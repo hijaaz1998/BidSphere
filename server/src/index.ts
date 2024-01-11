@@ -1,4 +1,4 @@
-import { log } from 'console';
+import cors from 'cors';
 import http from 'http';
 import connectDB from './frameworks/databse/connection';
 import express, {Application, Express, Request, Response} from 'express';
@@ -10,6 +10,8 @@ const app: Application = express();
 const server = http.createServer(app);
 
 connectDB();
+
+app.use(cors());
 
 expressConfig(app);
 

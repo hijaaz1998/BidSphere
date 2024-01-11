@@ -22,24 +22,24 @@ const authController = (
         
         const user: UserInterface = req.body;
 
-        const { token, applicantId } = await userRegister(
+        const { token, createdUser } = await userRegister(
             user,
             dbRepositoryUser,
             authService
-        );
+        );        
 
         res.json({
             status: "success",
             message: 'USer Registered',
             token,
-            applicantId,
+            createdUser,
         });
     });
 
     const loginUser = asyncHandler( async(req: Request, res: Response) => {
         const {email, password} : {email: string, password: string} = req.body;
 
-        const {firstName, lastName } = await userLogin(
+        const {token, user } = await userLogin(
             email,
             password,
             dbRepositoryUser,
@@ -49,8 +49,8 @@ const authController = (
         res.json({
             status: "success",
             message: "user retrieved",
-            firstName,
-            lastName
+            token,
+            user
         })
 
     })

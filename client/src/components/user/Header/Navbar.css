@@ -1,0 +1,66 @@
+.navbar{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #242424;
+    padding: 15px 5%;
+}
+
+.logo{
+    width: 160px;
+    cursor: pointer;
+}
+
+ul{
+    flex: 1;
+    list-style: none;
+    text-align: center;
+}
+
+ul li{
+    display: inline-block;
+    color: white;
+    margin: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.search-box{
+    display: flex;
+    height: 30px;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: white;
+}
+
+.search-box input{
+    padding: 6px;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    max-width: 200px;
+
+}
+
+.search-box input::placeholder{
+    color: black;
+}
+
+.search-box img{
+    width: 20px;
+    cursor: pointer;
+}
+
+.profile {
+    width: 30px;
+    height: 30px; /* Ensure the height is the same as the width for a perfect circle */
+    cursor: pointer;
+    margin-left: 40px;
+    border-radius: 50%; /* Make it round */
+    overflow: hidden; /* Ensure content doesn't overflow outside the rounded shape */
+  }
+  

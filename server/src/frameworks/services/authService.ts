@@ -12,16 +12,20 @@ export const authService = () => {
         return password
     }
 
-    const generateToken = (payload: string) => {
+    const generateToken = (payload: string) => {        
         const token = jwt.sign({ payload }, configKeys.JWT_SECRET, {
             expiresIn: '5d',
         });
         return token
     }
 
+    const comparePassword = (password: string, hashedPassword: string) => 
+         bcrypt.compare(password, hashedPassword)
+
     return {
         encryptPassword,
-        generateToken
+        generateToken,
+        comparePassword
     }
 }
 
