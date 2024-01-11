@@ -6,17 +6,16 @@ export const userDbRepository = (
     repository: ReturnType<UserRepositoryMongoDb>
     ) => {
     const addUser = async (user: UserEntityType) => {
-        await repository.addUser(user)
-    }
+         return await repository.addUser(user)
+    }    
 
-    const findUserByEmail = async (email: string) =>{
-        const user: any = await repository.getUserByEmail(email)
-        return user;
+    const getUserByEmail = async (email: string) =>{
+        return await repository.getUserByEmail(email)
     }
 
     return {
         addUser,
-        findUserByEmail,
+        getUserByEmail,
     }
 }
 

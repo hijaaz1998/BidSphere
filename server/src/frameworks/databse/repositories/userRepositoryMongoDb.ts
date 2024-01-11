@@ -9,14 +9,19 @@ export const userRepositoryMongoDb = () => {
             firstName: user.getFirstName(),
             lastName: user.getLastName(),
             email: user.getEmail(),
+            phoneNumber: user.getPhoneNumber(),
+            password: user.getPassword()
         });
-        newUser.save();
+        await newUser.save();
+        console.log("newUser", newUser);
+        console.log("newUser", newUser._id);
+        
         
         return newUser;
     }
 
     const getUserByEmail = async (email: string) => {
-        const user: {firstName: string, lastName: string} | null = await User.findOne({email});
+        const user: createUserInterface | null = await User.findOne({email});
         return user
     }
 

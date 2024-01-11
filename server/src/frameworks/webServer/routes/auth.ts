@@ -6,7 +6,7 @@ import { authService } from '../../services/authService';
 import { userRepositoryMongoDb } from '../../databse/repositories/userRepositoryMongoDb';
 
 const authRouter = () => {
-
+    
     const router = express.Router();
 
     const controller = authController(
