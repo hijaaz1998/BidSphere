@@ -1,9 +1,14 @@
-export default function postBeforeAuction(
+import { ObjectId } from "mongoose"
+export default function productBeforeAuction(
     productName: string,
-    image: string
+    image: string,
+    userId: string | ObjectId
 ) {
     return {
         getProductName: () : string => productName,
-        getImage: () : string => image
+        getImage: () : string => image,
+        getUserId: () : string | ObjectId => userId 
     }
 }
+
+export type ProductEntityType = ReturnType<typeof productBeforeAuction >

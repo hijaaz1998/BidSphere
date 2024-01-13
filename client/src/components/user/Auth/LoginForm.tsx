@@ -41,6 +41,8 @@ function LoginForm() {
       })
 
       const userData = response.data;
+      
+      localStorage.setItem("userId", JSON.stringify(userData.user._id))
       localStorage.setItem("userData", JSON.stringify(userData.user));
       localStorage.setItem("userToken", JSON.stringify(userData.token));
       
