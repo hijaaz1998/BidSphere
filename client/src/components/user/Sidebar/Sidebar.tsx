@@ -6,17 +6,21 @@ interface UserData {
     lastName: string;
   }
 
-const Sidebar = () => {
+  interface SidebarProps {
+    onButtonClick: (component: string) => void;
+  }
 
-    const [userData, setUserData] = useState<UserData | null>(null);
+const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
 
-    useEffect(() => {
-        const data = localStorage.getItem('userData');
-        if(data){
-        const parsed = JSON.parse(data);
-        setUserData(parsed)
-        }
-    },[])
+    // const [userData, setUserData] = useState<UserData | null>(null);
+
+    // useEffect(() => {
+    //     const data = localStorage.getItem('userData');
+    //     if(data){
+    //     const parsed = JSON.parse(data);
+    //     setUserData(parsed)
+    //     } 
+    // },[])
 
   return (
     <div className="flex fixed top-20 h-screen bg-gray-400">
@@ -30,7 +34,7 @@ const Sidebar = () => {
             </div>
             {/* User Info */}
             <div className="text-center">
-                <h2 className="text-lg font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2>
+                {/* <h2 className="text-lg font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2> */}
                 <p className="text-gray-600">Followers: 500</p>
                 <p className="text-gray-600">Following: 200</p>
                 {/* Edit Profile Button */}
@@ -40,27 +44,27 @@ const Sidebar = () => {
 
             {/* Navigation Links */}
             <div className="h- text-center bg-white mx-5 rounded-lg overflow-y-auto">
-                <a href="#" className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                <a onClick={() => onButtonClick('myPost')} className="block p-2 hover:cursor-pointer text-white bg-black rounded-xl mx-10 my-3">
                     My Posts
                 </a>
-                <a href="#" className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                <a onClick={() => onButtonClick('addPost')} className="block p-2 hover:cursor-pointer text-white bg-black rounded-xl mx-10 my-3">
                     Add Post
                 </a>
-                <a href="#" className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                {/* <a onClick={} className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
                     Notifications
                 </a>
-                <a href="#" className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                <a onClick={} className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
                     Messages
                 </a>
-                <a href="#" className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                <a onClick={} className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
                     My Bids
                 </a>
-                <a href="#" className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                <a onClick={} className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
                     My Listings
                 </a>
-                <a href="#" className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                <a onClick={} className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
                     Favorites
-                </a>
+                </a> */}
             </div>
         </div>
     </div>

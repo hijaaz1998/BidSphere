@@ -71,7 +71,6 @@ const RegisterForm = () => {
       toast.error(error.response)
     }
 
-    
   };
 
   return (
