@@ -22,7 +22,19 @@ const userSchema = new Schema(
         password: {
             type: String,
             trim: true,
-        }
+        },
+        isBlocked: {
+            type: Boolean,
+            default: false
+        },
+        followers: [
+            {
+                user: {
+                    type: mongoose.Types.ObjectId,
+                    ref: 'users'
+                }
+            }
+        ]
     },
     {timestamps: true}
 )

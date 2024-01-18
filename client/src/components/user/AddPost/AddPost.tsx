@@ -3,8 +3,16 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
+import { useNavigate } from 'react-router-dom';
+import { render } from 'react-dom';
 
-const AddPost = () => {
+interface AddPostProps {
+  setSelectedComponent : (str : string) => void;
+}
+
+const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
+
+  const navigate = useNavigate();
 
   const UPLOAD_PRESET = import.meta.env.VITE_UPLOAD_PRESET;
   const CLOUD_NAME = import.meta.env.VITE_CLOUD_NAME;
@@ -24,6 +32,9 @@ const AddPost = () => {
       if(allowedFormats.includes(selectedFile.type)){
         setImage(selectedFile);
       } 
+    }
+    else{
+      toast.error("please select an image")
     }
   }
 
@@ -50,6 +61,8 @@ const AddPost = () => {
   const addProductHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+
+
     const image = await handleImageUpload();
     const userId = localStorage.getItem('userId')? JSON.parse(localStorage.getItem('userId') as string): null
 
@@ -58,18 +71,21 @@ const AddPost = () => {
       image,
       userId
     })
-
+    
     if(response){
       toast.success("added");
+      setSelectedComponent('myPost');
+      navigate('/home/myPost')
     }
+
 
   }
 
   return (
     <>
       <ToastContainer />
-      <div className='bg-gray-400 w-full flex items-center justify-center min-h-screen'>
-        <div className='mt-20 p-8 w-full md:w-96 lg:w-1/2 bg-white rounded-lg text-center'>
+      <div className='bg-gray-400 w-full flex items-center justify-center min-h-screen h-full'>
+        <div className='mt-20 p-8 w-[800px] md:w-96 lg:w-1/2 bg-white rounded-lg text-center'>
           <h1 className='text-2xl font-bold mb-4'>Add Post</h1>
           <form className='space-y-4' onSubmit={addProductHandler}>
             <div className='flex flex-col'>

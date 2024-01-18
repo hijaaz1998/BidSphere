@@ -48,25 +48,27 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await axiosInstance.post('/auth/signup', {
+      const response = await axiosInstance.post('/user/signup', {
         firstName,
         lastName,
         phoneNumber,
         email,
         password
       })
-      console.log(response.data,"lll");
       
+      if(response.data.success){
+        const userData = response.data
+        console.log("aaaa",userData);
 
-      const userData = response.data
-      console.log(userData);
-      
-      localStorage.setItem("userData", JSON.stringify(userData.applicantId));
-      localStorage.setItem("userToken", JSON.stringify(userData.token));
-
-      dispatch(signup(userData))
-      toast.success('Registration successfull')
-      navigate('/home');
+        dispatch(signup(userData))
+        toast.success('Registration successfull')
+        navigate('/');
+      } else {
+        setError(response.data.result.error.message);
+        setTimeout(() => {
+          setError('');
+        }, 3000);
+      }
     } catch (error:any) {
       toast.error(error.response)
     }

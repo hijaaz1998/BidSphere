@@ -18,9 +18,6 @@ const userSlice = createSlice({
         },
         signup: (state, action: PayloadAction<string> ) => {
             console.log("action.payload",action.payload);
-            // state.user = action.payload
-            
-            // localStorage.setItem('userInfo', )
         },
         logout: (state, action: PayloadAction<string> ) => {
             state.user = action.payload

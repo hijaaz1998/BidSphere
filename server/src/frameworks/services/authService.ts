@@ -19,13 +19,21 @@ export const authService = () => {
         return token
     }
 
+    const generateTokenAdmin = (id: string) => {
+        const adminToken = jwt.sign({id}, configKeys.JWT_SECRET_ADMIN,{
+            expiresIn: '5d'
+        });
+        return adminToken
+    }
+
     const comparePassword = (password: string, hashedPassword: string) => 
          bcrypt.compare(password, hashedPassword)
 
     return {
         encryptPassword,
         generateToken,
-        comparePassword
+        comparePassword,
+        generateTokenAdmin
     }
 }
 

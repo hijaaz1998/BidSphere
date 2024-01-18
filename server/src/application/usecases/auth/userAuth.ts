@@ -1,8 +1,10 @@
-import { UserInterface, createUserInterface } from "../../../types/userInterface";
+import { UserInterface, createUserInterface, UserAfterLogin } from "../../../types/userInterface";
 import { AuthServiceInterface } from "../../services/authServiceInterface";
-import { UserDbInterface } from "../../interfaces/userDbRepository";
+import { UserDbInterface, userDbRepository } from "../../interfaces/userDbRepository";
 import { Types } from "mongoose";
+import { HttpStatus } from "../../../types/httpStatus";
 import createUserEntity, { UserEntityType } from "../../../entities/user";
+import AppError from "../../../utils/middleware/appError";
 
 export const userRegister = async (
     user: UserInterface,
@@ -15,7 +17,7 @@ export const userRegister = async (
     const isExistingEmail = await userRepository.getUserByEmail(user?.email)
 
     if(isExistingEmail){
-        throw new Error('user already exists')
+        return new AppError('Email already exists', HttpStatus.UNAUTHORIZED)
     }
 
     user.password = await authService.encryptPassword(user?.password);
@@ -43,10 +45,10 @@ export const userLogin = async (
     userRepository: ReturnType<UserDbInterface>,
     authService: ReturnType<AuthServiceInterface>
 ) => {
-    const user: createUserInterface | null = await userRepository.getUserByEmail(email)
+    const user: UserAfterLogin | null = await userRepository.getUserByEmail(email)
     
     if(!user){
-        throw new Error ("This user doesent exist") 
+        return new AppError('This user doesnt exist', HttpStatus.UNAUTHORIZED)
     }
 
     const isPasswordCorrect = await authService.comparePassword(
@@ -55,7 +57,7 @@ export const userLogin = async (
     )
 
     if(!isPasswordCorrect){
-        throw new Error ('Password or email is incorrect')
+        return new AppError('Invalid email or password', HttpStatus.UNAUTHORIZED)
     }
 
     const token = authService.generateToken(JSON.stringify(user))
@@ -63,3 +65,24 @@ export const userLogin = async (
     
 }
 
+export const getUserSuggestion = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string
+) => {
+    const data = await userRepository.getUserSuggestion(userId);
+    return data
+}
+
+
+export const followTheUser = async (
+    userRepository: ReturnType<UserDbInterface>,
+    followed: string,
+    followedBy: string
+) => {
+   
+    
+    const data = await userRepository.followUser(followed, followedBy)
+    if(data){
+        return data
+    }
+}

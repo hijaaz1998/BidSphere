@@ -15,3 +15,10 @@ export interface UserInterface {
     password: string;
 }
 
+export interface UserAfterLogin{
+    _id: string;
+    firstName: string;
+    lastName: string;
+    password: string
+}
+

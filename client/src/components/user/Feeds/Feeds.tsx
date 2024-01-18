@@ -7,14 +7,14 @@ const Feeds: React.FC = () => {
   // Assuming you have a state variable to store the data
   const [feedsData, setFeedsData] = useState<any[]>([]);
 
-  useEffect(() => {
-    // Fetch data using axiosInstance or any other method
-    // Update the state with the fetched data
-    // Example:
-    axiosInstance.get("/your-api-endpoint").then((response) => {
-      setFeedsData(response.data);
-    });
-  }, []); // Add any dependencies if needed
+  // useEffect(() => {
+  //   // Fetch data using axiosInstance or any other method
+  //   // Update the state with the fetched data
+  //   // Example:
+  //   axiosInstance.get("/your-api-endpoint").then((response) => {
+  //     setFeedsData(response.data);
+  //   });
+  // }, []); // Add any dependencies if needed
 
   // Dummy user suggestions data
   const userSuggestions: string[] = ["User1", "User2", "User3"];
@@ -23,7 +23,7 @@ const Feeds: React.FC = () => {
     <div className="flex h-screen bg-gray-400">
       {/* Feeds Section */}
       <div className="flex-1 overflow-hidden">
-        <div className="w-[800px] px-6 mt-20">
+        <div className=" px-6 mt-20">
           <div className="bg-gray-400 min-h-screen">
             {feedsData.length > 0 ? (
               feedsData.map((data, index) => (
@@ -94,7 +94,7 @@ const Feeds: React.FC = () => {
               ))
             ) : (
               <div className="flex items-center justify-center h-full">
-                <p className="text-gray-600">Follow someone to get started.</p>
+                <p className="text-gray-600">Follow someone to get started. or Add a post</p>
               </div>
             )}
           </div>

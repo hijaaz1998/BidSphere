@@ -7,14 +7,26 @@ interface Product {
   _id: string;
   productName: string;
   image: string;
-  // Add other properties if needed
 }
 
-const Post = () => {
+interface UserData {
+  firstName: string;
+  lastName: string;
+}
+
+const Posts = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [userData, setUserData] = useState<UserData | null>(null)
 
   const fetchData = async () => {
     try {
+
+      const data = localStorage.getItem('userData');
+        if(data){
+        const parsed = JSON.parse(data);
+        setUserData(parsed)
+        } 
+
       const userId = localStorage.getItem("userId")
         ? JSON.parse(localStorage.getItem("userId") as string)
         : null;
@@ -25,7 +37,6 @@ const Post = () => {
       setProducts(fetchedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
-      // Handle the error
     }
   };
 
@@ -34,8 +45,8 @@ const Post = () => {
   }, []);
 
   return (
-    <div className="your-outer-div-class bg-gray-400 min-h-screen px-6 mt-20 overflow-hidden">
-      {products.map((product, index) => (
+    <div className=" bg-gray-400 min-h-screen px-6 overflow-hidden">
+      {products?.slice()?.reverse()?.map((product, index) => (
         <div
           key={index}
           className="max-w-xl mx-auto bg-white rounded-md overflow-hidden shadow-lg my-4 mt-14"
@@ -48,7 +59,7 @@ const Post = () => {
               className="w-12 h-12 object-cover rounded-full"
             />
             <div className="ml-4">
-              <h2 className="text-lg font-semibold">Username</h2>
+              <h2 className="text-lg font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2>
               {/* Other user information can go here */}
             </div>
           </div>
@@ -100,8 +111,12 @@ const Post = () => {
           </div>
         </div>
       ))}
+
+      {products.length === 0 && (
+        <div>Nothing To Show</div>
+      )}
     </div>
   );
 };
 
-export default Post;
+export default Posts;

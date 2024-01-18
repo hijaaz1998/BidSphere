@@ -18,6 +18,8 @@ const authRouter = () => {
 
     router.post('/signup', controller.registerUser );
     router.post('/login', controller.loginUser );
+    router.get('/get_suggestions/:userId', controller.getSuggestion );
+    router.patch('/follow', controller.followUser)
 
     return router;
 

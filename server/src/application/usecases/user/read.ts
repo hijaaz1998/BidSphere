@@ -1,5 +1,15 @@
-// import { UserDbInterface } from "../../interfaces/userDbRepository";
+import { UserDbInterface } from "../../interfaces/userDbRepository";
 
-// export const removePassword = (object: any) => {
-//     let {_id, firstName, lastName, phoneNumber, }
-// }
+export const getUsers = async (
+    userRepository: ReturnType<UserDbInterface>
+) => {
+    return await userRepository.getAllUsers()
+}
+
+export const blockUsers = async(
+    userId: string,
+    userRepository: ReturnType<UserDbInterface>
+) => {
+    return await userRepository.blockUser(userId)
+}
+

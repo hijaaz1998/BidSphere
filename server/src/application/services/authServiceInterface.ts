@@ -7,6 +7,8 @@ export const authServiceInterface = (service: ReturnType<AuthService>) => {
 
     const generateToken = (payload: string) => service.generateToken(payload);
 
+    const generateTokenAdmin = (id: string) => service.generateTokenAdmin(id)
+
     const comparePassword = (password: string, hashedPassword: string) => 
         service.comparePassword(password, hashedPassword);
     return {

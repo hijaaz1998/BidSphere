@@ -13,9 +13,30 @@ export const userDbRepository = (
         return await repository.getUserByEmail(email)
     }
 
+    const getAllUsers = async() => {
+        return await repository.getAllUsers();
+    }
+
+    const blockUser = async (userId: string) => {
+        return await repository.blockUser(userId)
+    }
+
+    const getUserSuggestion = async (userId: string) => {
+        return await repository.getSuggestion(userId)
+    }
+
+    const followUser = async(followed: string, followedBy: string) => {
+        
+        return await repository.followTheUser(followed, followedBy)
+    }
+
     return {
         addUser,
         getUserByEmail,
+        getAllUsers,
+        blockUser,
+        getUserSuggestion,
+        followUser
     }
 }
 
