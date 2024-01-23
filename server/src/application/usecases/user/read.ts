@@ -13,3 +13,8 @@ export const blockUsers = async(
     return await userRepository.blockUser(userId)
 }
 
+export const removePassword = (object: any) => {
+    let {password, ...userWithoutPassword} = object;
+    return userWithoutPassword
+}
+

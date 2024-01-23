@@ -19,12 +19,11 @@ interface User {
 const UserProfile: React.FC<UserProfileProps> = () => {
 
   const [suggestions, setSuggestions] = useState<User[]>([])
-
-  const userId = localStorage.getItem('userId') ? JSON.parse(localStorage.getItem('userId') as string) : null
+  const [follow, setFollow] = useState<Boolean>(false)
 
   const fetchUserSuggestion = async () => {
     try {
-      const data = await axiosInstance.get(`/user/get_suggestions/${userId}`)
+      const data = await axiosInstance.get(`/user/get_suggestions`)
       const suggestions = data.data.suggestions
       setSuggestions(suggestions)
       
@@ -36,13 +35,15 @@ const UserProfile: React.FC<UserProfileProps> = () => {
 
   useEffect(() => {
     fetchUserSuggestion();
-  },[])
+  },[follow])
 
   const followUser = async (followed: string) => {
-    const isFollowed = await axiosInstance.patch('/user/follow',{followed, userId})
-    console.log(isFollowed);
     
+    const isFollowed = await axiosInstance.patch(`/user/follow/${followed}`)
+    
+    setFollow((prev) => !prev);
   }
+  
 
   return (
     <>

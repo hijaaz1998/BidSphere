@@ -14,7 +14,8 @@ export const authServiceInterface = (service: ReturnType<AuthService>) => {
     return {
         encryptPassword,
         generateToken,
-        comparePassword
+        comparePassword,
+        generateTokenAdmin
     }
 } 
 

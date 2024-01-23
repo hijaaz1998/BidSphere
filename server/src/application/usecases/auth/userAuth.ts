@@ -5,6 +5,7 @@ import { Types } from "mongoose";
 import { HttpStatus } from "../../../types/httpStatus";
 import createUserEntity, { UserEntityType } from "../../../entities/user";
 import AppError from "../../../utils/middleware/appError";
+import { removePassword } from "../user/read";
 
 export const userRegister = async (
     user: UserInterface,
@@ -45,7 +46,7 @@ export const userLogin = async (
     userRepository: ReturnType<UserDbInterface>,
     authService: ReturnType<AuthServiceInterface>
 ) => {
-    const user: UserAfterLogin | null = await userRepository.getUserByEmail(email)
+    const user: UserAfterLogin | null = await userRepository.getUserByEmail(email)    
     
     if(!user){
         return new AppError('This user doesnt exist', HttpStatus.UNAUTHORIZED)
@@ -60,14 +61,16 @@ export const userLogin = async (
         return new AppError('Invalid email or password', HttpStatus.UNAUTHORIZED)
     }
 
-    const token = authService.generateToken(JSON.stringify(user))
-    return {token, user}
+    const userDetails = removePassword(user)
+    const token = authService.generateToken(JSON.stringify(userDetails._id))    
+
+    return {token, userDetails}
     
 }
 
 export const getUserSuggestion = async (
     userRepository: ReturnType<UserDbInterface>,
-    userId: string
+    userId: any
 ) => {
     const data = await userRepository.getUserSuggestion(userId);
     return data
@@ -85,4 +88,20 @@ export const followTheUser = async (
     if(data){
         return data
     }
+}
+
+export const googleAuthRegister = async (
+    firstName: string, lastName: string, email: string, jti: string,
+    userRepository: ReturnType<UserDbInterface>,
+    authService: ReturnType<AuthServiceInterface>
+) => {
+    const user: any = await userRepository.addUserByGoogle(firstName,lastName, email, jti);
+
+
+    console.log("user",user);
+    
+
+    const token = authService.generateToken(JSON.stringify(user?._id));
+
+    return {token, user}
 }

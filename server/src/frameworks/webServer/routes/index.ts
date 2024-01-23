@@ -5,7 +5,7 @@ import adminRouter from "./adminRoute";
 
 const routes = (app: Application) => {
     app.use('/api/product', productRouter())
-    app.use('/api/user',  authRouter())
+    app.use('/api/user', authRouter())
     app.use('/api/admin', adminRouter())
 }
 

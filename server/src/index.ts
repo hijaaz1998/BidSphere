@@ -10,7 +10,7 @@ const app: Application = express();
 const server = http.createServer(app);
 
 connectDB();
-
+app.use(express.json());
 app.use(cors());
 
 expressConfig(app);

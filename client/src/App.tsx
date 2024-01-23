@@ -2,24 +2,29 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Login from "./pages/Auth/Login"
 import Home from "./pages/Home/Home"
 import Signup from "./pages/Auth/Signup"
-// import AddPost from "./components/user/AddPost/AddPost"
 import AdminLogin from "./pages/Auth/AdminLogin"
 import AdminHome from "./pages/Home/AdminHome"
 import HomeMyPosts from "./pages/MyPosts/MyPost"
+import { ToastContainer } from "react-toastify"
+import PostDetails from "./pages/PostDetails/PostDetails"
+
 function App() {
 
   return (
     <>
+      <ToastContainer />
       <Router>
         <Routes>
           <Route path="/" element={< Login />} />
           <Route path="/home" element={< Home />}/>
-          <Route path="/home/myPost" element={< HomeMyPosts />}/>
+          <Route path="/postDetails" element={< PostDetails />}/>
           <Route path="/signup" element={< Signup />}/>
           <Route path="/admin" element={< AdminLogin />}/>
           <Route path="/admin/dashboard" element={< AdminHome />}/>
+
         </Routes>
       </Router>
+      
     </>
   )
 }

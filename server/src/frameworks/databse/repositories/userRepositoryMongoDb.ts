@@ -13,10 +13,7 @@ export const userRepositoryMongoDb = () => {
             password: user.getPassword()
         });
         await newUser.save();
-        console.log("newUser", newUser);
-        console.log("newUser", newUser._id);
-        
-        
+
         return newUser;
     }
 
@@ -30,6 +27,9 @@ export const userRepositoryMongoDb = () => {
     
         return null;
     };
+    
+    
+    
     
     
 
@@ -58,31 +58,74 @@ export const userRepositoryMongoDb = () => {
     };
 
     const getSuggestion = async (userId: string) => {
-        const data = await User.find({ _id: { $ne: userId } });
-        return data;
+        try {
+            const loggedInUser: UserInterface = await User.findById(userId) as UserInterface;
+    
+            const usersNotInFollowing = await User.find({
+                _id: { $nin: [...loggedInUser.following, userId] }
+            });
+    
+            const shuffledUsers = shuffleArray(usersNotInFollowing);
+    
+            const randomUsers = shuffledUsers.slice(0, 5);
+    
+            return randomUsers;
+        } catch (error) {
+            console.error('Error getting random users:', error);
+            throw error;
+        }
     };
+    
+    
+    const shuffleArray = (array: any[]) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
+    
     
     const followTheUser = async (followedId: string, followedById: string) => {
         try {
-            console.log("cm");
+            await User.updateOne(
+                { _id: followedById },
+                { $addToSet: { following: followedId } }
+            );
+    
+            await User.updateOne(
+                { _id: followedId },
+                { $addToSet: { followers: followedById } }
+            );
+    
             const followedByUser = await User.findById(followedById);
-
-            followedByUser?.followers.push({ user: followedId });
-
-            await followedByUser?.save();
-
-            console.log(followedByUser);
-            
-
-            if(followedByUser){
-                return followedByUser
-            }
-
+            return followedByUser;
         } catch (error) {
             console.log(error);
-            
         }
-    }  
+    };
+
+    const googleAuth = async (firstName: string, lastName: string, email: string, jti: string) => {
+        const isExisting = await User.findOne({email: email})
+
+        if(!isExisting){
+            const newUser: any = new User({
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                jti: jti
+            });
+            await newUser.save();
+
+            return newUser
+        } else {
+            console.log("isExisting",isExisting);
+            
+            return isExisting
+        }
+    }
+    
+      
       
 
     return{
@@ -91,7 +134,8 @@ export const userRepositoryMongoDb = () => {
         getAllUsers,
         blockUser,
         getSuggestion,
-        followTheUser
+        followTheUser,
+        googleAuth
     }
 }
 

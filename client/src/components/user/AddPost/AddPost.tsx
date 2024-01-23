@@ -64,18 +64,16 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
 
 
     const image = await handleImageUpload();
-    const userId = localStorage.getItem('userId')? JSON.parse(localStorage.getItem('userId') as string): null
 
     const response = await axiosInstance.post('/product/addProduct', {
       productName,
       image,
-      userId
     })
     
     if(response){
       toast.success("added");
       setSelectedComponent('myPost');
-      navigate('/home/myPost')
+      navigate('/home')
     }
 
 

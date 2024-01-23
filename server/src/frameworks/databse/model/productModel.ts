@@ -26,7 +26,7 @@ const productSchema = new Schema(
         userId: {
             type: mongoose.Types.ObjectId,
             require: true,
-            ref: 'users'
+            ref: 'User'
         },
         createdOn: {
             type: Date,

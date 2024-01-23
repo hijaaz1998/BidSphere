@@ -4,6 +4,7 @@ import { userDbRepository } from '../../../application/interfaces/userDbReposito
 import { authServiceInterface } from '../../../application/services/authServiceInterface';
 import { authService } from '../../services/authService';
 import { userRepositoryMongoDb } from '../../databse/repositories/userRepositoryMongoDb';
+import jwtAuth from '../../../utils/middleware/jwtAuth'
 
 const authRouter = () => {
     
@@ -18,8 +19,9 @@ const authRouter = () => {
 
     router.post('/signup', controller.registerUser );
     router.post('/login', controller.loginUser );
-    router.get('/get_suggestions/:userId', controller.getSuggestion );
-    router.patch('/follow', controller.followUser)
+    router.get('/get_suggestions', jwtAuth, controller.getSuggestion );
+    router.patch('/follow/:followed', jwtAuth, controller.followUser);
+    router.post('/googleAuth', controller.googleAuth)
 
     return router;
 

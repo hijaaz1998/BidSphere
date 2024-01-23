@@ -29,13 +29,21 @@ const userSchema = new Schema(
         },
         followers: [
             {
-                user: {
-                    type: mongoose.Types.ObjectId,
-                    ref: 'users'
-                }
+                type: Schema.Types.ObjectId,
+                ref: 'users'
             }
-        ]
+        ],
+        following: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'users'
+            }
+        ],
+        jti: {
+            type: String
+        }
     },
+    
     {timestamps: true}
 )
 

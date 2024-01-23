@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import userImage from "../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg"; // replace with actual path
 import axiosInstance from "../../../axiosEndPoints/userAxios";
+import { login } from "../../../slices/userSlice";
 
 interface Product {
   _id: string;
@@ -15,6 +16,7 @@ interface UserData {
 }
 
 const Posts = () => {
+  
   const [products, setProducts] = useState<Product[]>([]);
   const [userData, setUserData] = useState<UserData | null>(null)
 
@@ -27,11 +29,8 @@ const Posts = () => {
         setUserData(parsed)
         } 
 
-      const userId = localStorage.getItem("userId")
-        ? JSON.parse(localStorage.getItem("userId") as string)
-        : null;
       const response = await axiosInstance.get(
-        `/product/getProducts/${userId}`
+        `/product/getProducts`
       );
       const fetchedProducts = response.data.myProducts;
       setProducts(fetchedProducts);

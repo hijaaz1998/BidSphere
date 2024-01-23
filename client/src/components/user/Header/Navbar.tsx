@@ -1,7 +1,7 @@
 import logo from '/defaults/logo.png';
 import default_profile from '/defaults/blank_profile.png';
 import searchIcon from '/defaults/search-b.png';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Navbar() {
 
@@ -17,12 +17,14 @@ function Navbar() {
   return (
     <div className='fixed flex items-center justify-between top-0 left-0 w-full bg-gray-800 p-3 z-10 px-9'>
       <div className="flex items-center">
-        <img src={logo} alt="logo" className='w-40 cursor-pointer' />
+        <Link to={'/'}>
+          <img src={logo} alt="logo" className='w-40 cursor-pointer' />
+        </Link>
       </div>
 
       <div className='flex items-center'>
         <ul className='flex items-center mx-auto'>
-          <li className='text-white mx-4 cursor-pointer'>Home</li>
+          <li className='text-white mx-4 cursor-pointer'><Link to={'/'}>Home</Link></li>
           <li className='text-white mx-4 cursor-pointer'>Auctions</li>
         </ul>
       </div>

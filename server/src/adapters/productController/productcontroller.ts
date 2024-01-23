@@ -1,3 +1,4 @@
+import url from 'url';
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import { ProductDbInterface } from '../../application/interfaces/productDbRepository';
@@ -5,22 +6,32 @@ import { ProductRepositoryMongoDb } from '../../frameworks/databse/repositories/
 import { ProductBeforeAuctionInterface } from '../../types/productInterface';
 
 import { productAdd } from '../../application/usecases/product/addProduct';
-import { getUserProducts } from '../../application/usecases/product/read';
+import { getUserProducts, allPosts } from '../../application/usecases/product/read';
 
-const productController = (
+interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
+    userId?: string;
+  }
+
+const   productController = (
     productDbRepository: ProductDbInterface,
     productDbRepositoryImpl: ProductRepositoryMongoDb
 ) => {
 
     const dbRepositoryProduct = productDbRepository(productDbRepositoryImpl());
 
-    const addProduct = asyncHandler ( async (req: Request, res: Response) => {
+    const addProduct = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
         const product: ProductBeforeAuctionInterface = req.body;
+        const userId = req.userId;
+        console.log("userrrr",userId);
+        
+        if(userId !== undefined){
 
-        const createdProduct = await productAdd(
-            product,
-            dbRepositoryProduct,
-        )
+            const createdProduct = await productAdd(
+                userId,
+                product,
+                dbRepositoryProduct,
+                )
+        }
 
         res.json({
             status: 'success',
@@ -28,9 +39,12 @@ const productController = (
         })
     })
 
-    const handleGetProductsOfUser = asyncHandler ( async (req: Request, res: Response) => {
-        const userId : any = req.params.userId;
-        const myProducts = await getUserProducts(dbRepositoryProduct, userId);
+    const handleGetProductsOfUser = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId
+        let myProducts;
+        if(userId){
+             myProducts = await getUserProducts(dbRepositoryProduct, userId);
+        }
         console.log("aaaa",myProducts);
         
 
@@ -39,9 +53,22 @@ const productController = (
         })
     })
 
+    const getAllPosts = asyncHandler( async (req: AuthenticatedRequest, res:Response) => {
+        const userId = req.userId
+        let posts;
+        if(userId){
+             posts = await allPosts(dbRepositoryProduct, userId)
+        }        
+
+        res.json({
+            posts
+        })
+    })
+
     return {
         addProduct,
-        handleGetProductsOfUser
+        handleGetProductsOfUser,
+        getAllPosts
     }
 }
 

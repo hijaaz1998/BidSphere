@@ -9,3 +9,12 @@ export const getUserProducts = async (
 
     return products
 }
+
+export const allPosts = async (
+    productRepository: ReturnType<ProductDbInterface>,
+    userId: string
+) => {
+    const posts = await productRepository.getAllPosts(userId);
+
+    return posts
+}

@@ -3,7 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { useDispatch } from 'react-redux';
 import { login } from '../../../slices/userSlice';
-import { ToastContainer, toast } from 'react-toastify';
+// import { ToastContainer, toast } from 'react-toastify';
+import {  GoogleLogin } from '@react-oauth/google';
+import { toast } from 'react-toastify';
+
+
 
 function LoginForm() {
   
@@ -13,6 +17,25 @@ function LoginForm() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleLoginSuccess = async (credentialResponse: any) => {
+    console.log(credentialResponse.credential);
+    const credential = credentialResponse.credential;
+    const success = await axiosInstance.post('/user/googleAuth', { credential });
+    if(success){
+      console.log("success",success.data);
+      console.log("success",success.data.token);
+      
+      localStorage.setItem("userToken", JSON.stringify(success.data.token))
+      localStorage.setItem("userData", JSON.stringify(success.data.user))
+      navigate('/home')
+    }
+
+  }
+  
+
+
+  
 
   const loginHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,12 +66,13 @@ function LoginForm() {
 
       if(response.data.status){
         const userData = response.data;
-        console.log("userData",userData);
+        console.log("userData",userData.result.user);
+        console.log("userData",userData.result.token);
         
-      
-        localStorage.setItem("userId", JSON.stringify(userData?.result?.user?._id))
         localStorage.setItem("userData", JSON.stringify(userData?.result?.user));
         localStorage.setItem("userToken", JSON.stringify(userData?.result?.token));
+        console.log("dataaaaaaaaaa",userData);
+        
         
         dispatch(login(userData))
         navigate('/home')
@@ -81,9 +105,19 @@ function LoginForm() {
             <button type='submit' className='bg-blue-500 text-white py-2 px-4 mt-4 mb-3 rounded-md w-full'>Login</button>
             <p className='text-sm mt-2'>Already have an account? <span className='text-blue-500 cursor-pointer'><Link to={'/signup'}>Signup</Link></span></p>
           </div>
+
         </form>
+        <GoogleLogin
+          onSuccess={handleLoginSuccess}
+          onError={() => {
+            console.log('Login Failed');
+          }}
+        />
       </div>
     </div>
+
+      
+      
     </>
   )
 }

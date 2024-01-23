@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react'
 import userImage from '../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg'
+import { useSelector } from 'react-redux';
 
 interface UserData {
-    _id: string;
     firstName: string;
     lastName: string;
   }
@@ -12,6 +12,10 @@ interface UserData {
   }
 
 const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
+
+    const { firstName, lastName } = useSelector((state: any) => state.user);
+    console.log("loggging", firstName, lastName);
+    
 
     const [userData, setUserData] = useState<UserData  | null>(null);
 
@@ -26,6 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
 
     console.log("userDataaaa",userData?.firstName);
     
+    
 
   return (
 
@@ -36,8 +41,8 @@ const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
                 </div>
                 <div className="text-center">
                     <h2 className="text-lg text-black font-semibold">{userData?.firstName} {userData?.lastName}</h2>
-                    <p className="text-gray-600">Followers: 500</p>
-                    <p className="text-gray-600">Following: 200</p>
+                    {/* <p className="text-gray-600">Followers: {userData?.followers?.count}</p>
+                    <p className="text-gray-600">Following: {userData?.following?.count}</p> */}
                     <button className="bg-blue-500 text-white px-4 py-2 rounded-full mt-2">Edit Profile</button>
                 </div>
             </div>

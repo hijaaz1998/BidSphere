@@ -13,12 +13,13 @@ export interface UserInterface {
     email: string;
     phoneNumber: string;
     password: string;
+    following: Array<string>;
 }
 
 export interface UserAfterLogin{
     _id: string;
-    firstName: string;
-    lastName: string;
-    password: string
+    firstName?: string;
+    lastName?: string;
+    password: string;
 }
 

@@ -29,6 +29,9 @@ export const userDbRepository = (
         
         return await repository.followTheUser(followed, followedBy)
     }
+    const addUserByGoogle = async (firstName: string, lastName: string, email: string, jti: string) => {
+        return await repository.googleAuth(firstName, lastName, email, jti)
+    }
 
     return {
         addUser,
@@ -36,7 +39,8 @@ export const userDbRepository = (
         getAllUsers,
         blockUser,
         getUserSuggestion,
-        followUser
+        followUser,
+        addUserByGoogle
     }
 }
 

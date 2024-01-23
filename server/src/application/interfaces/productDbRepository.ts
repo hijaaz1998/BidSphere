@@ -12,9 +12,14 @@ export const productDbRepository = (
         return await repository.getUserProducts(userId)
     }
 
+    const getAllPosts = async(userId: string) => {
+        return await repository.allPosts(userId)
+    }
+
     return {
         addProduct,
-        getUsersAllProducts
+        getUsersAllProducts,
+        getAllPosts
     }
 }
 

@@ -57,12 +57,10 @@ const RegisterForm = () => {
       })
       
       if(response.data.success){
-        const userData = response.data
-        console.log("aaaa",userData);
 
-        dispatch(signup(userData))
         toast.success('Registration successfull')
         navigate('/');
+        
       } else {
         setError(response.data.result.error.message);
         setTimeout(() => {

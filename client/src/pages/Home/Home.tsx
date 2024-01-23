@@ -43,7 +43,7 @@ const Home: React.FC = () => {
           {renderSelectedComponent()}
         </div>
         <div className="w-80 bg-white fixed right-0  overflow-y-hidden flex flex-col items-center "> 
-        <UserSuggestions />
+        <UserSuggestions _id={""} userImage={""} firstName={""} lastName={""} />
         </div>
       </div>
       

@@ -5,9 +5,21 @@ import { UserRepositoryMongoDb } from '../../frameworks/databse/repositories/use
 import { AuthService } from '../../frameworks/services/authService';
 import { AuthServiceInterface, authServiceInterface } from '../../application/services/authServiceInterface';
 import { UserInterface, createUserInterface } from '../../types/userInterface';
-
-import { userRegister, userLogin, getUserSuggestion, followTheUser } from '../../application/usecases/auth/userAuth';
+import { userRegister, userLogin, getUserSuggestion, followTheUser, googleAuthRegister } from '../../application/usecases/auth/userAuth';
 import AppError from '../../utils/middleware/appError';
+import {jwtDecode} from "jwt-decode";
+import { JwtPayload } from 'jwt-decode';
+import jwt from 'jsonwebtoken'
+
+interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
+  userId?: string;
+}
+
+interface DecodedToken extends JwtPayload {
+  given_name?: string;
+  family_name?: string;
+  email?: string
+}
 
 const authController = (
     authServiceInterface: AuthServiceInterface,
@@ -70,14 +82,14 @@ const authController = (
             message: "user retrieved",
             result: {
               token: result.token,
-              user: result.user,
+              user: result.userDetails,
             },
           });
         }
     });
 
-    const getSuggestion = asyncHandler( async (req: Request, res: Response) => {
-      const userId = req.params.userId
+    const getSuggestion = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+      const userId = req.userId            
 
       const suggestions = await getUserSuggestion(dbRepositoryUser, userId);
       
@@ -86,16 +98,54 @@ const authController = (
       })
     })
 
-    const followUser = asyncHandler (async (req: Request, res: Response) => {
-      const {followed, followedBy} = req.body;
+    const followUser = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+      
+      const followed = req.params.followed;
+      const userId = req.userId  
+      let isFollowed;
+      
+      if(userId){
 
-      const isFollowed = await followTheUser(dbRepositoryUser, followed, followedBy)
+         isFollowed = await followTheUser(dbRepositoryUser, followed, userId);
 
-      if(isFollowed){
+      }
+        
+    
+      if (isFollowed) {
         res.json({
           success: true
-        })
+        });
       }
+    });
+
+    const googleAuth = asyncHandler( async (req: Request, res: Response) => {
+      console.log("body",req.body);
+      
+      const tokenObject = JSON.stringify(req.body);
+      
+      const token = tokenObject
+      console.log("toooooookkkkken", token);
+      
+
+      const decoded: any = jwtDecode(token);
+
+      console.log("decoded",decoded);
+      
+      
+      const firstName = decoded.given_name;
+      const lastName = decoded.family_name;
+      const jti = decoded.jti
+      const email = decoded.email 
+
+      const result = await googleAuthRegister(firstName, lastName, email, jti, dbRepositoryUser, authService)
+      console.log("reeeeeeeesulttttt",result);
+      
+      if(result){
+        res.json(
+          result
+        )
+      }
+      
     })
 
 
@@ -103,7 +153,8 @@ const authController = (
         registerUser,
         loginUser,
         getSuggestion,
-        followUser
+        followUser,
+        googleAuth
     }
 }
 
