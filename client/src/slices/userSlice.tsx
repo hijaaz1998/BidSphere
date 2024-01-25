@@ -13,8 +13,9 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action: PayloadAction<string>) => {
+            console.log("stateee", action);
+            console.log("stateee", action.payload);
             state.user = action.payload; 
-            console.log("stateee", state.user);
             
         },
         signup: (state, action: PayloadAction<string> ) => {
@@ -27,6 +28,7 @@ const userSlice = createSlice({
 })
 
 export const {login, signup, logout} = userSlice.actions;
-export const selectUser = (state: {user: UserState}) => state.user.user;
+export const selectUser = (state: { user: UserState }) => state.user.user;
+
 
 export default userSlice.reducer;

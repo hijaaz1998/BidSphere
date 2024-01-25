@@ -25,7 +25,7 @@ function Navbar() {
       <div className='flex items-center'>
         <ul className='flex items-center mx-auto'>
           <li className='text-white mx-4 cursor-pointer'><Link to={'/'}>Home</Link></li>
-          <li className='text-white mx-4 cursor-pointer'>Auctions</li>
+          <li className='text-white mx-4 cursor-pointer'><Link to={'/auctions'}>Auctions</Link> </li>
         </ul>
       </div>
 

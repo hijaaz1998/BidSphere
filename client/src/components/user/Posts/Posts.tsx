@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import userImage from "../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg"; // replace with actual path
 import axiosInstance from "../../../axiosEndPoints/userAxios";
 import { login } from "../../../slices/userSlice";
+import { Link } from "react-router-dom";
 
 interface Product {
   _id: string;
@@ -59,16 +60,18 @@ const Posts = () => {
             />
             <div className="ml-4">
               <h2 className="text-lg font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2>
-              {/* Other user information can go here */}
             </div>
           </div>
 
-          {/* Post Image Section */}
-          <img
+          <div className="flex justify-center">
+          <Link to={`/postDetails/${product._id}`} >
+            <img
             src={product.image}
             alt="Post"
-            className="w-full h-full object-contain min-h-64"
-          />
+            className="fixed-size-image "
+            />
+          </Link>
+          </div>
 
           {/* Post Actions Section */}
           <div className="flex justify-between p-4">

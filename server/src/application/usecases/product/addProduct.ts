@@ -1,17 +1,21 @@
-import { ProductBeforeAuctionInterface } from "../../../types/productInterface";
+import { ProductInterface } from "../../../types/productInterface";
 import { ProductDbInterface } from "../../interfaces/productDbRepository";
-import createProductEntityBeforeAuction, {ProductEntityType} from '../../../entities/products';
+import {productBeforeAuction, ProductEntityType} from '../../../entities/products';
 
 export const productAdd = async (
     userId: string,
-    product: ProductBeforeAuctionInterface,
+    product: ProductInterface,
     productRepository: ReturnType<ProductDbInterface>
 ) => {
-    const {productName, image} = product;
+    const {productName, description, age, condition, rarity, image} = product;
     const userID = userId
     
-    const productEntity: ProductEntityType = createProductEntityBeforeAuction(
+    const productEntity: ProductEntityType = productBeforeAuction(
         productName,
+        description,
+        age,
+        condition,
+        rarity,
         image,
         userID
     )

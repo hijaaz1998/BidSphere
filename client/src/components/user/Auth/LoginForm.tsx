@@ -71,10 +71,10 @@ function LoginForm() {
         
         localStorage.setItem("userData", JSON.stringify(userData?.result?.user));
         localStorage.setItem("userToken", JSON.stringify(userData?.result?.token));
-        console.log("dataaaaaaaaaa",userData);
+        console.log("dataaaaaaaaadddda",userData);
         
         
-        dispatch(login(userData))
+        dispatch(login(userData.result.user))
         navigate('/home')
       } else {
         setError(response.data.result.error.message);

@@ -10,14 +10,13 @@ const Feeds: React.FC = () => {
 
   const fetchData = async () => {
     const response = await axiosInstance.get(`/product/get_all_posts`)
-    console.log("data",response.data.posts);
+    console.log("response.data.posts",response.data.posts);
     
     setFeedsData(response.data.posts)
-    
   }
-console.log(feedsData,"lll");
 
-
+  console.log("feedsData",feedsData);
+  
 
   useEffect(() => {
     fetchData();
@@ -61,7 +60,11 @@ console.log(feedsData,"lll");
                 </div>
   
                 {/* Post Image Section */}
-                <img src={data.image} alt="Post" className="w-full h-full object-contain min-h-64" />
+                <div className="flex justify-center">
+                  <Link to={`/postDetails/${data?._id}`} >
+                    <img src={data.image} alt="Post" className="fixed-size-image" />
+                  </Link>
+                </div>
   
                 {/* Post Actions Section */}
                 <div className="flex justify-between p-4">

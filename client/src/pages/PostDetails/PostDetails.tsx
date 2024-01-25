@@ -1,32 +1,13 @@
 import { useState } from "react";
+import {useParams} from 'react-router-dom'
 import Navbar from "../../components/user/Header/Navbar"
-import Sidebar from "../../components/user/Sidebar/Sidebar"
-import Feeds from "../../components/user/Feeds/Feeds";
-import AddPost from "../../components/user/AddPost/AddPost";
-import Posts from "../../components/user/Posts/Posts";
+
 import PostDetails from "../../components/user/Posts/PostDetails";
-import RightSideComponent from "./RightSideComponent";
+import RightSideComponent from "../../components/user/Posts/RightSideComponent";
 
 const PostDetailsPage = () => {
 
-    const [selectedComponent, setSelectedComponent] = useState<string>('feeds');
-
-    const renderSelectedComponent = () => {
-        switch (selectedComponent) {
-          case 'feeds':
-            return <Feeds />;
-          case 'addPost':
-            return <AddPost setSelectedComponent={setSelectedComponent} />;
-          case 'myPost':
-            return <Posts />;
-          default:
-            return null;
-        }
-      };
-    
-      const handleButtonClick = (component: string) => {
-        setSelectedComponent(component);
-      };
+  const {postId} = useParams();
 
   return (
     <>
@@ -35,12 +16,12 @@ const PostDetailsPage = () => {
       </div>
 
       <div className="px-4 mt-9 flex ">
-        <div className="w-3/4 pr-4 bg-slate-400"> 
-          <PostDetails />
+        <div className="w-3/4 pr-4"> 
+          <PostDetails postId={postId} />
         </div>
-            <div className="w-1/4 fixed right-0  overflow-y-hidden flex flex-col items-center mt-10 ">
-                <RightSideComponent />
-            </div>
+        <div className="w-1/4 fixed right-0  overflow-y-hidden flex flex-col items-center ">
+            <RightSideComponent postId={postId} />
+        </div>
       </div>
       
     </>
