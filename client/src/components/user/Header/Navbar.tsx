@@ -2,15 +2,17 @@ import logo from '/defaults/logo.png';
 import default_profile from '/defaults/blank_profile.png';
 import searchIcon from '/defaults/search-b.png';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../slices/userSlice';
 
 function Navbar() {
 
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    localStorage.removeItem("userData");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userToken");
+
+    dispatch(logout())
     navigate('/')
   }
 

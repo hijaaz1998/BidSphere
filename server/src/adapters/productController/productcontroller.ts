@@ -6,7 +6,7 @@ import { ProductRepositoryMongoDb } from '../../frameworks/databse/repositories/
 import { EditProductInterface, ProductInterface } from '../../types/productInterface';
 
 import { productAdd } from '../../application/usecases/product/addProduct';
-import { getUserProducts, allPosts, getPostDetail, postDelete, postEdit } from '../../application/usecases/product/read';
+import { getUserProducts, allPosts, getPostDetail, postDelete, postEdit, postLike, getComment, addComments } from '../../application/usecases/product/read';
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
     userId?: string;
@@ -98,13 +98,48 @@ const   productController = (
         }
     })
 
+    const likePost = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+        const postId = req.params.postId;
+        const userId = req.userId;
+
+        const updated = await postLike(dbRepositoryProduct, postId, userId);
+
+        res.json({
+            updated
+        })
+    })
+
+    const getComments = asyncHandler( async (req: Request, res: Response) => {
+        const postId = req.params.postId;
+
+        const comments = await getComment(dbRepositoryProduct, postId)
+
+        res.json({
+            comments
+        })
+    })
+
+    const addComment = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+        const postId = req.params.postId;
+        const {comment} = req.body;
+        const userId = req.userId
+        const commented = await addComments(dbRepositoryProduct, userId, postId, comment)
+
+        res.json({
+            commented
+        })
+    })
+
     return {
         addProduct,
         handleGetProductsOfUser,
         getAllPosts,
         getPostDetails,
         deletePost,
-        editPost
+        editPost,
+        likePost,
+        getComments,
+        addComment
     }
 }
 

@@ -77,6 +77,81 @@ export const productRepositoryMongoDb = () => {
             return updatedProduct
         }
     }
+
+    const postLike = async (postId: string, userId: string | undefined) => {
+        try {
+          const existingPost = await Product.findById(postId);
+      
+          if (!existingPost) {
+            return null;
+          }
+      
+          const likedByUser = existingPost.likes.some((like) => like?.user?.toString() === userId);
+      
+          let updated;
+      
+          if (likedByUser) {
+            updated = await Product.findByIdAndUpdate(
+              postId,
+              {
+                $pull: { likes: { user: userId } },
+              },
+              { new: true }
+            );
+          } else {
+            updated = await Product.findByIdAndUpdate(
+              postId,
+              {
+                $addToSet: { likes: { user: userId } },
+              },
+              { new: true }
+            );
+          }
+      
+          if (updated) {
+            return updated;
+          }
+        } catch (error) {
+          console.error("Error updating likes:", error);
+          return null;
+        }
+      };
+
+      const getComment = async(postId: string) => {
+        const product = await Product.findById(postId)
+
+        const comments = product?.comments.map(comment => comment.comment);
+        console.log("comment", comments)
+        return comments
+    }
+
+    const addComments = async (userId: string | undefined, postId: string, comment: string) => {
+        try {
+          const product = await Product.findById(postId);
+      
+          if (!product) {
+            console.error('Product not found');
+            return;
+          }
+      
+          const newComment = {
+            user: userId, 
+            comment: comment,
+          };
+      
+          product.comments.push(newComment);
+      
+          await product.save();
+
+          return product;
+      
+        } catch (error) {
+          console.error('Error adding comment:', error);
+        }
+    };
+      
+      
+      
  
     return {
         addProductBefore,
@@ -84,7 +159,10 @@ export const productRepositoryMongoDb = () => {
         allPosts,
         getPostDetails,
         postDelete,
-        postEdit
+        postEdit,
+        postLike,
+        getComment,
+        addComments
     }
 }
 

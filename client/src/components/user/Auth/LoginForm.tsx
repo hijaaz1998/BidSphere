@@ -27,7 +27,8 @@ function LoginForm() {
       console.log("success",success.data.token);
       
       localStorage.setItem("userToken", JSON.stringify(success.data.token))
-      localStorage.setItem("userData", JSON.stringify(success.data.user))
+      localStorage.setItem("userData", JSON.stringify(success.data.user));
+      dispatch(login(success.data.user))
       navigate('/home')
     }
 

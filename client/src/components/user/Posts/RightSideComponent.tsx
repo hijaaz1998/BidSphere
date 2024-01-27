@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
 interface PostId {
-  postId: string | undefined
+  postId: string
 }
 
 const RightSideComponent: React.FC<PostId> = ({ postId }) => {
@@ -19,8 +19,42 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
   const [rarity, setRarity] = useState('');
   const [id, setId] = useState('');
 
+  const [isAuctionModalOpen, setAuctionModalOpen] = useState(false);
+  const [auctionDate, setAuctionDate] = useState<Date | null>(new Date());
+  const [basePrice, setBasePrice] = useState('');
+  const [auctioned, setAuctioned] = useState(false)
+
   const handleRemoveButtonClick = () => {
     setRemoveModalOpen(true);
+  };
+
+
+  const handleAuctionButtonClick = () => {
+    setBasePrice('');
+    setAuctionModalOpen(true);
+  };
+
+  const handleAuctionConfirm = async (postId: string) => {
+
+    const formattedAuctionDate = auctionDate?.toISOString(); // Convert to ISO string
+    const numericBasePrice = Number(basePrice);
+
+    const res = await axiosInstance.post('/auction/addToAuction',{
+      data: {
+        postId,
+        basePrice: numericBasePrice,
+        auctionDate: formattedAuctionDate
+      }
+    })
+
+    setAuctionModalOpen(false);
+    setAuctioned(true);
+    return toast.success("Set for Auction Successfully");
+    
+  };
+
+  const handleAuctionModalClose = () => {
+    setAuctionModalOpen(false);
   };
 
   const handleEditButtonClick = async (postId: string) => {
@@ -74,6 +108,16 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
     setEditModalOpen(false);
   };
 
+  const findAuctioned = async () => {
+    const isAuctioned = await axiosInstance.get(`/auction/isOnAuction/${postId}`)
+    console.log("auctioned",isAuctioned);
+    setAuctioned(isAuctioned.data.auctioned.isAuctioned)
+  }
+
+  useEffect(() => {
+    findAuctioned();
+  },[])
+
   return (
     <div className="bg-gray-200 p-4 rounded w-full mt-4">
       <div className="flex flex-col space-y-2">
@@ -83,7 +127,11 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
         <button className="bg-red-500 text-white px-4 py-2 rounded w-full" onClick={handleRemoveButtonClick}>
           Remove
         </button>
-        <button className="bg-green-500 text-white px-4 py-2 rounded w-full">Set for Auction</button>
+        {!auctioned && (
+            <button className="bg-green-500 text-white px-4 py-2 rounded w-full" onClick={handleAuctionButtonClick}>
+                Set for Auction
+            </button>
+        )}
       </div>
 
       {/* Remove confirmation modal */}
@@ -101,6 +149,47 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
                   Confirm Remove
                 </button>
               </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {isAuctionModalOpen && (
+        <>
+          <div className="fixed inset-0 bg-black opacity-50" onClick={handleAuctionModalClose}></div>
+          <div className="fixed inset-0 flex items-center justify-center">
+            <div className="bg-white p-8 rounded shadow-lg">
+              <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAuctionConfirm(postId) }}>
+                <label className="block">
+                  Auction Date:
+                  <input
+                    type="datetime-local"
+                    className="py-2 px-3 mb-3 w-full border rounded-md"
+                    value={auctionDate?.toISOString().slice(0, 16)}
+                    onChange={(e) => setAuctionDate(new Date(e.target.value))}
+                    required
+                  />
+                </label>
+                <label className="block">
+                  Base Price:
+                  <input
+                    type="text"
+                    className="py-2 px-3 mb-3 w-full border rounded-md"
+                    placeholder="Enter base price"
+                    value={basePrice}
+                    onChange={(e) => setBasePrice(e.target.value)}
+                    required
+                  />
+                </label>
+                <div className="flex justify-end">
+                  <button className="bg-gray-300 px-4 py-2 mr-2 rounded" onClick={handleAuctionModalClose}>
+                    Cancel
+                  </button>
+                  <button className="bg-green-500 text-white px-4 py-2 rounded" type="submit">
+                    Confirm Auction
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </>

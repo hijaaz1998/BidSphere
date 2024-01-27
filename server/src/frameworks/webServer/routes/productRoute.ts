@@ -18,6 +18,9 @@ const productRouter = () => {
     router.get('/postDetails/:postId', controller.getPostDetails);
     router.patch('/deletePost/:postId', controller.deletePost);
     router.put('/editPost/:postId', controller.editPost);
+    router.patch('/like/:postId',jwtAuth, controller.likePost);
+    router.get('/comments/:postId', controller.getComments)
+    router.post('/addComment/:postId', jwtAuth, controller.addComment)
 
     return router;
 }

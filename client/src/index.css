@@ -14,7 +14,7 @@
 }
 
 .fixed-size-image-auction {
-  @apply w-64 h-40 object-cover; /* Adjust these values to your desired width and height */
+  @apply w-72 h-60 object-contain; /* Adjust these values to your desired width and height */
 }
 
 .fixed-size-image-details {

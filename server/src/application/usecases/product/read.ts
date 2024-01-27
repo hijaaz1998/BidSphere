@@ -53,3 +53,33 @@ export const postEdit = async (
 
     return updated
 }
+
+export const postLike = async (
+    productRepository: ReturnType<ProductDbInterface>,
+    postId: string,
+    userId: string | undefined
+) => {
+    const liked = await productRepository.likePost(postId, userId);
+
+    return liked
+}
+
+export const getComment = async (
+    productRepository: ReturnType<ProductDbInterface>,
+    postId: string
+) => {
+    const comments = await productRepository.getComments(postId)
+
+    return comments
+}
+
+export const addComments = async (
+    productRepository: ReturnType<ProductDbInterface>,
+    userId: string | undefined,
+    postId: string,
+    comment: string
+) => {
+    const comments = await productRepository.addComment(userId, postId, comment)
+
+    return comments
+}

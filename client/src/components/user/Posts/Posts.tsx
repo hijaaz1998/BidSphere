@@ -4,6 +4,7 @@ import userImage from "../assets/User Avatar Vector Design Images, User Vector A
 import axiosInstance from "../../../axiosEndPoints/userAxios";
 import { login } from "../../../slices/userSlice";
 import { Link } from "react-router-dom";
+import { TiThumbsUp, TiMessage } from 'react-icons/ti'; // Import react-icons
 
 interface Product {
   _id: string;
@@ -17,22 +18,18 @@ interface UserData {
 }
 
 const Posts = () => {
-  
   const [products, setProducts] = useState<Product[]>([]);
-  const [userData, setUserData] = useState<UserData | null>(null)
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const fetchData = async () => {
     try {
-
       const data = localStorage.getItem('userData');
-        if(data){
+      if (data) {
         const parsed = JSON.parse(data);
-        setUserData(parsed)
-        } 
+        setUserData(parsed);
+      }
 
-      const response = await axiosInstance.get(
-        `/product/getProducts`
-      );
+      const response = await axiosInstance.get(`/product/getProducts`);
       const fetchedProducts = response.data.myProducts;
       setProducts(fetchedProducts);
     } catch (error) {
@@ -64,51 +61,29 @@ const Posts = () => {
           </div>
 
           <div className="flex justify-center">
-          <Link to={`/postDetails/${product._id}`} >
-            <img
-            src={product.image}
-            alt="Post"
-            className="fixed-size-image "
-            />
-          </Link>
+            <Link to={`/postDetails/${product._id}`}>
+              <img
+                src={product.image}
+                alt="Post"
+                className="fixed-size-image "
+              />
+            </Link>
           </div>
 
           {/* Post Actions Section */}
           <div className="flex justify-between p-4">
-            <div className="flex items-center space-x-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-green-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-
-              <span className="text-gray-600">Like</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-indigo-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-              <span className="text-gray-600">Comment</span>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <TiThumbsUp className="h-6 w-6 text-green-500" />
+                <span className="text-gray-600"></span>
+                {product?.likes > 0 && (
+                  <span className="text-gray-600">{product.likes}</span>
+                )}
+              </div>
+              <div className="flex items-center space-x-2">
+                <TiMessage className="h-6 w-6 text-indigo-500" />
+                <span className="text-gray-600"></span>
+              </div>
             </div>
           </div>
         </div>

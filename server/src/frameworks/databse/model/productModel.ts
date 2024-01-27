@@ -24,7 +24,7 @@ const productSchema = new Schema(
             type: Number
         },
         userId: {
-            type: mongoose.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             required: true,
             ref: 'User'
         },
@@ -40,6 +40,10 @@ const productSchema = new Schema(
             type: Boolean,
             default: false
         },
+        isAuctioned: {
+            type: Boolean,
+            default: false
+        },
         likes: [
             { 
                 user: {
@@ -51,7 +55,7 @@ const productSchema = new Schema(
         comments: [
             {
                 user: {
-                    type: mongoose.Types.ObjectId,
+                    type: Schema.Types.ObjectId,
                     ref: "users"
                 },
                 comment: {

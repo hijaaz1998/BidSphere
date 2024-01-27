@@ -28,13 +28,31 @@ export const productDbRepository = (
         return await repository.postEdit(post, postId)
     }
 
+    const likePost = async( postId: string, userId: string | undefined) => {
+        return await repository.postLike(postId, userId)
+    }
+
+    const getComments = async (postId: string) => {
+        return await repository.getComment(postId)
+    }
+
+    const addComment = async (userId: string | undefined, postId: string, comment: string) => {
+        return await repository.addComments(userId, postId, comment)
+    }
+
+    
+    
+
     return {
         addProduct,
         getUsersAllProducts,
         getAllPosts,
         getSinglePost,
         deletePost,
-        editPost
+        editPost,
+        likePost,
+        getComments,
+        addComment
     }
 }
 
