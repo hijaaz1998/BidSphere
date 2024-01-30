@@ -40,6 +40,9 @@ export const productDbRepository = (
         return await repository.addComments(userId, postId, comment)
     }
 
+    const getAllPostsAdmin = async () => {
+        return await repository.getPostsAdmin()
+    }
     
     
 
@@ -52,7 +55,8 @@ export const productDbRepository = (
         editPost,
         likePost,
         getComments,
-        addComment
+        addComment,
+        getAllPostsAdmin
     }
 }
 

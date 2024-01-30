@@ -2,6 +2,7 @@ import {ObjectId} from 'mongoose';
 import User from '../model/userModel';
 import { UserInterface, createUserInterface, UserAfterLogin } from '../../../types/userInterface';
 import { UserEntityType } from '../../../entities/user';
+import { log } from 'console';
 
 export const userRepositoryMongoDb = () => {
     const addUser = async (user: UserEntityType) => {
@@ -28,11 +29,6 @@ export const userRepositoryMongoDb = () => {
         return null;
     };
     
-    
-    
-    
-    
-
     const getAllUsers = async () => {
         const user: UserInterface[] | null = await User.find();
         return user
@@ -51,7 +47,6 @@ export const userRepositoryMongoDb = () => {
       
           await user.save();
       
-          console.log(`User ${user.isBlocked ? 'blocked' : 'unblocked'} successfully.`);
         } catch (error) {
           console.error('Error blocking/unblocking user:', error);
         }
@@ -98,8 +93,9 @@ export const userRepositoryMongoDb = () => {
                 { $addToSet: { followers: followedById } }
             );
     
-            const followedByUser = await User.findById(followedById);
-            return followedByUser;
+            const followedUser = await User.findById(followedId);
+            
+            return followedUser;
         } catch (error) {
             console.log(error);
         }
@@ -118,15 +114,48 @@ export const userRepositoryMongoDb = () => {
             await newUser.save();
 
             return newUser
-        } else {
-            console.log("isExisting",isExisting);
-            
+        } else {            
             return isExisting
         }
     }
     
+    const unfollowTheUser = async (logedInUser: string | undefined, unfollowedId: string) => {
+        try {
+            await User.updateOne(
+                {_id: logedInUser},
+                {$pull: {following: unfollowedId}}
+            );
+
+            await User.updateOne(
+                {_id: unfollowedId},
+                {$pull: {followers: logedInUser}}
+            )
+
+            const unfollowedUser = await User.findById(unfollowedId)
+
+            return unfollowedUser
+            
+        } catch (error) {
+            console.log(error)
+        }
+    } 
       
-      
+    const checkEmailIsThere = async (email: string) => {
+        const checkEmail = await User.findOne({email});
+        return checkEmail
+    }
+
+    const changeThePassword = async (email: string, password: string) => {
+        const user = await User.findOne({email})
+
+        if(user){
+            user.password = password;
+            await user.save()
+        }
+
+        return true
+        
+    }
 
     return{
         addUser,
@@ -135,7 +164,10 @@ export const userRepositoryMongoDb = () => {
         blockUser,
         getSuggestion,
         followTheUser,
-        googleAuth
+        googleAuth,
+        unfollowTheUser,
+        checkEmailIsThere,
+        changeThePassword
     }
 }
 

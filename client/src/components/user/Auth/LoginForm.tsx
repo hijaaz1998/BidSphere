@@ -23,8 +23,9 @@ function LoginForm() {
     const credential = credentialResponse.credential;
     const success = await axiosInstance.post('/user/googleAuth', { credential });
     if(success){
-      console.log("success",success.data);
-      console.log("success",success.data.token);
+      console.log("😊🌟");
+      
+      console.log("success",success.data.user);
       
       localStorage.setItem("userToken", JSON.stringify(success.data.token))
       localStorage.setItem("userData", JSON.stringify(success.data.user));
@@ -67,12 +68,9 @@ function LoginForm() {
 
       if(response.data.status){
         const userData = response.data;
-        console.log("userData",userData.result.user);
-        console.log("userData",userData.result.token);
         
         localStorage.setItem("userData", JSON.stringify(userData?.result?.user));
         localStorage.setItem("userToken", JSON.stringify(userData?.result?.token));
-        console.log("dataaaaaaaaadddda",userData);
         
         
         dispatch(login(userData.result.user))
@@ -98,15 +96,18 @@ function LoginForm() {
         <h3 className='text-sm text-gray-600 mb-6'>Enter your details to login.</h3>
         <form onSubmit={loginHandler} className='space-y-4'>
           <div className='flex flex-col'>
-            <input type="text" className='py-2 px-3 mb-3 w-full border rounded-md' placeholder='Email' value={email} onChange={(e) => {setEmail(e.target.value)}} />
-            <input type="password" className='py-2 px-3 mb-3 w-full border rounded-md' placeholder='Password' value={password} onChange={(e) => {setPassword(e.target.value)}} />
+              <input type="text" className='py-2 px-3 mb-3 w-full border rounded-md' placeholder='Email' value={email} onChange={(e) => { setEmail(e.target.value) }} />
+              <input type="password" className='py-2 px-3 mb-3 w-full border rounded-md' placeholder='Password' value={password} onChange={(e) => { setPassword(e.target.value) }} />
+              {/* Forgot Password link */}
+              <p className='text-sm mt-2 text-gray-500 cursor-pointer'>
+                <Link to={'/forgot-password'}>Forgot Password?</Link>
+              </p>
           </div>
           <div className='flex flex-col items-center'>
-            {error && <p className='text-red-500'>{error}</p>}
-            <button type='submit' className='bg-blue-500 text-white py-2 px-4 mt-4 mb-3 rounded-md w-full'>Login</button>
-            <p className='text-sm mt-2'>Already have an account? <span className='text-blue-500 cursor-pointer'><Link to={'/signup'}>Signup</Link></span></p>
+              {error && <p className='text-red-500'>{error}</p>}
+              <button type='submit' className='bg-blue-500 text-white py-2 px-4 mt-4 mb-3 rounded-md w-full'>Login</button>
+              <p className='text-sm mt-2'>Already have an account? <span className='text-blue-500 cursor-pointer'><Link to={'/signup'}>Signup</Link></span></p>
           </div>
-
         </form>
         <GoogleLogin
           onSuccess={handleLoginSuccess}
@@ -116,9 +117,6 @@ function LoginForm() {
         />
       </div>
     </div>
-
-      
-      
     </>
   )
 }

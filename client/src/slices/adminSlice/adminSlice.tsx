@@ -5,7 +5,7 @@ interface AdminState{
 }
 
 const initialState: AdminState = {
-    admin: ''
+    admin: localStorage.getItem("adminToken")? JSON.parse(localStorage.getItem('adminToken') as string) : null
 }
 
 const adminSlice = createSlice({
@@ -15,8 +15,8 @@ const adminSlice = createSlice({
         adminLogin: (state, action: PayloadAction<string>) => {
             state.admin = action.payload
         },
-        adminLogout: (state, action : PayloadAction<string>) => {
-            state.admin = action.payload
+        adminLogout: (state) => {
+            state.admin = ''
         }
     }
 })

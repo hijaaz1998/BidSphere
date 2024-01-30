@@ -5,11 +5,14 @@ import { UserRepositoryMongoDb } from '../../frameworks/databse/repositories/use
 import { AuthService } from '../../frameworks/services/authService';
 import { AuthServiceInterface, authServiceInterface } from '../../application/services/authServiceInterface';
 import { UserInterface, createUserInterface } from '../../types/userInterface';
-import { userRegister, userLogin, getUserSuggestion, followTheUser, googleAuthRegister } from '../../application/usecases/auth/userAuth';
+import { userRegister, userLogin, getUserSuggestion, followTheUser, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword } from '../../application/usecases/auth/userAuth';
 import AppError from '../../utils/middleware/appError';
 import {jwtDecode} from "jwt-decode";
 import { JwtPayload } from 'jwt-decode';
 import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer';
+
+let otp: Number;
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
   userId?: string;
@@ -58,7 +61,60 @@ const authController = (
             },
           });
         }
-      });
+     });
+
+     const getOtp = asyncHandler(async (req: Request, res: Response) => {
+
+      const emailObject = req.body;
+      
+      const email = Object.keys(emailObject)[0];
+      
+      otp = generateOtp();
+
+      const checkData = await checkEmail(dbRepositoryUser, email)
+
+      if(!checkData) {
+        res.json({
+          success: false,
+          message: "Please check the mail you entered"
+        })
+      } else {
+        console.log(otp);
+        
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          host: 'smtp.gmail.com',
+          port: 587,
+          auth: {
+            user: 'muhammadijasbtc@gmail.com',
+            pass: 'lcui urmh witl gaah'
+          }
+        });
+
+        const mailOptions = {
+          from: 'test@wristcrafts.com',
+          to: email,
+          subject: "Your OTP",
+          text: `Your OTP is ${otp}`
+        }
+
+
+        transporter.sendMail(mailOptions, (error) => {
+          if (error) {
+              console.log(error);
+          } else {
+              console.log('Email sent:');
+              res.json({
+                success: true,
+                otp: otp,
+                message: "Otp has been sent"
+              })
+          }
+        });
+
+      }
+
+    });
       
     const loginUser = asyncHandler(async (req: Request, res: Response) => {
 
@@ -88,6 +144,10 @@ const authController = (
         }
     });
 
+    function generateOtp() {
+      return Math.floor(1000 + Math.random() * 9000);
+    }
+
     const getSuggestion = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
       const userId = req.userId            
 
@@ -113,7 +173,7 @@ const authController = (
     
       if (isFollowed) {
         res.json({
-          success: true
+          isFollowed
         });
       }
     });
@@ -148,13 +208,40 @@ const authController = (
       
     })
 
+    const unfollow = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+      const logedInUser = req.userId;
+      const unfollowedId = req.params.unfollowedId;
+      console.log("unfollowing");
+      
+
+      const isUnfollowed = await unfollowTheUser(dbRepositoryUser ,logedInUser, unfollowedId)
+
+      if(isUnfollowed){
+        res.json({
+          isUnfollowed
+        })
+      }
+    })
+
+    const changePassword = asyncHandler ( async (req: Request, res: Response) =>  {
+      const {email, password} = req.body;
+
+      const response = changeThePassword(dbRepositoryUser, authService, email, password)
+
+      res.json({
+        response
+      })
+    })
 
     return {
         registerUser,
         loginUser,
         getSuggestion,
         followUser,
-        googleAuth
+        googleAuth,
+        unfollow,
+        getOtp,
+        changePassword
     }
 }
 

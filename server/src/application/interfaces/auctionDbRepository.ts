@@ -16,10 +16,24 @@ export const auctionDbRepository = (
         return await repository.isAuctioned(postId)
     }
 
+    const getAuctionDetails = async (auctionId: string) => {
+        return await repository.getDetailsOfAuction(auctionId)
+    }
+
+    const bidPost = async (
+        userId: string | undefined,
+        auctionId: string,
+        amount: Number
+        ) => {
+            return await repository.bidNow(userId, auctionId, amount)
+        }
+
     return {
         addAuction,
         getUpcomingAuctions,
-        isOnAuction
+        isOnAuction,
+        getAuctionDetails,
+        bidPost
     }
 }
 

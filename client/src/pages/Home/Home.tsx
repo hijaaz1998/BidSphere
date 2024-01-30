@@ -19,6 +19,8 @@ const Home: React.FC = () => {
         return <AddPost setSelectedComponent={setSelectedComponent} />;
       case 'myPost':
         return <Posts />;
+      case 'myListings':
+        return <AddPost setSelectedComponent={setSelectedComponent}/>;
       default:
         return null;
     }

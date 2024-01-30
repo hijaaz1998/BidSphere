@@ -60,6 +60,10 @@ const productSchema = new Schema(
                 },
                 comment: {
                     type: String
+                },
+                createdOn: {
+                    type: Date,
+                    default: new Date()
                 }
             }
         ]

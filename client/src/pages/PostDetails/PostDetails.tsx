@@ -34,7 +34,6 @@ const PostDetailsPage = () => {
     const fetchPostData = async () => {
 
         const response = await axiosInstance.get(`/product/postDetails/${postId}`)
-        console.log('😊 😀 😂 ' , response.data)
         
         setData(response.data)  
     }
@@ -60,7 +59,7 @@ const PostDetailsPage = () => {
           {logedUser?.user?._id === data?.userId?._id ? (
             <RightSideComponent postId={postId} />
           ) : (
-            <RightSideUser />
+            <RightSideUser userData = {data?.userId} />
           ) } 
         </div>
       </div>

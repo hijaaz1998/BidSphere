@@ -14,10 +14,6 @@ function AdminLoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogout = async () => {
-    localStorage.removeItem("adminToken");
-    navigate('/admin')
-  }
 
   const loginHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,6 +43,9 @@ function AdminLoginForm() {
       })
 
       const adminData = response.data;
+      console.log("admoin",adminData);
+      
+
       
       localStorage.setItem("adminToken", JSON.stringify(adminData.adminToken));
       
@@ -76,8 +75,6 @@ function AdminLoginForm() {
             <button type='submit' className='bg-blue-500 text-white py-2 px-4 mt-4 mb-3 rounded-md w-full'>Login</button>
           </div>
         </form>
-
-        <button onClick={handleLogout}>logout</button>
       </div>
     </div>
     </>

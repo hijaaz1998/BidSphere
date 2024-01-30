@@ -3,11 +3,15 @@ import './Navbar.css';
 import logo from '/defaults/logo.png';
 import search_icon from '/defaults/search-b.png';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { adminLogout } from '../../../slices/adminSlice/adminSlice';
 
 function AdminNavbar() {
+  const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleLogout = async () => {
         localStorage.removeItem("adminToken");
+        dispatch(adminLogout())
         navigate('/admin')
       }
   return (

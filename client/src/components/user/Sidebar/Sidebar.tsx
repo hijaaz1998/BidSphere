@@ -64,9 +64,9 @@ const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
                 <a  className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
                     My Bids
                 </a>
-                <a  className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
-                    My Listings
-                </a>
+                <span onClick={() => onButtonClick('myListings')} className="block p-2 hover:cursor-pointer text-white bg-black rounded-xl mx-10 my-3">
+                    Listings
+                </span>
                 <a  className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
                     Favorites
                 </a>

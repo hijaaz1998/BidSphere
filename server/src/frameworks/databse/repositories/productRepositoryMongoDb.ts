@@ -117,13 +117,48 @@ export const productRepositoryMongoDb = () => {
         }
       };
 
-      const getComment = async(postId: string) => {
-        const product = await Product.findById(postId)
-
-        const comments = product?.comments.map(comment => comment.comment);
-        console.log("comment", comments)
-        return comments
-    }
+      const getComment = async (postId: string) => {
+        try {
+          const product = await Product.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(postId) } },
+            {
+              $unwind: "$comments", // Deconstruct the comments array
+            },
+            {
+              $sort: { "comments.createdOn": -1 }, // Sort comments in descending order based on creation time
+            },
+            {
+              $limit: 5, // Limit the result to 5 comments
+            },
+            {
+              $lookup: {
+                from: "users", // Replace with the actual collection name for users
+                localField: "comments.user",
+                foreignField: "_id",
+                as: "user",
+              },
+            },
+            {
+              $unwind: "$user",
+            },
+            {
+              $project: {
+                _id: 0,
+                commentText: "$comments.comment",
+                user: { firstName: "$user.firstName", lastName: "$user.lastName" },
+              },
+            },
+          ]);
+      
+          return product;
+        } catch (error) {
+          console.error("Error getting comments with users:", error);
+          throw error;
+        }
+      };
+      
+      
+      
 
     const addComments = async (userId: string | undefined, postId: string, comment: string) => {
         try {
@@ -150,8 +185,18 @@ export const productRepositoryMongoDb = () => {
         }
     };
       
-      
-      
+    const getPostsAdmin = async () => {
+      const posts = await Product.find({ isDeleted: false })
+      .populate({
+        path: 'userId',
+        model: 'User',
+        select: 'firstName lastName email',
+      })
+      .exec();
+
+      return posts
+    }  
+    
  
     return {
         addProductBefore,
@@ -162,7 +207,8 @@ export const productRepositoryMongoDb = () => {
         postEdit,
         postLike,
         getComment,
-        addComments
+        addComments,
+        getPostsAdmin
     }
 }
 

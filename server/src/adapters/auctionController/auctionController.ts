@@ -2,7 +2,11 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import { AuctionDbInterface, auctionDbRepository } from '../../application/interfaces/auctionDbRepository';
 import { AuctionRepositoryMongoDb } from '../../frameworks/databse/repositories/auctionRepositoryMongoDb';
-import { addToAuction, getAuctionsUpcoming, checkAuctioned } from '../../application/usecases/auction/auction';
+import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, bidNow } from '../../application/usecases/auction/auction';
+
+interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
+    userId?: string;
+}
 
 const auctionController = (
     auctionDbRepository: AuctionDbInterface,
@@ -43,13 +47,39 @@ const auctionController = (
         })
     })
 
+    const getAuctionDetails = asyncHandler( async (req: Request, res: Response) => {
+        const auctionId = req.params.auctionId;
+        const details = await getDetailsOfAuction(dbRepositoryAuction, auctionId)
+
+        res.json({
+            details
+        })
+    })
+
+    const bid = asyncHandler ( async ( req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId;
+        const {auctionId, amount } = req.body;
+
+        const auctionID = auctionId.auctionId;
+        console.log(auctionId.auctionId);
+        console.log(amount);
+        
+
+        const updated = await bidNow(dbRepositoryAuction, userId, auctionID, amount)
+
+        res.json({
+            updated
+        })
+    })
+
 
     return {
         addAuction,
         getUpcomingAuctions,
-        isAuctioned
+        isAuctioned,
+        getAuctionDetails,
+        bid
     }
 }
-
 
 export default auctionController

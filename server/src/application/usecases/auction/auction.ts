@@ -38,3 +38,23 @@ export const checkAuctioned = async(
 
     return isAuctioned
 }
+
+export const getDetailsOfAuction = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    auctionId: string
+) => {
+    const details = await auctionRepository.getAuctionDetails(auctionId);
+
+    return details;
+}
+
+export const bidNow = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    userId: string | undefined,
+    auctionId: string,
+    amount: Number
+) => {
+    const updated = await auctionRepository.bidPost(userId, auctionId, amount)
+
+    return updated
+}

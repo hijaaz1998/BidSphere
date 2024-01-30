@@ -105,3 +105,35 @@ export const googleAuthRegister = async (
 
     return {token, user}
 }
+
+export const unfollowTheUser = async (
+    userRepository: ReturnType<UserDbInterface>,
+    logedInUser: string | undefined,
+    unfollowedId: string
+) => {
+    const res = await userRepository.unfollowUser(logedInUser, unfollowedId);
+
+    return res
+}
+
+export const checkEmail = async (
+    userRepository: ReturnType<UserDbInterface>,
+    email: string
+) => {
+    const check = await userRepository.checkEmail(email)
+
+    return check
+}
+
+export const changeThePassword = async (
+    userRepository: ReturnType<UserDbInterface>,
+    authService: ReturnType<AuthServiceInterface>,
+    email: string,
+    password: string
+) => {
+    const encrypted = await authService.encryptPassword(password);
+
+    const updated = await userRepository.changePassword(email, encrypted);
+
+
+}

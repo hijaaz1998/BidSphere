@@ -21,7 +21,10 @@ const authRouter = () => {
     router.post('/login', controller.loginUser );
     router.get('/get_suggestions', jwtAuth, controller.getSuggestion );
     router.patch('/follow/:followed', jwtAuth, controller.followUser);
-    router.post('/googleAuth', controller.googleAuth)
+    router.post('/googleAuth', controller.googleAuth);
+    router.patch('/unfollow/:unfollowedId', jwtAuth, controller.unfollow)
+    router.post('/get_otp', controller.getOtp)
+    router.post('/set_new_password', controller.changePassword)
 
     return router;
 

@@ -28,22 +28,65 @@ export const auctionRepositoryMongoDb = () => {
 
     const getAuctionsUpcoming = async () => {
         const auctions = await Auction.find({})
-            .populate('postId', 'productName description image') // Replace 'productName', 'otherField1', 'otherField2' with the actual fields you want to populate
-            .exec();
-    
+          .populate({
+            path: 'postId',
+            populate: {
+              path: 'userId',
+              model: 'User',
+              select: 'firstName lastName', // Fields from the user document
+            },
+            select: 'productName description image', // Fields from the postId (product) document
+          })
+          .exec();
+      
         return auctions;
     };
+      
 
     const isAuctioned = async (postId: string) => {
         const auctioned = await Product.findById(postId,{isAuctioned})
         return auctioned
     } 
 
+    const getDetailsOfAuction = async (auctionId: string) => {
+        
+        const details = await Auction.findById(auctionId).populate({
+            path: 'postId',
+            select: 'productName image',
+          });
+
+          console.log("auction", details);
+          return details
+          
+    }
+
+    const bidNow = async (
+        userId: string | undefined,
+        auctionId: string,
+        amount: Number
+    ) => {
+        const updated = await Auction.updateOne(
+            { _id: new mongoose.Types.ObjectId(auctionId) },
+            { $inc: { currentAmount: amount } }
+        );
+
+        if(updated) {
+            const details = await Auction.findById(auctionId).populate({
+                path: 'postId',
+                select: 'productName image',
+              });
+
+              return details
+        }
+    }
+
 
     return {
         addToAuction,
         getAuctionsUpcoming,
-        isAuctioned
+        isAuctioned,
+        getDetailsOfAuction,
+        bidNow
     }
 
 }

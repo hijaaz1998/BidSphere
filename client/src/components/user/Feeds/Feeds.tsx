@@ -46,6 +46,7 @@ const Feeds: React.FC = () => {
   const fetchComments = async () => {
     try {
       const response = await axiosInstance.get(`product/comments/${selectedPost?._id}`);
+      console.log("comments",response.data.comments);
       setComments(response.data.comments);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -154,10 +155,20 @@ const Feeds: React.FC = () => {
               </button>
             </div>
             <h1 className="text-2xl font-bold mb-4">Comments</h1>
-            {comments ? (
+            {comments && comments.length > 0 ? (
               <ul>
                 {comments.map((comment, index) => (
-                  <li key={index}>{comment}</li>
+                  <li key={index}>
+                    <div className="flex items-center">
+                      <img
+                        src={comment?.user?.profileImage || userImage}
+                        alt="User Profile"
+                        className="w-8 h-8 object-cover rounded-full mr-2"
+                      />
+                      <p className="font-semibold">{comment.user?.firstName} {comment.user?.lastName}</p>
+                    </div>
+                    <p>{comment?.commentText}</p> {/* Assuming the comment text is stored in 'comment' field */}
+                  </li>
                 ))}
               </ul>
             ) : (
@@ -180,6 +191,7 @@ const Feeds: React.FC = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

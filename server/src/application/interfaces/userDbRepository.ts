@@ -33,6 +33,18 @@ export const userDbRepository = (
         return await repository.googleAuth(firstName, lastName, email, jti)
     }
 
+    const unfollowUser = async (logedInUser: string | undefined, unfollowedId: string) => {
+        return await repository.unfollowTheUser(logedInUser, unfollowedId)
+    }
+
+    const checkEmail = async (email: string) => {
+        return await repository.checkEmailIsThere(email);
+    }
+
+    const changePassword = async (email: string, password: string) => {
+        return await repository.changeThePassword(email, password)
+    }
+
     return {
         addUser,
         getUserByEmail,
@@ -40,7 +52,10 @@ export const userDbRepository = (
         blockUser,
         getUserSuggestion,
         followUser,
-        addUserByGoogle
+        addUserByGoogle,
+        unfollowUser,
+        checkEmail,
+        changePassword
     }
 }
 

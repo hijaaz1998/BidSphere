@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
+import { Link } from 'react-router-dom';
 
 const LiveAuctions = () => {
 
   const [upcomingAuctions, setUpcomingAuctions] = useState<any[]>([])
 
   const fetchData = async () => {
+
     const res = await axiosInstance.get('/auction/getAuctions')
+
     setUpcomingAuctions(res.data.upcomingAuctions);
-    
+       
   }
 
   useEffect(() => {
@@ -28,7 +31,9 @@ const LiveAuctions = () => {
               <h3>{data.postId.productName}</h3>
               <p> Rs. {data.currentAmount}</p>
             </div>
-            <button className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md">Bid Now</button>
+            <Link to={`/auctions/details/${data._id}`}>
+              <button className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md">Bid Now</button>
+            </Link>
           </div>
         ))}
       </div>
