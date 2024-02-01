@@ -32,20 +32,22 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <div className=" top-0 w-full bg-gray-800 text-white p-4 text-center">
-        <Navbar />
-      </div>
-
-      <div className="fixed left-0 top-14 h-full bg-gray-800 w-64 text-white">
-        <Sidebar onButtonClick={handleButtonClick} />
-      </div>
-
-      <div className="ml-64 px-4 mt-10 flex">
-        <div className="w-3/4 pr-4"> 
-          {renderSelectedComponent()}
+      <div className="h-screen bg-black">
+        <div className=" top-0 w-full bg-black text-white p-4 text-center">
+          <Navbar />
         </div>
-        <div className="w-80 bg-white fixed right-0  overflow-y-hidden flex flex-col items-center "> 
-        <UserSuggestions _id={""} userImage={""} firstName={""} lastName={""} />
+
+        <div className="fixed left-0 top-14 h-full bg-black w-64 text-white">
+          <Sidebar onButtonClick={handleButtonClick} />
+        </div>
+
+        <div className="ml-64 px-4 mt-10 flex bg-black">
+          <div className="w-3/4 pr-4 "> 
+            {renderSelectedComponent()}
+          </div>
+          <div className="w-1/4 fixed right-0 flex flex-col items-center "> 
+          <UserSuggestions _id={""} userImage={""} firstName={""} lastName={""} />
+          </div>
         </div>
       </div>
       

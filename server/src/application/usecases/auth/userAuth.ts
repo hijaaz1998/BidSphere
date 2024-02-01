@@ -135,5 +135,23 @@ export const changeThePassword = async (
 
     const updated = await userRepository.changePassword(email, encrypted);
 
+    return updated
+}
 
+export const getFollowingList = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string | undefined
+) => {
+    const following = await userRepository.getFollowing(userId);
+
+    return following
+}
+
+export const getFollowersList = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string | undefined
+) => {
+    const followers = await userRepository.getFollowers(userId);
+
+    return followers;
 }

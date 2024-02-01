@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import image from '../assets/Old globe.jpg';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
+import { toast } from 'react-toastify';
 
 interface AuctionId {
   auctionId: string | undefined;
@@ -36,16 +37,18 @@ const AuctionDetailsComponent: React.FC<AuctionId> = (auctionId) => {
   };
 
   const performAction = async (amount: number) => {
-    console.log(auctionId);
-    console.log(typeof auctionId);
+
     
     const updated = await axiosInstance.post('/auction/bid', {
         auctionId: auctionId,
         amount : amount
       });
 
-      setData(updated.data.updated);
-      console.log("updatedAuction",updated);
+      if(updated){
+        toast.success(`Congradulations! Rs ${amount} has been Bidded`)
+        setData(updated.data.updated);
+        console.log("updatedAuction",updated);
+      }    
       
   };
 
@@ -57,7 +60,11 @@ const AuctionDetailsComponent: React.FC<AuctionId> = (auctionId) => {
         </div>
         <div className="p-8 w-1/2 flex flex-col justify-center items-center">
           <h2 className="text-2xl font-bold mb-4">{data?.postId?.productName}</h2>
-          <p className="mb-4">Current Amount: {data?.currentAmount}</p>
+          <p className="mb-4">
+            Current Amount: <span className="text-green-600 font-extrabold">{data?.currentAmount}</span>
+          </p>
+
+
           <div className="mb-4">
             <button onClick={() => handleButtonClick(100)} className="mr-2 bg-blue-500 text-white px-4 py-2 rounded">
               100

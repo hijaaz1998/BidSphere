@@ -18,5 +18,5 @@
 }
 
 .fixed-size-image-details {
-  @apply w-96 h-80 object-cover; /* Adjust these values to your desired width and height */
+  @apply w-96 h-96 object-cover; /* Adjust these values to your desired width and height */
 }

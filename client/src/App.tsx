@@ -11,6 +11,7 @@ import PostDetails from "./pages/PostDetails/PostDetails"
 import Auction from "./pages/Auction/Auction"
 import AuctionDetails from "./pages/Auction/AuctionDetailsPage"
 import ForgotPassword from "./pages/Auth/ForgotPassword"
+import Profile from "./pages/Profile/Profile"
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/postDetails/:postId" element={< PostDetails />}/>
             <Route path="/auctions" element={< Auction />}/>
             <Route path="/auctions/details/:auctionId" element={< AuctionDetails />}/>
+            <Route path="/profile" element = { <Profile /> }/>
           </Route>
 
           <Route element = { <AdminPrivateRoutes />}> 

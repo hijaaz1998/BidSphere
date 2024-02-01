@@ -45,13 +45,13 @@ const PostDetailsPage = () => {
     console.log("redux",logedUser?.user)
 
   return (
-    <>
-      <div className=" top-0 w-full bg-gray-800 text-white p-4 text-center">
+    <div className="h-screen bg-black">
+      <div className=" top-0 w-full  text-white p-4 text-center">
         <Navbar />
       </div>
 
-      <div className="px-4 mt-9 flex ">
-        <div className="w-3/4 pr-4"> 
+      <div className="px-4 mt-9 flex h-full">
+        <div className="w-3/4 pr-4 "> 
           <PostDetails postDetail={data} />
         </div>
         
@@ -63,9 +63,9 @@ const PostDetailsPage = () => {
           ) } 
         </div>
       </div>
-      
-    </>
+    </div>
   )
 }
 
 export default PostDetailsPage
+

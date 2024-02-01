@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import userImage from '../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg'
 import { useSelector } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 interface UserData {
     firstName: string;
     lastName: string;
@@ -34,42 +34,42 @@ const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
 
   return (
 
-        <div className="w-64 bg-gray-800 h-full shadow-md mx-0 m-0">
-            <div className="flex flex-col items-center justify-center p-4 rounded-lg mx-5 my-3 bg-white h-64 mt-5">
+        <div className="w-64  h-full shadow-md mx-0 ml-4">
+            <div className="flex flex-col items-center p-4 rounded-lg mx-5 my-3 bg-black h-56 mt-5 drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800">
                 <div className="mb-4">
-                    <img src={userImage} alt="Profile Image" className="w-16 h-16 object-cover rounded-full" />
+                    <img src={userImage} alt="Profile Image" className="w-20 h-20 object-cover rounded-full" />
                 </div>
                 <div className="text-center">
-                    <h2 className="text-lg text-black font-semibold">{userData?.firstName} {userData?.lastName}</h2>
-                    {/* <p className="text-gray-600">Followers: {userData?.followers?.count}</p>
-                    <p className="text-gray-600">Following: {userData?.following?.count}</p> */}
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-full mt-2">Edit Profile</button>
+                    <h2 className="text-sm text-white font-semibold">{userData?.firstName} {userData?.lastName}</h2>
+                    <button className='text-sm text-indigo-500 shadow-lg border-2 border-slate-800 rounded-lg px-5 py-2 mt-4 hover:bg-indigo-500 hover:text-white'>
+                        <Link to="/profile">Profile</Link>
+                    </button>
                 </div>
             </div>
 
             {/* Navigation Links */}
-            <div className=" text-center bg-white mx-5 rounded-lg overflow-y-auto">
-                <span onClick={() => onButtonClick('myPost')} className="block p-2 hover:cursor-pointer text-white bg-black rounded-xl mx-10 my-3">
+            <div className=" text-center mx-5 rounded-lg overflow-y-auto drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800">
+                <span onClick={() => onButtonClick('myPost')} className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     My Posts
                 </span>
-                <span onClick={() => onButtonClick('addPost')} className="block p-2 hover:cursor-pointer text-white bg-black rounded-xl mx-10 my-3">
+                <span onClick={() => onButtonClick('addPost')} className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3 drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     Add Post
                 </span>
-                <a  className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                <span  className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     Notifications
-                </a>
-                <a  className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                </span>
+                <span  className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     Messages
-                </a>
-                <a  className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                </span>
+                <span  className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     My Bids
-                </a>
-                <span onClick={() => onButtonClick('myListings')} className="block p-2 hover:cursor-pointer text-white bg-black rounded-xl mx-10 my-3">
+                </span>
+                <span onClick={() => onButtonClick('myListings')} className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3 drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     Listings
                 </span>
-                <a  className="block p-2 text-white bg-black rounded-xl mx-10 my-3">
+                <span  className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     Favorites
-                </a>
+                </span>
             </div>
         </div>
 

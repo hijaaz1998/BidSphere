@@ -2,7 +2,8 @@ import express from 'express'
 import productController from '../../../adapters/productController/productcontroller'
 import { productDbRepository } from '../../../application/interfaces/productDbRepository'
 import { ProductRepositoryMongoDb, productRepositoryMongoDb } from '../../databse/repositories/productRepositoryMongoDb'
-import jwtAuth from '../../../utils/middleware/jwtAuth'
+import jwtAuth from '../../../utils/middleware/jwtAuth';
+
 
 const productRouter = () => {
     const router = express.Router();

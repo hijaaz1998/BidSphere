@@ -5,6 +5,7 @@ import { authServiceInterface } from '../../../application/services/authServiceI
 import { authService } from '../../services/authService';
 import { userRepositoryMongoDb } from '../../databse/repositories/userRepositoryMongoDb';
 import jwtAuth from '../../../utils/middleware/jwtAuth'
+import checkBlocked from '../../../utils/middleware/checkBlocked';
 
 const authRouter = () => {
     
@@ -24,7 +25,9 @@ const authRouter = () => {
     router.post('/googleAuth', controller.googleAuth);
     router.patch('/unfollow/:unfollowedId', jwtAuth, controller.unfollow)
     router.post('/get_otp', controller.getOtp)
-    router.post('/set_new_password', controller.changePassword)
+    router.post('/set_new_password', controller.changePassword);
+    router.get('/getFollowing', jwtAuth, controller.getFollowing);
+    router.get('/getFollowers', jwtAuth, controller.getFollowers);
 
     return router;
 

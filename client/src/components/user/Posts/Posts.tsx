@@ -42,11 +42,11 @@ const Posts = () => {
   }, []);
 
   return (
-    <div className=" bg-gray-400 min-h-screen px-6 overflow-hidden">
+    <div className=" bg-black min-h-screen px-6 overflow-hidden">
       {products?.slice()?.reverse()?.map((product, index) => (
         <div
           key={index}
-          className="max-w-xl mx-auto bg-white rounded-md overflow-hidden shadow-lg my-4 mt-14"
+          className="max-w-xl mx-auto bg-black rounded-md overflow-hidden shadow-lg my-4 mt-14 border-2 border-slate-800"
         >
           {/* User Profile Section */}
           <div className="flex items-center p-4">
@@ -56,16 +56,19 @@ const Posts = () => {
               className="w-12 h-12 object-cover rounded-full"
             />
             <div className="ml-4">
-              <h2 className="text-lg font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2>
+              <h2 className="text-sm text-white font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2>
             </div>
           </div>
+          <div className="">
+              <h2 className="text-sm text-white font-semibold mb-4 flex justify-center ">{product?.description}</h2>
+          </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center ">
             <Link to={`/postDetails/${product._id}`}>
               <img
                 src={product.image}
                 alt="Post"
-                className="fixed-size-image "
+                className=" "
               />
             </Link>
           </div>
@@ -73,17 +76,7 @@ const Posts = () => {
           {/* Post Actions Section */}
           <div className="flex justify-between p-4">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <TiThumbsUp className="h-6 w-6 text-green-500" />
-                <span className="text-gray-600"></span>
-                {product?.likes > 0 && (
-                  <span className="text-gray-600">{product.likes}</span>
-                )}
-              </div>
-              <div className="flex items-center space-x-2">
-                <TiMessage className="h-6 w-6 text-indigo-500" />
-                <span className="text-gray-600"></span>
-              </div>
+              
             </div>
           </div>
         </div>

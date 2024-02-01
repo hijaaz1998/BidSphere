@@ -25,37 +25,29 @@ const PostDetails = (postDetail: any) => {
   
 
   return (
-    <div className="bg-gray-100 p-6 rounded shadow-md flex items-center justify-center h-full mt-4">
-  <img
-    src={postDetails?.image}
-    alt="PostImage"
-    className="fixed-size-image-details"
-  />
+    <div className=" bg-black p-6 shadow-md flex items-center justify-center h-sc mt-4 text-white rounded-lg border-2 border-slate-800 ">
+      <div className=''>
+        <img
+          src={postDetails?.image}
+          alt="PostImage"
+          className="h-full"
+        />
+      </div>
 
-  <div className="w-1/2 h-full">
-    <div className="flex items-center mb-2">
-      <img
-        src={image}
-        alt="ProfileImage"
-        className="w-8 h-8 rounded-full mr-2"
-      />
-      <span className="text-gray-700">{postDetails?.userId?.firstName} {postDetails?.userId?.lastName}</span>
-    </div>
+      <div className="w-1/2 h-full ml-10 mt-10">
+        <div className='flex items-center justify-center flex-col'>
+          <h2 className="text-2xl mb-2">{postDetails?.productName}</h2>
+          <p className="text-white mb-2">{postDetails?.description}</p>
 
-    <div className='flex items-center justify-center flex-col'>
-      <h2 className="text-2xl font-bold mb-2">{postDetails?.productName}</h2>
-
-      <p className="text-gray-700 mb-2">{postDetails?.description}</p>
-
-      {/* Additional Information */}
-      <div className="flex items-center mb-2">
-        <span className="text-gray-700 mr-2">Age: {postDetails?.age}</span>
-        <span className="text-gray-700 mr-2">Condition: {postDetails?.condition}</span>
-        <span className="text-gray-700">Rarity: {postDetails?.rarity}</span>
+          {/* Additional Information */}
+          <div className="flex items-center flex-col mb-2">
+            <div className="text-white mb-2">Age: {postDetails?.age}</div>
+            <div className="text-white mb-2">Condition: {postDetails?.condition}</div>
+            <div className="text-white">Rarity: {postDetails?.rarity}</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
   );
 };

@@ -5,7 +5,7 @@ import { UserRepositoryMongoDb } from '../../frameworks/databse/repositories/use
 import { AuthService } from '../../frameworks/services/authService';
 import { AuthServiceInterface, authServiceInterface } from '../../application/services/authServiceInterface';
 import { UserInterface, createUserInterface } from '../../types/userInterface';
-import { userRegister, userLogin, getUserSuggestion, followTheUser, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword } from '../../application/usecases/auth/userAuth';
+import { userRegister, userLogin, getUserSuggestion, followTheUser, getFollowersList, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword, getFollowingList } from '../../application/usecases/auth/userAuth';
 import AppError from '../../utils/middleware/appError';
 import {jwtDecode} from "jwt-decode";
 import { JwtPayload } from 'jwt-decode';
@@ -226,10 +226,32 @@ const authController = (
     const changePassword = asyncHandler ( async (req: Request, res: Response) =>  {
       const {email, password} = req.body;
 
-      const response = changeThePassword(dbRepositoryUser, authService, email, password)
+      const response = await changeThePassword(dbRepositoryUser, authService, email, password)
 
       res.json({
         response
+      })
+    })
+
+    const getFollowing = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+      
+      const userId = req.userId;
+
+      const following = await getFollowingList(dbRepositoryUser, userId)
+
+      res.json({
+        following
+      })
+    })
+
+    const getFollowers = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+
+      const userId = req.userId;
+
+      const followers = await getFollowersList(dbRepositoryUser, userId)
+
+      res.json({
+        followers
       })
     })
 
@@ -241,7 +263,9 @@ const authController = (
         googleAuth,
         unfollow,
         getOtp,
-        changePassword
+        changePassword,
+        getFollowing,
+        getFollowers
     }
 }
 

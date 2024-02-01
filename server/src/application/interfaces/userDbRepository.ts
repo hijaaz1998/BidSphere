@@ -45,6 +45,14 @@ export const userDbRepository = (
         return await repository.changeThePassword(email, password)
     }
 
+    const getFollowing = async (userId: string | undefined) => {
+        return await repository.getFollowingList(userId)
+    }
+
+    const getFollowers = async (userId: string | undefined) => {
+        return await repository.getFollowersList(userId)
+    }
+
     return {
         addUser,
         getUserByEmail,
@@ -55,7 +63,9 @@ export const userDbRepository = (
         addUserByGoogle,
         unfollowUser,
         checkEmail,
-        changePassword
+        changePassword,
+        getFollowing,
+        getFollowers
     }
 }
 

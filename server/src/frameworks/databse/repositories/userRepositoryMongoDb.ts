@@ -157,6 +157,34 @@ export const userRepositoryMongoDb = () => {
         
     }
 
+    const getFollowingList = async (userId: string | undefined) => {
+
+        try {
+            const user = await User.findById(userId).populate('following', 'firstName lastName')
+
+            const following = user?.following;
+
+            return following
+                        
+        } catch (error) {
+            console.log(error);
+            
+        }
+        
+    }
+
+    const getFollowersList = async (userId: string | undefined) => {
+        try {
+            const user = await User.findById(userId).populate('followers', 'firstName lastName')
+
+            const follwersList = user?.followers;
+
+            return follwersList
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return{
         addUser,
         getUserByEmail,
@@ -167,7 +195,9 @@ export const userRepositoryMongoDb = () => {
         googleAuth,
         unfollowTheUser,
         checkEmailIsThere,
-        changeThePassword
+        changeThePassword,
+        getFollowingList,
+        getFollowersList
     }
 }
 
