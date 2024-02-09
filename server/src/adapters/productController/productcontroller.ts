@@ -39,14 +39,16 @@ const   productController = (
         })
     })
 
-    const handleGetProductsOfUser = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId
+    const handleGetProductsOfUser = asyncHandler ( async (req: Request, res: Response) => {
+        const userId = req.params.userId;
+        console.log('req.params:', req.params);
+        console.log('userId:', userId);
+
+        
         let myProducts;
         if(userId){
              myProducts = await getUserProducts(dbRepositoryProduct, userId);
-        }
-        console.log("aaaa",myProducts);
-        
+        }        
 
         res.json({
             myProducts

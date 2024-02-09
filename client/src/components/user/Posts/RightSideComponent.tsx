@@ -119,16 +119,16 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
   },[])
 
   return (
-    <div className="bg-gray-200 p-4 rounded w-full mt-4">
-      <div className="flex flex-col space-y-2">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded w-full" onClick={() => handleEditButtonClick(postId)}>
+    <div className="bg-black p-4 rounded w-full mt-4">
+      <div className="flex flex-col space-y-2 items-center">
+        <button className=" border-2 border-blue-400 text-blue-500 px-4 py-2 rounded-3xl w-52" onClick={() => handleEditButtonClick(postId)}>
           Edit
         </button>
-        <button className="bg-red-500 text-white px-4 py-2 rounded w-full" onClick={handleRemoveButtonClick}>
+        <button className=" text-red-500 border-red-400 border-2 px-4 py-2 rounded-3xl w-52" onClick={handleRemoveButtonClick}>
           Remove
         </button>
         {!auctioned && (
-            <button className="bg-green-500 text-white px-4 py-2 rounded w-full" onClick={handleAuctionButtonClick}>
+            <button className=" text-green-500 border-2 border-green-400 px-4 py-2 rounded-3xl w-52" onClick={handleAuctionButtonClick}>
                 Set for Auction
             </button>
         )}

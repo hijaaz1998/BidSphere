@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import image from '../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg'
+import { Params } from 'react-router-dom';
 
 interface FollowingUser {
   id: number;
@@ -8,17 +9,21 @@ interface FollowingUser {
   image: string;
 }
 
+interface UserIdProps {
+  userId: Readonly<Params<string>>
+}
+
 interface FollowingProps {
   following: FollowingUser[];
 }
 
-const Following: React.FC<FollowingProps> = () => {
+const Following: React.FC<UserIdProps> = ({userId}) => {
   
   const [following, setFollowing] = useState<any[]>([])
 
   const fetchFollowing = async () => {
     
-    const response = await axiosInstance.get('/user/getfollowing')
+    const response = await axiosInstance.get(`/user/getFollowing/${userId}`)
 
     setFollowing(response.data.following)
 
@@ -26,7 +31,7 @@ const Following: React.FC<FollowingProps> = () => {
 
   useEffect(() => {
     fetchFollowing();
-  },[])
+  },[userId])
 
   return (
     <div>

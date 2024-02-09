@@ -29,7 +29,7 @@ function App() {
             <Route path="/postDetails/:postId" element={< PostDetails />}/>
             <Route path="/auctions" element={< Auction />}/>
             <Route path="/auctions/details/:auctionId" element={< AuctionDetails />}/>
-            <Route path="/profile" element = { <Profile /> }/>
+            <Route path="/profile/:userId" element = { <Profile /> }/>
           </Route>
 
           <Route element = { <AdminPrivateRoutes />}> 

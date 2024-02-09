@@ -23,6 +23,9 @@ const PostDetails = (postDetail: any) => {
 
   const postDetails = postDetail.postDetail;
   
+  const handleAddToFavorites = (id: string) => {
+    
+  }
 
   return (
     <div className=" bg-black p-6 shadow-md flex items-center justify-center h-sc mt-4 text-white rounded-lg border-2 border-slate-800 ">
@@ -39,12 +42,15 @@ const PostDetails = (postDetail: any) => {
           <h2 className="text-2xl mb-2">{postDetails?.productName}</h2>
           <p className="text-white mb-2">{postDetails?.description}</p>
 
-          {/* Additional Information */}
           <div className="flex items-center flex-col mb-2">
             <div className="text-white mb-2">Age: {postDetails?.age}</div>
             <div className="text-white mb-2">Condition: {postDetails?.condition}</div>
             <div className="text-white">Rarity: {postDetails?.rarity}</div>
           </div>
+
+          <button onClick={() => handleAddToFavorites(postDetails?._id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Add to Favorites
+          </button>
         </div>
       </div>
     </div>

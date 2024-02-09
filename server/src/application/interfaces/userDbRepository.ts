@@ -53,6 +53,10 @@ export const userDbRepository = (
         return await repository.getFollowersList(userId)
     }
 
+    const getUsersInfo = async (userId: string) => {
+        return await repository.getUserInfo(userId)
+    }
+
     return {
         addUser,
         getUserByEmail,
@@ -65,7 +69,8 @@ export const userDbRepository = (
         checkEmail,
         changePassword,
         getFollowing,
-        getFollowers
+        getFollowers,
+        getUsersInfo
     }
 }
 

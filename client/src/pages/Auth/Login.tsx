@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import LoginForm from '../../components/user/Auth/LoginForm'
 import { useNavigate } from 'react-router-dom'
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 

@@ -96,9 +96,11 @@ const Feeds: React.FC = () => {
                       />
                       <div className="ml-4">
                         <button>
-                          <h2 className="text-md font-semibold text-white">
-                            {data?.userId?.firstName} {data?.userId?.lastName}
-                          </h2>
+                          <Link to={`/profile/${data?.userId?._id}`}>
+                            <h2 className="text-md font-semibold text-white">
+                              {data?.userId?.firstName} {data?.userId?.lastName}
+                            </h2>
+                          </Link>
                         </button>
                       </div>
                     </div>

@@ -20,7 +20,7 @@ export const auctionRepositoryMongoDb = () => {
 
         await newAuction.save();
 
-        const product = await Product.findByIdAndUpdate(postId, {isAuctioned: true})
+        await Product.findByIdAndUpdate(postId, {isAuctioned: true})
         
         
         return newAuction

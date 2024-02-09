@@ -5,7 +5,7 @@ import { UserRepositoryMongoDb } from '../../frameworks/databse/repositories/use
 import { AuthService } from '../../frameworks/services/authService';
 import { AuthServiceInterface, authServiceInterface } from '../../application/services/authServiceInterface';
 import { UserInterface, createUserInterface } from '../../types/userInterface';
-import { userRegister, userLogin, getUserSuggestion, followTheUser, getFollowersList, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword, getFollowingList } from '../../application/usecases/auth/userAuth';
+import { userRegister, userLogin, getUserSuggestion, followTheUser, getFollowersList, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword, getFollowingList, getUserInfo } from '../../application/usecases/auth/userAuth';
 import AppError from '../../utils/middleware/appError';
 import {jwtDecode} from "jwt-decode";
 import { JwtPayload } from 'jwt-decode';
@@ -104,6 +104,8 @@ const authController = (
               console.log(error);
           } else {
               console.log('Email sent:');
+              console.log(otp);
+              
               res.json({
                 success: true,
                 otp: otp,
@@ -233,9 +235,9 @@ const authController = (
       })
     })
 
-    const getFollowing = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+    const getFollowing = asyncHandler ( async (req: Request, res: Response) => {
       
-      const userId = req.userId;
+      const userId = req.params.userId;
 
       const following = await getFollowingList(dbRepositoryUser, userId)
 
@@ -244,14 +246,23 @@ const authController = (
       })
     })
 
-    const getFollowers = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+    const getFollowers = asyncHandler ( async (req: Request, res: Response) => {
 
-      const userId = req.userId;
+      const userId = req.params.userId;
 
       const followers = await getFollowersList(dbRepositoryUser, userId)
 
       res.json({
         followers
+      })
+    })
+
+    const getUserInfos = asyncHandler ( async (req: Request, res: Response) => {
+      const userId = req.params.userId
+      const user = await getUserInfo(dbRepositoryUser, userId )
+
+      res.json({
+        user
       })
     })
 
@@ -265,7 +276,8 @@ const authController = (
         getOtp,
         changePassword,
         getFollowing,
-        getFollowers
+        getFollowers,
+        getUserInfos
     }
 }
 

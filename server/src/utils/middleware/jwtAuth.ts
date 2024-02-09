@@ -15,23 +15,16 @@ interface AuthenticatedRequest extends Request {
 const verifyToken = (req: AuthenticatedRequest, res: Response, next: NextFunction): any => {
   const token: string | undefined =
     req.headers.authorization && req.headers.authorization.split(' ')[1];
-
-    console.log("tokken",token);
     
 
   if (token) {
     try {
-      console.log("configKeys.JWT_SECRET",configKeys.JWT_SECRET);
       
       const decodedToken = jwt.verify(token, configKeys.JWT_SECRET) as JwtPayload;
-      console.log("req",decodedToken);
 
       const payloadObject = JSON.parse(decodedToken.payload);
-      console.log("payload", payloadObject);
             
       req.userId = payloadObject;  
-      console.log("going");
-                 
       
       next();
     } catch (error) {

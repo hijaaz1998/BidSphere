@@ -3,6 +3,7 @@ import userImage from '../assets/User Avatar Vector Design Images, User Vector A
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 interface UserData {
+    _id: string;
     firstName: string;
     lastName: string;
   }
@@ -20,11 +21,10 @@ const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
     const [userData, setUserData] = useState<UserData  | null>(null);
 
     useEffect(() => {
-        const data = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData') as string) : null;
-        console.log("dataaaaaaa",data);
+        const data = localStorage.getItem('userData')
         
         if(data){
-        setUserData(data)
+        setUserData(JSON.parse(data))
         } 
     },[])
 
@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
                 <div className="text-center">
                     <h2 className="text-sm text-white font-semibold">{userData?.firstName} {userData?.lastName}</h2>
                     <button className='text-sm text-indigo-500 shadow-lg border-2 border-slate-800 rounded-lg px-5 py-2 mt-4 hover:bg-indigo-500 hover:text-white'>
-                        <Link to="/profile">Profile</Link>
+                        <Link to={`/profile/${userData?._id}`}>Profile</Link>
                     </button>
                 </div>
             </div>

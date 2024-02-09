@@ -155,3 +155,12 @@ export const getFollowersList = async (
 
     return followers;
 }
+
+export const getUserInfo = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string
+) => {
+    const user = await userRepository.getUsersInfo(userId)
+
+    return user
+}

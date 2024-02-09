@@ -31,7 +31,6 @@ const auctionController = (
         const upcomingAuctions = await getAuctionsUpcoming(dbRepositoryAuction)
 
         console.log("upcomingAuctions",upcomingAuctions);
-        
 
         res.json({
             upcomingAuctions

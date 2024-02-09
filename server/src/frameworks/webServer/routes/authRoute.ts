@@ -26,8 +26,9 @@ const authRouter = () => {
     router.patch('/unfollow/:unfollowedId', jwtAuth, controller.unfollow)
     router.post('/get_otp', controller.getOtp)
     router.post('/set_new_password', controller.changePassword);
-    router.get('/getFollowing', jwtAuth, controller.getFollowing);
-    router.get('/getFollowers', jwtAuth, controller.getFollowers);
+    router.get('/getFollowing/:userId', jwtAuth, controller.getFollowing);
+    router.get('/getFollowers/:userId', jwtAuth, controller.getFollowers);
+    router.get('/getUserInfo/:userId', controller.getUserInfos)
 
     return router;
 

@@ -24,6 +24,7 @@ export const productRepositoryMongoDb = () => {
     const getUserProducts = async(userId: string) => {
         
         const products: any = await Product.find({ userId: userId, isDeleted: false }).lean();
+        
         return products
     }
 

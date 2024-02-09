@@ -14,6 +14,8 @@ const RegisterForm = () => {
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
   const [error, setError] = useState<string>('');
+  const [otp, setOTP] = useState('');
+  const [validOtp, setValidOtp] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const RegisterForm = () => {
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim() || !email.trim() || !password.trim() || !cpassword.trim()) {
+    if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim() || !email.trim() || !password.trim() || !otp.trim() || !cpassword.trim()) {
       setError('All fields are required.');
       setTimeout(() => {
         setError('');
@@ -33,6 +35,14 @@ const RegisterForm = () => {
 
     if(!emailRegex.test(email)){
       setError('Invalid Email');
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    if(otp !== validOtp){
+      setError('Incorrect OTP');
       setTimeout(() => {
         setError('');
       }, 3000);
@@ -53,7 +63,7 @@ const RegisterForm = () => {
         lastName,
         phoneNumber,
         email,
-        password
+        password,
       })
       
       if(response.data.success){
@@ -72,6 +82,21 @@ const RegisterForm = () => {
     }
 
   };
+
+  const handleGetOTP = async () => {
+    const response = await axiosInstance.post(`/user/get_otp`, email);
+
+    if(response.data.success){
+      toast.success(response.data.message)
+      setValidOtp(response.data.otp)
+    } else {
+        setError(response.data.message);
+        setTimeout(() => {
+            setError('');
+        }, 3000);
+        return;
+    }
+  }
 
   return (
     <>
@@ -108,15 +133,28 @@ const RegisterForm = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 
               />
+              <div className='flex justify-center items-center'>
+                <input
+                  type="text"
+                  className='py-2 px-3 w-4/5 mb-3 border rounded-md'
+                  placeholder='Email'
+                  name='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                  <a className='w-1/5 text-blue-400 cursor-pointer' onClick={handleGetOTP}>Get OTP</a>
+              </div>
+              {validOtp && 
               <input
                 type="text"
                 className='py-2 px-3 mb-3 w-full border rounded-md'
-                placeholder='Email'
-                name='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder='OTP'
+                name='otp'
+                value={otp}
+                onChange={(e) => setOTP(e.target.value)}
                 
               />
+              }
               <input
                 type="password"
                 className='py-2 px-3 mb-3 w-full border rounded-md'

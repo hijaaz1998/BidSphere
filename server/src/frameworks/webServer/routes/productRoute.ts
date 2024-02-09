@@ -14,7 +14,7 @@ const productRouter = () => {
     );
 
     router.post('/addProduct', jwtAuth, controller.addProduct);
-    router.get('/getProducts', jwtAuth, controller.handleGetProductsOfUser);
+    router.get('/getPosts/:userId', jwtAuth, controller.handleGetProductsOfUser);
     router.get('/get_all_posts', jwtAuth, controller.getAllPosts);
     router.get('/postDetails/:postId', controller.getPostDetails);
     router.patch('/deletePost/:postId', controller.deletePost);

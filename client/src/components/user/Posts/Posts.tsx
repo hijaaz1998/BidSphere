@@ -15,6 +15,7 @@ interface Product {
 interface UserData {
   firstName: string;
   lastName: string;
+  _id: any
 }
 
 const Posts = () => {
@@ -23,6 +24,7 @@ const Posts = () => {
 
   const fetchData = async () => {
     try {
+
       const data = localStorage.getItem('userData');
       if (data) {
         const parsed = JSON.parse(data);
@@ -31,6 +33,8 @@ const Posts = () => {
 
       const response = await axiosInstance.get(`/product/getProducts`);
       const fetchedProducts = response.data.myProducts;
+      console.log("fetchedProducts",fetchedProducts);
+      
       setProducts(fetchedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -56,7 +60,9 @@ const Posts = () => {
               className="w-12 h-12 object-cover rounded-full"
             />
             <div className="ml-4">
-              <h2 className="text-sm text-white font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2>
+              <Link to={`/profile/${userData?._id}`}>
+                <h2 className="text-sm text-white font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2>
+              </Link>
             </div>
           </div>
           <div className="">
@@ -83,7 +89,7 @@ const Posts = () => {
       ))}
 
       {products.length === 0 && (
-        <div>Nothing To Show</div>
+        <div className="text-white">Nothing To Show</div>
       )}
     </div>
   );

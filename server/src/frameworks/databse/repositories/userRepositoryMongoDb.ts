@@ -185,6 +185,18 @@ export const userRepositoryMongoDb = () => {
         }
     }
 
+    const getUserInfo = async (userId: string) => {
+        try {
+
+            const user = await User.findById(userId);
+            return user;
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+
     return{
         addUser,
         getUserByEmail,
@@ -197,7 +209,8 @@ export const userRepositoryMongoDb = () => {
         checkEmailIsThere,
         changeThePassword,
         getFollowingList,
-        getFollowersList
+        getFollowersList,
+        getUserInfo
     }
 }
 
