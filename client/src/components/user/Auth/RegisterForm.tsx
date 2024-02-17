@@ -14,16 +14,16 @@ const RegisterForm = () => {
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
   const [error, setError] = useState<string>('');
-  const [otp, setOTP] = useState('');
-  const [validOtp, setValidOtp] = useState('');
-
+  const [otp, setOTP] = useState();
+  const [validOtp, setValidOtp] = useState();
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
   const signupHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim() || !email.trim() || !password.trim() || !otp.trim() || !cpassword.trim()) {
       setError('All fields are required.');
@@ -41,7 +41,7 @@ const RegisterForm = () => {
       return;
     }
 
-    if(otp !== validOtp){
+    if(!otp || isNaN(otp) || parseInt(otp) !== validOtp){
       setError('Incorrect OTP');
       setTimeout(() => {
         setError('');
@@ -84,11 +84,28 @@ const RegisterForm = () => {
   };
 
   const handleGetOTP = async () => {
-    const response = await axiosInstance.post(`/user/get_otp`, email);
+
+    if(!email.trim()){
+      setError('Enter Email');
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    if(!emailRegex.test(email)){
+      setError('Invalid Email');
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    const response = await axiosInstance.post(`/user/get_otp_for_registration`, email);
 
     if(response.data.success){
       toast.success(response.data.message)
-      setValidOtp(response.data.otp)
+      setValidOtp(response.data.otp);
     } else {
         setError(response.data.message);
         setTimeout(() => {

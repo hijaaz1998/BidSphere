@@ -77,7 +77,7 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
     if(response){
       toast.success("added");
       setSelectedComponent('myPost');
-      navigate('/home')
+      navigate('/')
     }
   }
 

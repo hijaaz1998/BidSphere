@@ -10,16 +10,30 @@ interface AuctionId {
 const AuctionDetailsComponent: React.FC<AuctionId> = (auctionId) => {
   const [data, setData] = useState('');
   const [customAmount, setCustomAmount] = useState<string>('');
+  const [startingDate, setStartingDate] = useState<Date>();
+  const [endingDate, setEndingDate] = useState<Date>();
+  const [time, setTime] = useState<number>();
 
   const fetchData = async () => {
     const res = await axiosInstance.get(`/auction/auctionDetails/${auctionId.auctionId}`);
     setData(res.data.details);
-    console.log('response auction', res.data.details);
+    setEndingDate(new Date(res.data.details.endingDate));
+    setStartingDate(new Date(res.data.details.startingDate));
+    console.log('Starting Date', res.data.details.startingDate);
+    console.log('Ending Date', res.data.details.endingDate);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (endingDate) {
+      const currentTime = new Date();
+      const differenceInMilliseconds = Math.abs(endingDate.getTime() - currentTime.getTime());
+      setTime(differenceInMilliseconds);
+    }
+  }, [endingDate]);
 
   const handleButtonClick = (value: number) => {
     performAction(value);
@@ -37,20 +51,40 @@ const AuctionDetailsComponent: React.FC<AuctionId> = (auctionId) => {
   };
 
   const performAction = async (amount: number) => {
-
-    
     const updated = await axiosInstance.post('/auction/bid', {
         auctionId: auctionId,
         amount : amount
       });
 
       if(updated){
-        toast.success(`Congradulations! Rs ${amount} has been Bidded`)
+        toast.success(`Congratulations! Rs ${amount} has been Bidded`)
         setData(updated.data.updated);
         console.log("updatedAuction",updated);
       }    
-      
   };
+
+  useEffect(() => {
+
+    if(time){
+      setTimeout(() => {
+        setTime(time - 1000)
+      },1000)
+    }
+
+  },[time])
+
+  const getFormatedTime = (time: number) => {
+    let total_seconds = parseInt(Math.floor(time / 1000))
+    let total_minutes = parseInt(Math.floor(total_seconds / 60))
+    let total_hours = parseInt(Math.floor(total_minutes / 60))
+    let days = parseInt(Math.floor(total_hours / 24))
+
+    let seconds = parseInt(total_seconds % 60)
+    let minutes = parseInt(total_minutes % 60)
+    let hours = parseInt(total_hours % 24)
+
+    return `${days}: ${hours}: ${minutes}: ${seconds}`;
+  }
 
   return (
     <div className="max-w-screen-xl mx-auto p-4">
@@ -59,11 +93,11 @@ const AuctionDetailsComponent: React.FC<AuctionId> = (auctionId) => {
           <img src={data?.postId?.image} alt="Product" className="w-full h-full object-contain max-w-96 max-h-96" />
         </div>
         <div className="p-8 w-1/2 flex flex-col justify-center items-center">
+          <span>{getFormatedTime(time)}</span>
           <h2 className="text-2xl font-bold mb-4">{data?.postId?.productName}</h2>
           <p className="mb-4">
             Current Amount: <span className="text-green-600 font-extrabold">{data?.currentAmount}</span>
           </p>
-
 
           <div className="mb-4">
             <button onClick={() => handleButtonClick(100)} className="mr-2 bg-blue-500 text-white px-4 py-2 rounded">
@@ -76,6 +110,7 @@ const AuctionDetailsComponent: React.FC<AuctionId> = (auctionId) => {
               500
             </button>
           </div>
+          
           <form onSubmit={handleSubmit}>
             <label htmlFor="customAmount" className="block mb-2">
               Custom Amount:

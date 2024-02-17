@@ -5,14 +5,16 @@ import { UserRepositoryMongoDb } from '../../frameworks/databse/repositories/use
 import { AuthService } from '../../frameworks/services/authService';
 import { AuthServiceInterface, authServiceInterface } from '../../application/services/authServiceInterface';
 import { UserInterface, createUserInterface } from '../../types/userInterface';
-import { userRegister, userLogin, getUserSuggestion, followTheUser, getFollowersList, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword, getFollowingList, getUserInfo } from '../../application/usecases/auth/userAuth';
+import { userRegister, userLogin, getUserSuggestion, followTheUser, getFollowersList, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword, getFollowingList, getUserInfo, userSearch, getFavorites } from '../../application/usecases/auth/userAuth';
 import AppError from '../../utils/middleware/appError';
 import {jwtDecode} from "jwt-decode";
 import { JwtPayload } from 'jwt-decode';
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer';
+import { Z_ASCII } from 'zlib';
 
 let otp: Number;
+let RegisterOtp: Number
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
   userId?: string;
@@ -62,6 +64,49 @@ const authController = (
           });
         }
      });
+
+     const getOtpForRegister = asyncHandler ( async (req: Request, res: Response) => {
+
+        RegisterOtp = generateOtp();
+
+        const emailObject = req.body;
+      
+        const email = Object.keys(emailObject)[0];
+
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          host: 'smtp.gmail.com',
+          port: 587,
+          auth: {
+            user: 'muhammadijasbtc@gmail.com',
+            pass: 'lcui urmh witl gaah'
+          }
+        });
+
+        const mailOptions = {
+          from: 'test@wristcrafts.com',
+          to: email,
+          subject: "Your OTP",
+          text: `Your OTP is ${RegisterOtp}`
+        }
+
+
+        transporter.sendMail(mailOptions, (error) => {
+          if (error) {
+              console.log(error);
+          } else {
+              console.log('Email sent:');
+              console.log(RegisterOtp);
+              
+              res.json({
+                success: true,
+                otp: RegisterOtp,
+                message: "Otp has been sent"
+              })
+          }
+        });
+
+     })
 
      const getOtp = asyncHandler(async (req: Request, res: Response) => {
 
@@ -266,6 +311,26 @@ const authController = (
       })
     })
 
+    const searchUser = asyncHandler (async (req: AuthenticatedRequest, res: Response) => {
+      const userId = req.userId;
+      const search: any = req.query.search
+
+      const results = await userSearch(dbRepositoryUser, userId, search)
+
+      res.json({
+        results
+      })
+    })
+
+    const getFavorite = asyncHandler ( async (req: Request, res: Response) => {
+      const userid = req.params.userId;
+      const favorites = await getFavorites(dbRepositoryUser, userid)
+
+      res.json({
+        favorites
+      })
+    })
+
     return {
         registerUser,
         loginUser,
@@ -277,7 +342,10 @@ const authController = (
         changePassword,
         getFollowing,
         getFollowers,
-        getUserInfos
+        getUserInfos,
+        getOtpForRegister,
+        searchUser,
+        getFavorite
     }
 }
 

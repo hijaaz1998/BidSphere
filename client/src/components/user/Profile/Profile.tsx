@@ -64,7 +64,7 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
       case 'followers':
         return <Followers userId={userId} setActiveTab={setActiveTab} />;
       case 'following':
-        return <Following userId={userId} />;
+        return <Following userId={userId} setActiveTab={setActiveTab} />;
       default:
         return null;
     }

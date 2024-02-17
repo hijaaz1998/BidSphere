@@ -22,6 +22,8 @@ const productRouter = () => {
     router.patch('/like/:postId',jwtAuth, controller.likePost);
     router.get('/comments/:postId', controller.getComments)
     router.post('/addComment/:postId', jwtAuth, controller.addComment)
+    router.post('/report', jwtAuth, controller.reportPost)
+    router.post('/add_to_favorites', jwtAuth, controller.addToFavorite)
 
     return router;
 }

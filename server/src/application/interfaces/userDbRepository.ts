@@ -57,6 +57,14 @@ export const userDbRepository = (
         return await repository.getUserInfo(userId)
     }
 
+    const searchUser = async (userId: string | undefined, search: string) => {
+        return await repository.userSearch(userId, search)
+    }
+
+    const getFavorite = async (userId: string) => {
+        return await repository.getFavorites(userId)
+    }
+
     return {
         addUser,
         getUserByEmail,
@@ -70,7 +78,9 @@ export const userDbRepository = (
         changePassword,
         getFollowing,
         getFollowers,
-        getUsersInfo
+        getUsersInfo,
+        searchUser,
+        getFavorite
     }
 }
 

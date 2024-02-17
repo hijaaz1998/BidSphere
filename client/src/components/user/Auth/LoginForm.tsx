@@ -29,6 +29,7 @@ function LoginForm() {
       
       localStorage.setItem("userToken", JSON.stringify(success.data.token))
       localStorage.setItem("userData", JSON.stringify(success.data.user));
+      localStorage.setItem("userId", JSON.stringify(success.data.user?._id));
       dispatch(login(success.data.user))
       navigate('/home')
     }
@@ -66,9 +67,14 @@ function LoginForm() {
         password
       })
 
+      if(response.data.blocked){
+        toast.error('user have been blocked')
+      }
+
       if(response.data.status){
         const userData = response.data;
         
+        localStorage.setItem("userId", JSON.stringify(userData?.result?.user?._id));
         localStorage.setItem("userData", JSON.stringify(userData?.result?.user));
         localStorage.setItem("userToken", JSON.stringify(userData?.result?.token));
         

@@ -1,5 +1,6 @@
 import { ProductRepositoryMongoDb } from "../../frameworks/databse/repositories/productRepositoryMongoDb";
 import { EditPostEntity, ProductEntityType } from "../../entities/products";
+import { userDbRepository } from "./userDbRepository";
 
 export const productDbRepository = (
     repository: ReturnType<ProductRepositoryMongoDb>
@@ -44,7 +45,18 @@ export const productDbRepository = (
         return await repository.getPostsAdmin()
     }
     
-    
+    const reportPost = async (
+        userId: string | undefined,
+        reportId: string,
+        subject: string,
+        issue: string
+    ) => {
+        return repository.postReport(userId, reportId, subject, issue)
+    }
+
+    const addToFavorites = async (userId: string | undefined, postId: string ) => {
+        return await repository.addFavorite(userId, postId)
+    }
 
     return {
         addProduct,
@@ -56,7 +68,9 @@ export const productDbRepository = (
         likePost,
         getComments,
         addComment,
-        getAllPostsAdmin
+        getAllPostsAdmin,
+        reportPost,
+        addToFavorites
     }
 }
 

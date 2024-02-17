@@ -164,3 +164,21 @@ export const getUserInfo = async (
 
     return user
 }
+
+export const userSearch = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string | undefined,
+    search: string
+) => {
+    const result = await userRepository.searchUser(userId, search);
+
+    return result
+}
+
+export const getFavorites = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string
+) => {
+    const favorites = await userRepository.getFavorite(userId)
+    return favorites
+}

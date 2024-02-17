@@ -49,8 +49,8 @@ const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
 
             {/* Navigation Links */}
             <div className=" text-center mx-5 rounded-lg overflow-y-auto drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800">
-                <span onClick={() => onButtonClick('myPost')} className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
-                    My Posts
+                <span onClick={() => onButtonClick('feeds')} className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
+                    Feeds
                 </span>
                 <span onClick={() => onButtonClick('addPost')} className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3 drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     Add Post
@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
                 <span  className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     Notifications
                 </span>
-                <span  className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
+                <span onClick={() => onButtonClick('messages')}  className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
                     Messages
                 </span>
                 <span  className="block p-2 hover:cursor-pointer text-indigo-500 bg-black rounded-xl mx-10 my-3  drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">

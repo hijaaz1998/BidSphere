@@ -5,8 +5,9 @@ import { ProductDbInterface } from '../../application/interfaces/productDbReposi
 import { ProductRepositoryMongoDb } from '../../frameworks/databse/repositories/productRepositoryMongoDb';
 import { EditProductInterface, ProductInterface } from '../../types/productInterface';
 
-import { productAdd } from '../../application/usecases/product/addProduct';
-import { getUserProducts, allPosts, getPostDetail, postDelete, postEdit, postLike, getComment, addComments } from '../../application/usecases/product/read';
+import { productAdd,  } from '../../application/usecases/product/addProduct';
+import { getUserProducts, allPosts, getPostDetail, postDelete, postEdit, postLike, getComment, addComments, postReport, addFavorite } from '../../application/usecases/product/read';
+import { authService } from '../../frameworks/services/authService';
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
     userId?: string;
@@ -132,6 +133,40 @@ const   productController = (
         })
     })
 
+    const reportPost = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+
+        const {reportId, issue, subject } = req.body.data
+        const userId = req.userId
+
+        const reported = await postReport(dbRepositoryProduct, userId, reportId, subject, issue);
+        
+        if(!reported){
+            res.json({
+                success: false,
+                message: "Already Reported"
+            })
+        } else {
+            res.json({
+                success: true,
+                message: "Reported successfully"
+            })
+        }   
+    })
+
+    const addToFavorite = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId
+        const postId = req.body.postId
+
+        const favorite = await addFavorite(dbRepositoryProduct ,userId, postId)
+
+        if(favorite){
+            res.json({
+                message: 'Added to favorites'
+            })
+        }
+        
+    })
+
     return {
         addProduct,
         handleGetProductsOfUser,
@@ -141,7 +176,9 @@ const   productController = (
         editPost,
         likePost,
         getComments,
-        addComment
+        addComment,
+        reportPost,
+        addToFavorite
     }
 }
 

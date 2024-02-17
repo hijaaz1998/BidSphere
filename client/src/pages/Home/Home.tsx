@@ -6,6 +6,9 @@ import Posts from "../../components/user/Posts/Posts";
 import AddPost from "../../components/user/AddPost/AddPost";
 import Feeds from "../../components/user/Feeds/Feeds";
 import UserSuggestions from "../../components/user/Feeds/UserSuggestion";
+import Messages from "../Messages/Messages";
+import MyListings from "../../components/user/Listing/MyListings";
+import Listings from "../../components/user/Listing/Listings";
 
 const Home: React.FC = () => {
   const [selectedComponent, setSelectedComponent] = useState<string>('feeds');
@@ -14,13 +17,24 @@ const Home: React.FC = () => {
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
       case 'feeds':
-        return <Feeds />;
+        return (
+          <div className="flex w-full">
+            <div className="w-3/4 pr-4">
+              <Feeds />
+            </div>
+            <div className="w-1/4 flex flex-col items-center fixed top-14 right-0">
+              <UserSuggestions _id={""} userImage={""} firstName={""} lastName={""} />
+            </div>
+          </div>
+        );
       case 'addPost':
         return <AddPost setSelectedComponent={setSelectedComponent} />;
       case 'myPost':
         return <Posts />;
       case 'myListings':
-        return <AddPost setSelectedComponent={setSelectedComponent}/>;
+        return <Listings />;
+      case 'messages':
+        return <Messages />;
       default:
         return null;
     }
@@ -32,7 +46,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <div className="h-screen bg-black">
+      <div className="h-full bg-black">
         <div className=" top-0 w-full bg-black text-white p-4 text-center">
           <Navbar />
         </div>
@@ -41,18 +55,12 @@ const Home: React.FC = () => {
           <Sidebar onButtonClick={handleButtonClick} />
         </div>
 
-        <div className="ml-64 px-4 mt-10 flex bg-black">
-          <div className="w-3/4 pr-4 "> 
-            {renderSelectedComponent()}
-          </div>
-          <div className="w-1/4 fixed right-0 flex flex-col items-center "> 
-          <UserSuggestions _id={""} userImage={""} firstName={""} lastName={""} />
-          </div>
+        <div className="ml-64 px-4 mt-11 flex bg-black h-full">
+          {renderSelectedComponent()}
         </div>
       </div>
       
     </> 
-    
   );
 };
 

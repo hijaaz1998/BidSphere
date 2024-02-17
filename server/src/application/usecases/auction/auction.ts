@@ -1,8 +1,11 @@
 import { AuctionInterface } from "../../../types/auctionInterface";
-import { AuctionDbInterface } from "../../interfaces/auctionDbRepository";
+import { AuctionDbInterface, auctionDbRepository } from "../../interfaces/auctionDbRepository";
 import { AuctionEntity } from "../../../entities/auction";
 import { ProductInterface } from "../../../types/productInterface";
 import { auction } from "../../../entities/auction";
+import { afterEach } from "node:test";
+import { auctionRepositoryMongoDb } from "../../../frameworks/databse/repositories/auctionRepositoryMongoDb";
+import expressAsyncHandler from "express-async-handler";
 
 
 export const addToAuction = async (
@@ -57,4 +60,30 @@ export const bidNow = async (
     const updated = await auctionRepository.bidPost(userId, auctionId, amount)
 
     return updated
+}
+
+export const getMyListing = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    userId: string | undefined
+) => {
+    const listings = await auctionRepository.getMyListings(userId)
+
+    return listings
+}
+
+export const getIdForAuction = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    postId: string
+) => {
+    const id = await auctionRepository.getAuctionId(postId)
+
+    return id;
+}
+
+export const auctionRemove = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    id: string
+) => {
+    const removed = await auctionRepository.removeAuction(id);
+    return removed;
 }

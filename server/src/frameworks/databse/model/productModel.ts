@@ -66,7 +66,11 @@ const productSchema = new Schema(
                     default: new Date()
                 }
             }
-        ]
+        ],
+        favorited: {
+            type: Boolean,
+            default: false
+        }
     }
 )
 

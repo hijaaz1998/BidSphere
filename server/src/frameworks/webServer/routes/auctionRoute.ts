@@ -18,6 +18,9 @@ const auctionRouter = () => {
     router.get('/isOnAuction/:postId', controller.isAuctioned)
     router.get('/auctionDetails/:auctionId', controller.getAuctionDetails)
     router.post('/bid', jwtAuth, controller.bid)
+    router.get('/get_my_listings', jwtAuth, controller.getMyListings)
+    router.get('/getAuction/:postId', controller.getAuctionId)
+    router.patch('/removeAuction/:auctionId', controller.removeAuction)
 
     return router
 }

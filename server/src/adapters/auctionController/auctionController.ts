@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import { AuctionDbInterface, auctionDbRepository } from '../../application/interfaces/auctionDbRepository';
 import { AuctionRepositoryMongoDb } from '../../frameworks/databse/repositories/auctionRepositoryMongoDb';
-import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, bidNow } from '../../application/usecases/auction/auction';
+import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, bidNow, getMyListing, getIdForAuction, auctionRemove } from '../../application/usecases/auction/auction';
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
     userId?: string;
@@ -71,13 +71,44 @@ const auctionController = (
         })
     })
 
+    const getMyListings = asyncHandler (async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId;
+
+        const listings = await getMyListing(dbRepositoryAuction, userId)
+        
+        res.json({
+            listings
+        })
+        
+    })
+
+    const getAuctionId = asyncHandler ( async (req: Request, res: Response) => {
+        const postId = req.params.postId;
+        const id = await getIdForAuction(dbRepositoryAuction, postId)
+
+        res.json({
+            id
+        })
+    })
+
+    const removeAuction = asyncHandler ( async (req: Request, res: Response) => {
+        const id = req.params.auctionId
+        const removed = await auctionRemove(dbRepositoryAuction, id)
+
+        res.json({
+            removed: true
+        })
+    })
 
     return {
         addAuction,
         getUpcomingAuctions,
         isAuctioned,
         getAuctionDetails,
-        bid
+        bid,
+        getMyListings,
+        getAuctionId,
+        removeAuction
     }
 }
 

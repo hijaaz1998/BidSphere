@@ -16,6 +16,13 @@ const auctionSchema = new Schema(
         },
         startingDate: {
             type: Date
+        },
+        endingDate: {
+            type: Date
+        },
+        isRemoved: {
+            type: Boolean,
+            default: false
         }
     }
 )

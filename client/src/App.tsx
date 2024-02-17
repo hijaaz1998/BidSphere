@@ -13,6 +13,7 @@ import AuctionDetails from "./pages/Auction/AuctionDetailsPage"
 import ForgotPassword from "./pages/Auth/ForgotPassword"
 import Profile from "./pages/Profile/Profile"
 
+
 function App() {
 
   return (

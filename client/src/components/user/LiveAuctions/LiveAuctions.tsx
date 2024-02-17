@@ -19,8 +19,8 @@ const LiveAuctions = () => {
   },[])
 
   return (
-    <div className="container mx-auto mt-20 bg-black">
-      <h1 className="mb-6 text-2xl font-bold ml-4">Upcoming Auctions</h1>
+    <div className="container mx-auto mt-10 h-full bg-white">
+      <h1 className="mb-6 text-2xl font-bold ml-4"> Auctions</h1>
       <div className="grid grid-cols-4 gap-6">
         {upcomingAuctions.map((data, index) => (
           <div key={index} className="card mx-auto px-6 bg-white mb-10 flex flex-col items-center py-5 drop-shadow-lg">

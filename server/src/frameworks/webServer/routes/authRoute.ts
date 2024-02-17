@@ -24,11 +24,14 @@ const authRouter = () => {
     router.patch('/follow/:followed', jwtAuth, controller.followUser);
     router.post('/googleAuth', controller.googleAuth);
     router.patch('/unfollow/:unfollowedId', jwtAuth, controller.unfollow)
+    router.post('/get_otp_for_registration', controller.getOtpForRegister)
     router.post('/get_otp', controller.getOtp)
     router.post('/set_new_password', controller.changePassword);
     router.get('/getFollowing/:userId', jwtAuth, controller.getFollowing);
     router.get('/getFollowers/:userId', jwtAuth, controller.getFollowers);
     router.get('/getUserInfo/:userId', controller.getUserInfos)
+    router.get('/search',jwtAuth, controller.searchUser)
+    router.get('/getFavorite/:userId',controller.getFavorite)
 
     return router;
 

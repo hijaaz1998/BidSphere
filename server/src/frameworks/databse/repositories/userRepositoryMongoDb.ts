@@ -3,6 +3,7 @@ import User from '../model/userModel';
 import { UserInterface, createUserInterface, UserAfterLogin } from '../../../types/userInterface';
 import { UserEntityType } from '../../../entities/user';
 import { log } from 'console';
+import Favorite from '../model/FavoriteModel';
 
 export const userRepositoryMongoDb = () => {
     const addUser = async (user: UserEntityType) => {
@@ -195,7 +196,39 @@ export const userRepositoryMongoDb = () => {
             console.log(error);
         }
     }
+
+    const userSearch = async (userId: string | undefined, search: string) => {
+        console.log(search, "search");
     
+        const keyword = search ? {
+            $or: [
+                { firstName: { $regex: search, $options: 'i' } },
+                { lastName: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } }
+            ]
+        } : {};
+    
+        const users = await User.find({
+            ...keyword,
+            _id: { $ne: userId }
+        })
+        .select('firstName lastName');
+    
+        console.log("users",users);
+        
+        return users;
+    };
+    
+    const getFavorites = async (userId: string) => {
+        try {
+            const favorites = await Favorite.find({ user: userId }).populate('posts');
+            return favorites;
+        } catch (error) {
+            console.error('Error fetching favorites:', error);
+            throw error;
+        }
+    };
+     
 
     return{
         addUser,
@@ -210,7 +243,9 @@ export const userRepositoryMongoDb = () => {
         changeThePassword,
         getFollowingList,
         getFollowersList,
-        getUserInfo
+        getUserInfo,
+        userSearch,
+        getFavorites
     }
 }
 

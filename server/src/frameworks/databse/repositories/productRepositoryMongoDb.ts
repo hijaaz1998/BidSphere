@@ -2,7 +2,11 @@ import Product from '../model/productModel'
 import { EditPostEntity, ProductEntityType } from '../../../entities/products';
 import mongoose,{Types, ObjectId} from 'mongoose';
 import User from '../model/userModel';
+import Incidents from '../model/IncidentModel';
 import { postEdit } from '../../../application/usecases/product/read';
+import { report } from 'process';
+import { factory } from 'typescript';
+import Favorite from '../model/FavoriteModel';
 
 export const productRepositoryMongoDb = () => {
     const addProductBefore = async(product: ProductEntityType) => {
@@ -197,7 +201,57 @@ export const productRepositoryMongoDb = () => {
 
       return posts
     }  
+
+    const postReport = async (
+      userId: string | undefined,
+      reportId: string,
+      subject: string,
+      issue: string
+    ) => {
+
+      const existing = await Incidents.findOne({reportedUser: userId});
+
+      if(existing){
+        return false
+      }
+
+      const newIncident =  new Incidents({
+        subject,
+        issue,
+        reportedUser: userId,
+        ReportedPost: reportId
+      })
+
+      const saved = await newIncident.save();
+      return saved
+
+    }
     
+    const addFavorite = async (userId: string | undefined, postId: string) => {
+      try {
+        let favorite;
+    
+        const existingFavorite = await Favorite.findOne({
+          user: userId,
+          posts: { $in: [postId] }
+        });
+    
+        if (!existingFavorite) {
+          favorite = await Favorite.findOneAndUpdate(
+            { user: userId },
+            { $push: { posts: postId } },
+            { new: true, upsert: true } // Add options to create the document if it doesn't exist
+          );
+        } else {
+          favorite = existingFavorite;
+        }
+    
+        return favorite;
+      } catch (error) {
+        console.log(error);
+        throw error; // Re-throw the error to propagate it up the call stack
+      }
+    };
  
     return {
         addProductBefore,
@@ -209,7 +263,9 @@ export const productRepositoryMongoDb = () => {
         postLike,
         getComment,
         addComments,
-        getPostsAdmin
+        getPostsAdmin,
+        postReport,
+        addFavorite
     }
 }
 

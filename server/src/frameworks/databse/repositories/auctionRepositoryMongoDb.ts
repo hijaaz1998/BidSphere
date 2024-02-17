@@ -5,42 +5,53 @@ import Product from "../model/productModel";
 
 
 export const auctionRepositoryMongoDb = () => {
-
-    const addToAuction = async(auction: any) => {   
+    const addToAuction = async (auction: any) => {   
 
         const postId = auction.getPostId();
         const currentAmount = auction.getCurrentAmount();
         const startingDate =  auction.getStartingDate();
-
+    
+        const endingDate = new Date(startingDate);
+        endingDate.setDate(endingDate.getDate() + 10);
+    
         const newAuction: any = new Auction({
             postId,
             currentAmount,
-            startingDate
-        })
-
+            startingDate,
+            endingDate,
+        });
+    
         await newAuction.save();
-
-        await Product.findByIdAndUpdate(postId, {isAuctioned: true})
+    
+        await Product.findByIdAndUpdate(postId, {isAuctioned: true});
         
-        
-        return newAuction
+        return newAuction;
     }
+    
 
     const getAuctionsUpcoming = async () => {
-        const auctions = await Auction.find({})
-          .populate({
-            path: 'postId',
-            populate: {
-              path: 'userId',
-              model: 'User',
-              select: 'firstName lastName', // Fields from the user document
-            },
-            select: 'productName description image', // Fields from the postId (product) document
-          })
-          .exec();
-      
-        return auctions;
+        try {
+            const auctions = await Auction.find({ 
+                isRemoved: false
+            })
+            .populate({
+                path: 'postId',
+                populate: {
+                    path: 'userId',
+                    model: 'User',
+                    select: 'firstName lastName',
+                },
+                select: 'productName description image',
+            })
+            .exec();
+    
+            return auctions;
+        } catch (error) {
+            console.error('Error fetching upcoming auctions:', error);
+            throw error;
+        }
     };
+    
       
 
     const isAuctioned = async (postId: string) => {
@@ -80,13 +91,53 @@ export const auctionRepositoryMongoDb = () => {
         }
     }
 
+    const getMyListing = async (userId: string | undefined) => {
+        try {
+            const products = await Product.find({ userId: userId });
+            const productIds = products.map(product => product._id);
+    
+            const auctions = await Auction.find({ 
+                $and: [
+                    { postId: { $in: productIds } }, // Check if postId is in productIds array
+                    { isAuctioned: false } // Check if isAuctioned is false
+                ]
+            }).populate({
+                path: 'postId',
+                populate: {
+                    path: 'userId'
+                }
+            });
+            
+            return auctions;
+        } catch (error) {
+            console.error('Error fetching auctions:', error);
+            throw error;
+        }
+    }
+    
+
+    const getIdForAuction = async ( postId: string) => {
+        const auction = await Auction.findOne({postId})
+        return auction?._id;
+    }
+
+    const auctionRemove = async (id: string) => {
+        const removed = await Auction.findByIdAndUpdate(id, {isRemoved: true} )
+
+        if(removed){
+            return true
+        }
+    } 
 
     return {
         addToAuction,
         getAuctionsUpcoming,
         isAuctioned,
         getDetailsOfAuction,
-        bidNow
+        bidNow,
+        getMyListing,
+        getIdForAuction,
+        auctionRemove
     }
 
 }

@@ -83,3 +83,24 @@ export const addComments = async (
 
     return comments
 }
+
+export const postReport = async (
+    productRepository: ReturnType<ProductDbInterface>,
+    userId: string | undefined,
+    reportId: string,
+    subject: string,
+    issue: string
+) => {
+    const reported = await productRepository.reportPost(userId, reportId, subject, issue);
+
+    return reported;
+}
+
+export const addFavorite = async ( productRepository: ReturnType<ProductDbInterface>,
+    userId: string | undefined,
+     postId: string) => {
+
+    const favorite = await productRepository.addToFavorites(userId, postId);
+
+    return favorite
+}
