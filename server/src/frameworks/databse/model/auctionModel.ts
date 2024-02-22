@@ -3,7 +3,7 @@ import mongoose,{ Schema, model } from "mongoose";
 const auctionSchema = new Schema(
     {
         postId: {
-            type: mongoose.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             required: true,
             ref: 'Product'
         },
@@ -23,7 +23,25 @@ const auctionSchema = new Schema(
         isRemoved: {
             type: Boolean,
             default: false
-        }
+        },
+        participants: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Participants'
+            }
+        ],
+        isCompleted: {
+            type: Boolean,
+            default: false
+        },
+        isBlocked: {
+            type: Boolean,
+            default: false
+        },
+        isActive: {
+            type: Boolean,
+            default: true
+        }  
     }
 )
 

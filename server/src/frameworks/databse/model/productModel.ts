@@ -48,7 +48,7 @@ const productSchema = new Schema(
             { 
                 user: {
                     type: Schema.Types.ObjectId,
-                    ref: "users"
+                    ref: "User"
                 }
             }
         ],
@@ -56,7 +56,7 @@ const productSchema = new Schema(
             {
                 user: {
                     type: Schema.Types.ObjectId,
-                    ref: "users"
+                    ref: "User"
                 },
                 comment: {
                     type: String

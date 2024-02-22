@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import { AuctionDbInterface, auctionDbRepository } from '../../application/interfaces/auctionDbRepository';
 import { AuctionRepositoryMongoDb } from '../../frameworks/databse/repositories/auctionRepositoryMongoDb';
-import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, bidNow, getMyListing, getIdForAuction, auctionRemove } from '../../application/usecases/auction/auction';
+import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, bidNow, getMyListing, getIdForAuction, auctionRemove, getBids, bidAbort, notification } from '../../application/usecases/auction/auction';
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
     userId?: string;
@@ -59,11 +59,8 @@ const auctionController = (
         const userId = req.userId;
         const {auctionId, amount } = req.body;
 
-        const auctionID = auctionId.auctionId;
-        console.log(auctionId.auctionId);
-        console.log(amount);
-        
-
+        const auctionID = auctionId;
+    
         const updated = await bidNow(dbRepositoryAuction, userId, auctionID, amount)
 
         res.json({
@@ -100,6 +97,37 @@ const auctionController = (
         })
     })
 
+    const getMyBids = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId;
+
+        const myBids = await getBids(dbRepositoryAuction, userId)
+
+        res.json({
+            myBids
+        })
+    })
+
+    const abortBid = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId;
+        const auctionId = req.params.id
+        const myBids = await bidAbort(dbRepositoryAuction, userId, auctionId)
+
+        res.json({
+            myBids
+        })
+    })
+
+    const checkNotification = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+            const created = await notification(dbRepositoryAuction, userId)
+            res.json({created})
+        } catch (error) {
+            console.log(error);
+            
+        }
+    })
+
     return {
         addAuction,
         getUpcomingAuctions,
@@ -108,7 +136,10 @@ const auctionController = (
         bid,
         getMyListings,
         getAuctionId,
-        removeAuction
+        removeAuction,
+        getMyBids,
+        abortBid,
+        checkNotification
     }
 }
 

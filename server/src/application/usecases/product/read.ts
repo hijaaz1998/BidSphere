@@ -3,6 +3,7 @@ import { productRepositoryMongoDb } from "../../../frameworks/databse/repositori
 import { EditProductInterface } from "../../../types/productInterface";
 import { ProductDbInterface } from "../../interfaces/productDbRepository";
 import { editPost } from "../../../entities/products";
+import { isAwaitKeyword } from "typescript";
 
 export const getUserProducts = async (
     productRepository: ReturnType<ProductDbInterface>,
@@ -101,6 +102,24 @@ export const addFavorite = async ( productRepository: ReturnType<ProductDbInterf
      postId: string) => {
 
     const favorite = await productRepository.addToFavorites(userId, postId);
+
+    return favorite
+}
+
+export const getFavorite = async (
+    productRepository: ReturnType<ProductDbInterface>,
+    userId: string | undefined
+) => {
+    const favorite = await productRepository.getFavorites(userId)
+    return favorite
+}
+
+export const favoriteRemove = async (
+    productRepository: ReturnType<ProductDbInterface>,
+    userId: string | undefined,
+    postId: string
+) => {
+    const favorite = await productRepository.removeFavorite(userId, postId);
 
     return favorite
 }

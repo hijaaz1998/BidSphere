@@ -209,15 +209,25 @@ export const userRepositoryMongoDb = () => {
         } : {};
     
         const users = await User.find({
-            ...keyword,
-            _id: { $ne: userId }
+            $and: [
+                {
+                    $or: [
+                        { firstName: { $regex: search, $options: 'i' } },
+                        { lastName: { $regex: search, $options: 'i' } },
+                        { email: { $regex: search, $options: 'i' } }
+                    ]
+                },
+                { _id: { $ne: userId } },
+                { _id: { $in: (await User.findById(userId))?.following || [] } } // Filter by users followed by the current user
+            ]
         })
         .select('firstName lastName');
     
-        console.log("users",users);
-        
+        console.log("users", users);
+    
         return users;
     };
+    
     
     const getFavorites = async (userId: string) => {
         try {

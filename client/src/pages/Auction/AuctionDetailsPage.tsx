@@ -9,14 +9,14 @@ const AuctionDetailsPage = () => {
 
   const { auctionId } = useParams();
   return (
-    <>
-      <div className=" top-0 w-full bg-gray-800 text-white p-4 text-center">
+    <div className='h-full'>
+      <div className=" top-0 w-full bg-black text-white p-4 text-center">
         <Navbar />
       </div>
-      <div className='mt-9'>
+      <div className='mt-9 bg-black'>
         <AuctionDetailsComponent auctionId = {auctionId} />
       </div>
-    </>
+    </div>
   )
 }
 

@@ -11,6 +11,8 @@ const Listings = () => {
 
     const fetchListings = async () => {
         const response = await axiosInstance.get('/auction/get_my_listings')
+        console.log("response", response.data.listings);
+        
         setListings(response.data.listings)
     }
 

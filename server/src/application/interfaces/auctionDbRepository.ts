@@ -23,7 +23,7 @@ export const auctionDbRepository = (
     const bidPost = async (
         userId: string | undefined,
         auctionId: string,
-        amount: Number
+        amount: number
         ) => {
             return await repository.bidNow(userId, auctionId, amount)
     }
@@ -40,6 +40,18 @@ export const auctionDbRepository = (
         return await repository.auctionRemove(id);
     }
 
+    const getMyBids = async (userId: string | undefined) => {
+        return await repository.getBids(userId)
+    }
+
+    const abortBid = async (userId: string | undefined, auctionId: string) => {
+        return await repository.bidAbort(userId, auctionId)
+    }
+
+    const createNotification = async (userId: string | undefined) => {
+        return await repository.notificationCheck(userId)
+    }
+
     return {
         addAuction,
         getUpcomingAuctions,
@@ -48,7 +60,10 @@ export const auctionDbRepository = (
         bidPost,
         getMyListings,
         getAuctionId,
-        removeAuction
+        removeAuction,
+        getMyBids,
+        abortBid,
+        createNotification
     }
 }
 

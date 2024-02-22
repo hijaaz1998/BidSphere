@@ -6,7 +6,7 @@ import { ProductRepositoryMongoDb } from '../../frameworks/databse/repositories/
 import { EditProductInterface, ProductInterface } from '../../types/productInterface';
 
 import { productAdd,  } from '../../application/usecases/product/addProduct';
-import { getUserProducts, allPosts, getPostDetail, postDelete, postEdit, postLike, getComment, addComments, postReport, addFavorite } from '../../application/usecases/product/read';
+import { getUserProducts, allPosts, getPostDetail, postDelete, postEdit, postLike, getComment, addComments, postReport, addFavorite, getFavorite, favoriteRemove } from '../../application/usecases/product/read';
 import { authService } from '../../frameworks/services/authService';
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
@@ -167,6 +167,26 @@ const   productController = (
         
     })
 
+    const getFavorites = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId;
+        const favorites = await getFavorite(dbRepositoryProduct,userId)
+
+        res.json({
+            favorites
+        })
+    })
+
+    const removeFavorite = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId;
+        const postId = req.params.id;
+
+        const favorites = await favoriteRemove(dbRepositoryProduct, userId, postId)
+
+        res.json({
+            favorites
+        })
+    })
+ 
     return {
         addProduct,
         handleGetProductsOfUser,
@@ -178,7 +198,9 @@ const   productController = (
         getComments,
         addComment,
         reportPost,
-        addToFavorite
+        addToFavorite,
+        getFavorites,
+        removeFavorite
     }
 }
 

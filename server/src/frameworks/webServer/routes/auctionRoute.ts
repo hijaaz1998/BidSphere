@@ -14,13 +14,16 @@ const auctionRouter = () => {
     );
 
     router.post('/addToAuction', controller.addAuction)
-    router.get('/getAuctions', controller.getUpcomingAuctions)
+    router.get('/getAuctions', jwtAuth, controller.getUpcomingAuctions)
     router.get('/isOnAuction/:postId', controller.isAuctioned)
     router.get('/auctionDetails/:auctionId', controller.getAuctionDetails)
     router.post('/bid', jwtAuth, controller.bid)
     router.get('/get_my_listings', jwtAuth, controller.getMyListings)
     router.get('/getAuction/:postId', controller.getAuctionId)
     router.patch('/removeAuction/:auctionId', controller.removeAuction)
+    router.get('/get_my_bids', jwtAuth,controller.getMyBids)
+    router.put('/abort_bid/:id', jwtAuth, controller.abortBid)
+    router.get('/notification', jwtAuth, controller.checkNotification)
 
     return router
 }

@@ -12,6 +12,8 @@ const PostDetails = ({ postDetail, isOwnPost }: { postDetail: any, isOwnPost: bo
   const [favorites, setFavorites] = useState<any[]>([]); // Store the favorites list
 
   const getAuctionId = async () => {
+    console.log("postdetails",postDetail);
+    
     try {
       const response = await axiosInstance.get(`/auction/getAuction/${postDetail._id}`);
       setAuctionId(response.data.id);
@@ -78,7 +80,7 @@ const PostDetails = ({ postDetail, isOwnPost }: { postDetail: any, isOwnPost: bo
             </button>
           )}
 
-          {postDetail?.isAuctioned && (
+          {!isOwnPost && postDetail?.isAuctioned && (
             <Link to={`/auctions/details/${auctionId}`}>
               <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 Go to Auction

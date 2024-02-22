@@ -24,6 +24,8 @@ const productRouter = () => {
     router.post('/addComment/:postId', jwtAuth, controller.addComment)
     router.post('/report', jwtAuth, controller.reportPost)
     router.post('/add_to_favorites', jwtAuth, controller.addToFavorite)
+    router.get('/get_favorites', jwtAuth, controller.getFavorites)
+    router.put('/remove_favorite/:id', jwtAuth, controller.removeFavorite)
 
     return router;
 }

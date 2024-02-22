@@ -120,7 +120,7 @@ const Messages = () => {
 
 
   return (
-    <div className="container mx-auto">
+    <div className="container h-full">
       <div className="min-w-full border rounded lg:grid lg:grid-cols-3">
         <div className="border-r border-gray-300 lg:col-span-1">
           <div className="mx-3 my-3">
@@ -212,7 +212,6 @@ const Messages = () => {
                   src="https://cdn.pixabay.com/photo/2018/01/15/07/51/woman-3083383__340.jpg"
                   alt="username"
                 />
-
                 <span className="block ml-2 font-bold text-gray-600">
                   {selectedChat.users.find((user: { _id: any; }) => user._id !== userId)?.firstName}{" "}
                   {selectedChat.users.find((user: { _id: any; }) => user._id !== userId)?.lastName}
@@ -224,7 +223,7 @@ const Messages = () => {
                     {messages?.map((message, index) => (
                       <React.Fragment key={message.id}>
                         {message.sender._id === userId ?
-                         (
+                        (
                           <li className="flex justify-end">
                             <div className="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
                               <span className="block">{message.content}</span>
@@ -251,7 +250,6 @@ const Messages = () => {
                   name="message"
                   value={newMessage}
                 />
-
                 <button onClick={(e) => sendMessage(e)}>
                   <svg
                     className="w-5 h-5 text-gray-500 origin-center transform rotate-90"
@@ -265,9 +263,12 @@ const Messages = () => {
               </div>
             </div>
           ) : (
-            <div>Nothing</div>
+            <div className="flex items-center justify-center h-full">
+              <p className="text-xl text-gray-600">Select or search a chat to start messaging</p>
+            </div>
           )}
         </div>
+
       </div>
     </div>
   );

@@ -240,7 +240,7 @@ export const productRepositoryMongoDb = () => {
           favorite = await Favorite.findOneAndUpdate(
             { user: userId },
             { $push: { posts: postId } },
-            { new: true, upsert: true } // Add options to create the document if it doesn't exist
+            { new: true, upsert: true }
           );
         } else {
           favorite = existingFavorite;
@@ -249,9 +249,38 @@ export const productRepositoryMongoDb = () => {
         return favorite;
       } catch (error) {
         console.log(error);
-        throw error; // Re-throw the error to propagate it up the call stack
       }
     };
+
+    const getFavorite = async (userId: string | undefined) => {
+      try {
+        const products = await Favorite.findOne({ user: userId }).populate('posts');
+        const favorites = products ? products.posts : [];
+        console.log(favorites);
+        
+        return favorites
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    
+
+    const favoriteRemove = async (userId: string | undefined, postId: string) => {
+        try {
+            const removed = await Favorite.findOneAndUpdate(
+                { user: userId },
+                { $pull: { posts: postId } },
+                { new: true } // To return the updated document after the update operation
+            );
+
+            console.log("Removed:", removed);
+            return removed;
+        } catch (error) {
+            console.log(error);
+            throw error; // Re-throwing the error to handle it in the calling function if needed
+        }
+    }
+
  
     return {
         addProductBefore,
@@ -265,7 +294,9 @@ export const productRepositoryMongoDb = () => {
         addComments,
         getPostsAdmin,
         postReport,
-        addFavorite
+        addFavorite,
+        getFavorite,
+        favoriteRemove
     }
 }
 

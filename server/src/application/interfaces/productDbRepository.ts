@@ -51,11 +51,19 @@ export const productDbRepository = (
         subject: string,
         issue: string
     ) => {
-        return repository.postReport(userId, reportId, subject, issue)
+        return await repository.postReport(userId, reportId, subject, issue)
     }
 
     const addToFavorites = async (userId: string | undefined, postId: string ) => {
         return await repository.addFavorite(userId, postId)
+    }
+
+    const getFavorites = async (userId: string | undefined) => {
+        return await repository.getFavorite(userId)
+    }
+
+    const removeFavorite = async (userId: string | undefined, postId: string) => {
+        return await repository.favoriteRemove(userId, postId)
     }
 
     return {
@@ -70,7 +78,9 @@ export const productDbRepository = (
         addComment,
         getAllPostsAdmin,
         reportPost,
-        addToFavorites
+        addToFavorites,
+        getFavorites,
+        removeFavorite
     }
 }
 

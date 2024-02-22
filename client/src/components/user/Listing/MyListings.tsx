@@ -1,87 +1,81 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosEndPoints/userAxios";
+import { toast } from "react-toastify";
+
 
 const MyListings = () => {
 
-    const [data, setData] = useState([])
+  const [listings, setListings] = useState<any[]>([]);
 
-    const fetchData = async () => {
-        const fetchedData = await axiosInstance.get('/auction/get_my_listings')
-    }
+  const fetchListings = async () => {
+      const response = await axiosInstance.get('/auction/get_my_listings')
+      console.log("response", response.data.listings);
+      
+      setListings(response.data.listings)
+  }
 
-    useEffect(() => {
-        fetchData();
-    },[])
+  const removeItem = async (id: any) => {
+      const response = await axiosInstance.patch(`/auction/removeAuction/${id}`)
+
+      if(response.data.removed){
+          toast.success("Removed successfully")
+      }
+  }
+
+  useEffect(() => {
+      fetchListings();
+  },[])
 
   return (
-    <>
-      {/* component */}
-      <div className="md:px-10 py-8 w-full mr-4 flex justify-center items-center">
-        {/* <div className="shadow overflow-hidden rounded border-b border-gray-200"> */}
-        <table className="w-full lg:w-2/3 xl:w-2/2 bg-white border border-gray-300 rounded-md">
-          <thead className="bg-gray-800 text-white">
-            <tr>
-              <th className="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">
-                Name
-              </th>
-
-              <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
-                Email
-              </th>
-              <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
-                Status
-              </th>
-              <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
-                Action
-              </th>
+    <section className="container mx-auto p-6 font-mono">
+  <div className="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
+    <div className="w-full overflow-x-auto">
+      {listings && listings.length > 0 ? (
+        <table className="w-full">
+          <thead>
+            <tr className="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 border-b border-gray-600">
+              <th className="px-4 py-3">Product</th>
+              <th className="px-4 py-3">Bid</th>
+              <th className="px-4 py-3">Action</th>
             </tr>
           </thead>
-          <tbody className="text-gray-700">
-            {data?.map((data, index) => (
-              <tr key={index}>
-                <td className="w-1/3 text-left py-3 px-4">
-                  {`${
-                    (
-                      data as {
-                        studentFirstName?: string;
-                        studentLastName?: string;
-                      }
-                    )?.studentFirstName
-                  } ${
-                    (
-                      data as {
-                        studentFirstName?: string;
-                        studentLastName?: string;
-                      }
-                    )?.studentLastName
-                  }`}
+          <tbody className="bg-black">
+            {listings.map((list) => (
+              <tr key={list._id} className="text-white">
+                <td className="px-4 py-3 border">
+                  <div className="flex items-center text-sm">
+                    <div className="relative w-16 h-16 mr-3 rounded-full md:block">
+                      <img
+                        className="object-cover w-full h-full rounded-full"
+                        src={list.postId.image}
+                        alt={list.postId.productName}
+                        loading="lazy"
+                      />
+                      <div
+                        className="absolute inset-0 rounded-full shadow-inner"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-semibold">{list.postId.productName}</p>
+                    </div>
+                  </div>
                 </td>
+                <td className="px-4 py-3 text-ms font-semibold border">{list.currentAmount}</td>
 
-                <td className="text-left py-3 px-4">
-                  {(data as { studentEmail?: string })?.studentEmail}
-                </td>
-                <td className="text-left py-3 px-4">
-                  <button className="px-1 py-1 bg-blue-300 hover:bg-yellow-600 text-white text-sm font-medium rounded-full">
-                    Active
-                  </button>
-                </td>
-                <td className="text-left py-3 px-4">
-                  <label className="relative inline-flex items-center mb-5 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      defaultValue=""
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600" />
-                  </label>
-                </td>
+                <td className="px-4 py-3 text-sm border"><button onClick={() => removeItem(list._id)}>Remove</button></td>
               </tr>
             ))}
           </tbody>
         </table>
-        {/* </div> */}
-      </div>
-    </>
+      ) : (
+        <p className="text-white">No auctions have been set.</p>
+      )}
+    </div>
+  </div>
+</section>
+
+  
   );
 };
 

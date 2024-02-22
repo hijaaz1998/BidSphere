@@ -55,8 +55,11 @@ export const bidNow = async (
     auctionRepository: ReturnType<AuctionDbInterface>,
     userId: string | undefined,
     auctionId: string,
-    amount: Number
+    amount: number
 ) => {
+        console.log("a",auctionId);
+        console.log(amount);
+        console.log(userId);
     const updated = await auctionRepository.bidPost(userId, auctionId, amount)
 
     return updated
@@ -86,4 +89,29 @@ export const auctionRemove = async (
 ) => {
     const removed = await auctionRepository.removeAuction(id);
     return removed;
+}
+
+export const getBids = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    userId: string | undefined
+) => {
+    const bids = await auctionRepository.getMyBids(userId)
+    return bids
+}
+
+export const bidAbort = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    userId: string | undefined,
+    auctionId: string
+) => {
+    const bids = await auctionRepository.abortBid(userId, auctionId)
+    return bids
+}
+
+export const notification = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    userId: string | undefined
+) => {
+    const created = await auctionRepository.createNotification(userId);
+    return created
 }

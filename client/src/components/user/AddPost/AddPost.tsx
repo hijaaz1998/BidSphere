@@ -84,14 +84,14 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
   return (
     <>
   <ToastContainer />
-  <div className='bg-gray-400 w-full flex items-center justify-center min-h-screen h-full'>
-    <div className='mt-20 p-8 w-[800px] md:w-96 lg:w-1/2 bg-white rounded-lg text-center'>
-      <h1 className='text-2xl font-bold mb-4'>Add Post</h1>
+  <div className='bg-black w-full flex items-center justify-center min-h-screen h-full'>
+    <div className='mt-20 p-8 w-[800px] md:w-96 lg:w-1/2 bg-black rounded-lg text-center border-2 border-slate-800'>
+      <h1 className='text-2xl font-medium mb-4 text-white'>Add Post</h1>
       <form className='space-y-4' onSubmit={addProductHandler}>
         <div className='flex flex-col'>
           <input
             type='text'
-            className='py-2 px-3 mb-3 w-full border rounded-md'
+            className='py-2 px-3 mb-3 w-full border rounded-md outline-none border-slate-800 bg-black text-white' 
             placeholder='Product Name'
             name='productName'
             value={productName}
@@ -100,7 +100,7 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
           />
           
           <textarea
-            className='py-2 px-3 mb-3 w-full border rounded-md'
+            className='py-2 px-3 mb-3 w-full border rounded-md outline-none border-slate-800 bg-black text-white'
             placeholder='Description'
             name='description'
             value={description}
@@ -109,7 +109,7 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
           />
           <input
             type='text'
-            className='py-2 px-3 mb-3 w-full border rounded-md'
+            className='py-2 px-3 mb-3 w-full border rounded-md outline-none border-slate-800 bg-black text-white'
             placeholder='Age'
             name='age'
             value={age}
@@ -118,7 +118,7 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
           />
           <input
             type='text'
-            className='py-2 px-3 mb-3 w-full border rounded-md'
+            className='py-2 px-3 mb-3 w-full border rounded-md outline-none border-slate-800 bg-black text-white'
             placeholder='Condition'
             name='condition'
             value={condition}
@@ -127,19 +127,19 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
           />
           <input
             type='text'
-            className='py-2 px-3 mb-3 w-full border rounded-md'
+            className='py-2 px-3 mb-3 w-full border rounded-md outline-none border-slate-800 bg-black text-white'
             placeholder='Rarity'
             name='rarity'
             value={rarity}
             onChange={(e) => setRarity(e.target.value)}
             required
           />
-          <label htmlFor='image' className='block mb-2 text-gray-600'>
+          <label htmlFor='image' className='block mb-2 text-white'>
             Upload Image:
           </label>
           <input
             type='file'
-            className='py-2 px-3 mb-3 w-full border rounded-md'
+            className='py-2 px-3 mb-3 w-full border rounded-md outline-none border-slate-800 text-white'
             placeholder='Image'
             name='image'
             onChange={handleImage}
