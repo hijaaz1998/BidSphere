@@ -15,8 +15,15 @@ export const authService = () => {
     const generateToken = (payload: string) => {        
         const token = jwt.sign({ payload }, configKeys.JWT_SECRET, {
             expiresIn: '5d',
-        });
+        });                
         return token
+    }
+
+    const generateTokenAdmin = (id: string) => {
+        const adminToken = jwt.sign({id}, configKeys.JWT_SECRET_ADMIN,{
+            expiresIn: '5d'
+        });
+        return adminToken
     }
 
     const comparePassword = (password: string, hashedPassword: string) => 
@@ -25,7 +32,8 @@ export const authService = () => {
     return {
         encryptPassword,
         generateToken,
-        comparePassword
+        comparePassword,
+        generateTokenAdmin
     }
 }
 

@@ -13,9 +13,74 @@ export const userDbRepository = (
         return await repository.getUserByEmail(email)
     }
 
+    const getAllUsers = async() => {
+        return await repository.getAllUsers();
+    }
+
+    const blockUser = async (userId: string) => {
+        return await repository.blockUser(userId)
+    }
+
+    const getUserSuggestion = async (userId: string) => {
+        return await repository.getSuggestion(userId)
+    }
+
+    const followUser = async(followed: string, followedBy: string) => {
+        
+        return await repository.followTheUser(followed, followedBy)
+    }
+    const addUserByGoogle = async (firstName: string, lastName: string, email: string, jti: string) => {
+        return await repository.googleAuth(firstName, lastName, email, jti)
+    }
+
+    const unfollowUser = async (logedInUser: string | undefined, unfollowedId: string) => {
+        return await repository.unfollowTheUser(logedInUser, unfollowedId)
+    }
+
+    const checkEmail = async (email: string) => {
+        return await repository.checkEmailIsThere(email);
+    }
+
+    const changePassword = async (email: string, password: string) => {
+        return await repository.changeThePassword(email, password)
+    }
+
+    const getFollowing = async (userId: string | undefined) => {
+        return await repository.getFollowingList(userId)
+    }
+
+    const getFollowers = async (userId: string | undefined) => {
+        return await repository.getFollowersList(userId)
+    }
+
+    const getUsersInfo = async (userId: string) => {
+        return await repository.getUserInfo(userId)
+    }
+
+    const searchUser = async (userId: string | undefined, search: string) => {
+        return await repository.userSearch(userId, search)
+    }
+
+    const getFavorite = async (userId: string) => {
+        return await repository.getFavorites(userId)
+    }
+
     return {
         addUser,
         getUserByEmail,
+        getAllUsers,
+        blockUser,
+        getUserSuggestion,
+        followUser,
+        addUserByGoogle,
+        unfollowUser,
+        checkEmail,
+        changePassword,
+        getFollowing,
+        getFollowers,
+        getUsersInfo,
+        searchUser,
+        getFavorite
     }
 }
 

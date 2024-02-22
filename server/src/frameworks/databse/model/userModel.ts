@@ -22,8 +22,28 @@ const userSchema = new Schema(
         password: {
             type: String,
             trim: true,
+        },
+        isBlocked: {
+            type: Boolean,
+            default: false
+        },
+        followers: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
+        following: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
+        jti: {
+            type: String
         }
     },
+    
     {timestamps: true}
 )
 

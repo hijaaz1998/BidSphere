@@ -1,4 +1,4 @@
-import mongoose, {model, mongo, Schema} from "mongoose";
+import mongoose, {model, Schema} from "mongoose";
 
 const productSchema = new Schema(
     {
@@ -24,9 +24,9 @@ const productSchema = new Schema(
             type: Number
         },
         userId: {
-            type: mongoose.Types.ObjectId,
-            require: true,
-            ref: 'users'
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: 'User'
         },
         createdOn: {
             type: Date,
@@ -34,29 +34,43 @@ const productSchema = new Schema(
         },
         isSold: {
             type: Boolean,
+            default: false
         },
         isDeleted: {
-            type: Boolean
+            type: Boolean,
+            default: false
+        },
+        isAuctioned: {
+            type: Boolean,
+            default: false
         },
         likes: [
             { 
                 user: {
                     type: Schema.Types.ObjectId,
-                    ref: "users"
+                    ref: "User"
                 }
             }
         ],
         comments: [
             {
                 user: {
-                    type: mongoose.Types.ObjectId,
-                    ref: "users"
+                    type: Schema.Types.ObjectId,
+                    ref: "User"
                 },
-                coomment: {
+                comment: {
                     type: String
+                },
+                createdOn: {
+                    type: Date,
+                    default: new Date()
                 }
             }
-        ]
+        ],
+        favorited: {
+            type: Boolean,
+            default: false
+        }
     }
 )
 

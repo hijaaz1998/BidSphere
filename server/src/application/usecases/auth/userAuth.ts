@@ -1,8 +1,11 @@
-import { UserInterface, createUserInterface } from "../../../types/userInterface";
+import { UserInterface, createUserInterface, UserAfterLogin } from "../../../types/userInterface";
 import { AuthServiceInterface } from "../../services/authServiceInterface";
-import { UserDbInterface } from "../../interfaces/userDbRepository";
+import { UserDbInterface, userDbRepository } from "../../interfaces/userDbRepository";
 import { Types } from "mongoose";
+import { HttpStatus } from "../../../types/httpStatus";
 import createUserEntity, { UserEntityType } from "../../../entities/user";
+import AppError from "../../../utils/middleware/appError";
+import { removePassword } from "../user/read";
 
 export const userRegister = async (
     user: UserInterface,
@@ -15,7 +18,7 @@ export const userRegister = async (
     const isExistingEmail = await userRepository.getUserByEmail(user?.email)
 
     if(isExistingEmail){
-        throw new Error('user already exists')
+        return new AppError('Email already exists', HttpStatus.UNAUTHORIZED)
     }
 
     user.password = await authService.encryptPassword(user?.password);
@@ -43,10 +46,10 @@ export const userLogin = async (
     userRepository: ReturnType<UserDbInterface>,
     authService: ReturnType<AuthServiceInterface>
 ) => {
-    const user: createUserInterface | null = await userRepository.getUserByEmail(email)
+    const user: UserAfterLogin | null = await userRepository.getUserByEmail(email)    
     
     if(!user){
-        throw new Error ("This user doesent exist") 
+        return new AppError('This user doesnt exist', HttpStatus.UNAUTHORIZED)
     }
 
     const isPasswordCorrect = await authService.comparePassword(
@@ -55,11 +58,127 @@ export const userLogin = async (
     )
 
     if(!isPasswordCorrect){
-        throw new Error ('Password or email is incorrect')
+        return new AppError('Invalid email or password', HttpStatus.UNAUTHORIZED)
     }
 
-    const token = authService.generateToken(JSON.stringify(user))
-    return {token, user}
+    const userDetails = removePassword(user)
+    const token = authService.generateToken(JSON.stringify(userDetails._id))    
+
+    return {token, userDetails}
     
 }
 
+export const getUserSuggestion = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: any
+) => {
+    const data = await userRepository.getUserSuggestion(userId);
+    return data
+}
+
+
+export const followTheUser = async (
+    userRepository: ReturnType<UserDbInterface>,
+    followed: string,
+    followedBy: string
+) => {
+   
+    
+    const data = await userRepository.followUser(followed, followedBy)
+    if(data){
+        return data
+    }
+}
+
+export const googleAuthRegister = async (
+    firstName: string, lastName: string, email: string, jti: string,
+    userRepository: ReturnType<UserDbInterface>,
+    authService: ReturnType<AuthServiceInterface>
+) => {
+    const user: any = await userRepository.addUserByGoogle(firstName,lastName, email, jti);
+
+
+    console.log("user",user);
+    
+
+    const token = authService.generateToken(JSON.stringify(user?._id));
+
+    return {token, user}
+}
+
+export const unfollowTheUser = async (
+    userRepository: ReturnType<UserDbInterface>,
+    logedInUser: string | undefined,
+    unfollowedId: string
+) => {
+    const res = await userRepository.unfollowUser(logedInUser, unfollowedId);
+
+    return res
+}
+
+export const checkEmail = async (
+    userRepository: ReturnType<UserDbInterface>,
+    email: string
+) => {
+    const check = await userRepository.checkEmail(email)
+
+    return check
+}
+
+export const changeThePassword = async (
+    userRepository: ReturnType<UserDbInterface>,
+    authService: ReturnType<AuthServiceInterface>,
+    email: string,
+    password: string
+) => {
+    const encrypted = await authService.encryptPassword(password);
+
+    const updated = await userRepository.changePassword(email, encrypted);
+
+    return updated
+}
+
+export const getFollowingList = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string | undefined
+) => {
+    const following = await userRepository.getFollowing(userId);
+
+    return following
+}
+
+export const getFollowersList = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string | undefined
+) => {
+    const followers = await userRepository.getFollowers(userId);
+
+    return followers;
+}
+
+export const getUserInfo = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string
+) => {
+    const user = await userRepository.getUsersInfo(userId)
+
+    return user
+}
+
+export const userSearch = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string | undefined,
+    search: string
+) => {
+    const result = await userRepository.searchUser(userId, search);
+
+    return result
+}
+
+export const getFavorites = async (
+    userRepository: ReturnType<UserDbInterface>,
+    userId: string
+) => {
+    const favorites = await userRepository.getFavorite(userId)
+    return favorites
+}

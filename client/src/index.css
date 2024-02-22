@@ -8,3 +8,15 @@
   box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.fixed-size-image {
+  @apply w-80 h-60 object-cover; /* Adjust these values to your desired width and height */
+}
+
+.fixed-size-image-auction {
+  @apply w-72 h-60 object-contain; /* Adjust these values to your desired width and height */
+}
+
+.fixed-size-image-details {
+  @apply w-96 h-96 object-cover; /* Adjust these values to your desired width and height */
+}

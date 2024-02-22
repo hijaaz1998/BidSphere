@@ -2,30 +2,42 @@
 import React, { useEffect, useState } from "react";
 import userImage from "../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg"; // replace with actual path
 import axiosInstance from "../../../axiosEndPoints/userAxios";
+import { login } from "../../../slices/userSlice";
+import { Link } from "react-router-dom";
+import { TiThumbsUp, TiMessage } from 'react-icons/ti'; // Import react-icons
 
 interface Product {
   _id: string;
   productName: string;
   image: string;
-  // Add other properties if needed
 }
 
-const Post = () => {
+interface UserData {
+  firstName: string;
+  lastName: string;
+  _id: any
+}
+
+const Posts = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const fetchData = async () => {
     try {
-      const userId = localStorage.getItem("userId")
-        ? JSON.parse(localStorage.getItem("userId") as string)
-        : null;
-      const response = await axiosInstance.get(
-        `/product/getProducts/${userId}`
-      );
+
+      const data = localStorage.getItem('userData');
+      if (data) {
+        const parsed = JSON.parse(data);
+        setUserData(parsed);
+      }
+
+      const response = await axiosInstance.get(`/product/getProducts`);
       const fetchedProducts = response.data.myProducts;
+      console.log("fetchedProducts",fetchedProducts);
+      
       setProducts(fetchedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
-      // Handle the error
     }
   };
 
@@ -34,11 +46,11 @@ const Post = () => {
   }, []);
 
   return (
-    <div className="your-outer-div-class bg-gray-400 min-h-screen px-6 mt-20 overflow-hidden">
-      {products.map((product, index) => (
+    <div className=" bg-black min-h-screen px-6 overflow-hidden">
+      {products?.slice()?.reverse()?.map((product, index) => (
         <div
           key={index}
-          className="max-w-xl mx-auto bg-white rounded-md overflow-hidden shadow-lg my-4 mt-14"
+          className="max-w-xl mx-auto bg-black rounded-md overflow-hidden shadow-lg my-4 mt-14 border-2 border-slate-800"
         >
           {/* User Profile Section */}
           <div className="flex items-center p-4">
@@ -48,60 +60,39 @@ const Post = () => {
               className="w-12 h-12 object-cover rounded-full"
             />
             <div className="ml-4">
-              <h2 className="text-lg font-semibold">Username</h2>
-              {/* Other user information can go here */}
+              <Link to={`/profile/${userData?._id}`}>
+                <h2 className="text-sm text-white font-semibold">{`${userData?.firstName} ${userData?.lastName}`}</h2>
+              </Link>
             </div>
           </div>
+          <div className="">
+              <h2 className="text-sm text-white font-semibold mb-4 flex justify-center ">{product?.description}</h2>
+          </div>
 
-          {/* Post Image Section */}
-          <img
-            src={product.image}
-            alt="Post"
-            className="w-full h-full object-contain min-h-64"
-          />
+          <div className="flex justify-center ">
+            <Link to={`/postDetails/${product._id}`}>
+              <img
+                src={product.image}
+                alt="Post"
+                className=" "
+              />
+            </Link>
+          </div>
 
           {/* Post Actions Section */}
           <div className="flex justify-between p-4">
-            <div className="flex items-center space-x-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-green-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-
-              <span className="text-gray-600">Like</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-indigo-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-              <span className="text-gray-600">Comment</span>
+            <div className="flex items-center space-x-4">
+              
             </div>
           </div>
         </div>
       ))}
+
+      {products.length === 0 && (
+        <div className="text-white">Nothing To Show</div>
+      )}
     </div>
   );
 };
 
-export default Post;
+export default Posts;

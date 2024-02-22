@@ -14,16 +14,18 @@ const RegisterForm = () => {
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
   const [error, setError] = useState<string>('');
-
+  const [otp, setOTP] = useState();
+  const [validOtp, setValidOtp] = useState();
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
   const signupHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim() || !email.trim() || !password.trim() || !cpassword.trim()) {
+    if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim() || !email.trim() || !password.trim() || !otp.trim() || !cpassword.trim()) {
       setError('All fields are required.');
       setTimeout(() => {
         setError('');
@@ -39,6 +41,14 @@ const RegisterForm = () => {
       return;
     }
 
+    if(!otp || isNaN(otp) || parseInt(otp) !== validOtp){
+      setError('Incorrect OTP');
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+      return;
+    }
+
     if (password !== cpassword) {
       setError('Passwords do not match.');
       setTimeout(() => {
@@ -48,30 +58,62 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await axiosInstance.post('/auth/signup', {
+      const response = await axiosInstance.post('/user/signup', {
         firstName,
         lastName,
         phoneNumber,
         email,
-        password
+        password,
       })
-      console.log(response.data,"lll");
       
+      if(response.data.success){
 
-      const userData = response.data
-      console.log(userData);
-      
-      localStorage.setItem("userData", JSON.stringify(userData.applicantId));
-      localStorage.setItem("userToken", JSON.stringify(userData.token));
-
-      dispatch(signup(userData))
-      toast.success('Registration successfull')
-      navigate('/home');
+        toast.success('Registration successfull')
+        navigate('/');
+        
+      } else {
+        setError(response.data.result.error.message);
+        setTimeout(() => {
+          setError('');
+        }, 3000);
+      }
     } catch (error:any) {
       toast.error(error.response)
     }
 
   };
+
+  const handleGetOTP = async () => {
+
+    if(!email.trim()){
+      setError('Enter Email');
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    if(!emailRegex.test(email)){
+      setError('Invalid Email');
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    const response = await axiosInstance.post(`/user/get_otp_for_registration`, email);
+
+    if(response.data.success){
+      toast.success(response.data.message)
+      setValidOtp(response.data.otp);
+    } else {
+        setError(response.data.message);
+        setTimeout(() => {
+            setError('');
+        }, 3000);
+        return;
+    }
+  }
 
   return (
     <>
@@ -108,15 +150,28 @@ const RegisterForm = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 
               />
+              <div className='flex justify-center items-center'>
+                <input
+                  type="text"
+                  className='py-2 px-3 w-4/5 mb-3 border rounded-md'
+                  placeholder='Email'
+                  name='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                  <a className='w-1/5 text-blue-400 cursor-pointer' onClick={handleGetOTP}>Get OTP</a>
+              </div>
+              {validOtp && 
               <input
                 type="text"
                 className='py-2 px-3 mb-3 w-full border rounded-md'
-                placeholder='Email'
-                name='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder='OTP'
+                name='otp'
+                value={otp}
+                onChange={(e) => setOTP(e.target.value)}
                 
               />
+              }
               <input
                 type="password"
                 className='py-2 px-3 mb-3 w-full border rounded-md'

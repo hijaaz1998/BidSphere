@@ -3,6 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { useDispatch } from 'react-redux';
 import { login } from '../../../slices/userSlice';
+// import { ToastContainer, toast } from 'react-toastify';
+import {  GoogleLogin } from '@react-oauth/google';
+import { toast } from 'react-toastify';
+
+
 
 function LoginForm() {
   
@@ -12,6 +17,28 @@ function LoginForm() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleLoginSuccess = async (credentialResponse: any) => {
+    console.log(credentialResponse.credential);
+    const credential = credentialResponse.credential;
+    const success = await axiosInstance.post('/user/googleAuth', { credential });
+    if(success){
+      console.log("😊🌟");
+      
+      console.log("success",success.data.user);
+      
+      localStorage.setItem("userToken", JSON.stringify(success.data.token))
+      localStorage.setItem("userData", JSON.stringify(success.data.user));
+      localStorage.setItem("userId", JSON.stringify(success.data.user?._id));
+      dispatch(login(success.data.user))
+      navigate('/home')
+    }
+
+  }
+  
+
+
+  
 
   const loginHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,22 +62,34 @@ function LoginForm() {
     }
 
     try {
-      const response = await axiosInstance.post('/auth/login', {
+      const response = await axiosInstance.post('/user/login', {
         email,
         password
       })
 
-      const userData = response.data;
-      
-      localStorage.setItem("userId", JSON.stringify(userData.user._id))
-      localStorage.setItem("userData", JSON.stringify(userData.user));
-      localStorage.setItem("userToken", JSON.stringify(userData.token));
-      
-      dispatch(login(userData))
-      navigate('/home')
+      if(response.data.blocked){
+        toast.error('user have been blocked')
+      }
+
+      if(response.data.status){
+        const userData = response.data;
+        
+        localStorage.setItem("userId", JSON.stringify(userData?.result?.user?._id));
+        localStorage.setItem("userData", JSON.stringify(userData?.result?.user));
+        localStorage.setItem("userToken", JSON.stringify(userData?.result?.token));
+        
+        
+        dispatch(login(userData.result.user))
+        navigate('/home')
+      } else {
+        setError(response.data.result.error.message);
+        setTimeout(() => {
+          setError('');
+        }, 3000);
+      }
       
     } catch (error) {
-      
+      console.log("error",error);
     }
 
   }
@@ -63,15 +102,25 @@ function LoginForm() {
         <h3 className='text-sm text-gray-600 mb-6'>Enter your details to login.</h3>
         <form onSubmit={loginHandler} className='space-y-4'>
           <div className='flex flex-col'>
-            <input type="email" className='py-2 px-3 mb-3 w-full border rounded-md' placeholder='Email' value={email} onChange={(e) => {setEmail(e.target.value)}} />
-            <input type="password" className='py-2 px-3 mb-3 w-full border rounded-md' placeholder='Password' value={password} onChange={(e) => {setPassword(e.target.value)}} />
+              <input type="text" className='py-2 px-3 mb-3 w-full border rounded-md' placeholder='Email' value={email} onChange={(e) => { setEmail(e.target.value) }} />
+              <input type="password" className='py-2 px-3 mb-3 w-full border rounded-md' placeholder='Password' value={password} onChange={(e) => { setPassword(e.target.value) }} />
+              {/* Forgot Password link */}
+              <p className='text-sm mt-2 text-gray-500 cursor-pointer'>
+                <Link to={'/forgot-password'}>Forgot Password?</Link>
+              </p>
           </div>
           <div className='flex flex-col items-center'>
-            {error && <p className='text-red-500'>{error}</p>}
-            <button type='submit' className='bg-blue-500 text-white py-2 px-4 mt-4 mb-3 rounded-md w-full'>Login</button>
-            <p className='text-sm mt-2'>Already have an account? <span className='text-blue-500 cursor-pointer'><Link to={'/signup'}>Signup</Link></span></p>
+              {error && <p className='text-red-500'>{error}</p>}
+              <button type='submit' className='bg-blue-500 text-white py-2 px-4 mt-4 mb-3 rounded-md w-full'>Login</button>
+              <p className='text-sm mt-2'>Already have an account? <span className='text-blue-500 cursor-pointer'><Link to={'/signup'}>Signup</Link></span></p>
           </div>
         </form>
+        <GoogleLogin
+          onSuccess={handleLoginSuccess}
+          onError={() => {
+            console.log('Login Failed');
+          }}
+        />
       </div>
     </div>
     </>
