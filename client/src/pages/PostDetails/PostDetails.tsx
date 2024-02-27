@@ -21,6 +21,7 @@ interface PostData {
   comments: any[];
   likes: any[];
   description?: string;
+  isBlocked: boolean
 }
 
 const PostDetailsPage = () => {
@@ -31,6 +32,8 @@ const PostDetailsPage = () => {
   const fetchPostData = async () => {
     try {
       const response = await axiosInstance.get(`/product/postDetails/${postId}`);
+      console.log("datass",response.data);
+      
       setData(response.data);
     } catch (error) {
       console.error('Error fetching post data:', error);

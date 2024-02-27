@@ -115,3 +115,18 @@ export const notification = async (
     const created = await auctionRepository.createNotification(userId);
     return created
 }
+
+export const readChange = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    userId: string | undefined
+) => {
+    const changed = await auctionRepository.changeRead(userId);
+    return changed
+}
+
+export const auctionCompleted = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    auctionId: string) => {
+    const updated = await auctionRepository.completedAuction(auctionId)
+    return updated
+}

@@ -32,6 +32,7 @@ const authRouter = () => {
     router.get('/getUserInfo/:userId', controller.getUserInfos)
     router.get('/search',jwtAuth, controller.searchUser)
     router.get('/getFavorite/:userId',controller.getFavorite)
+    router.put('/update', jwtAuth, controller.updatProfile)
 
     return router;
 

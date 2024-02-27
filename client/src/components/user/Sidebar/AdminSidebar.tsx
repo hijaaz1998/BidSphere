@@ -17,6 +17,12 @@ const AdminSidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
         <span onClick={() => onButtonClick('posts')}  className=" bg-white w-full my-8 h-10 rounded-xl flex justify-center items-center hover:cursor-pointer">
             Posts
         </span>
+        {/* <span onClick={() => onButtonClick('reports')}  className=" bg-white w-full my-8 h-10 rounded-xl flex justify-center items-center hover:cursor-pointer">
+            Reports
+        </span> */}
+        {/* <a href="" className=' bg-white w-full my-8 h-10 rounded-xl flex justify-center items-center hover:cursor-pointer'>
+          <p>Users</p>
+        </a>
         <a href="" className=' bg-white w-full my-8  h-10 rounded-xl flex justify-center items-center hover:cursor-pointer'>
           <p>Users</p>
         </a>
@@ -26,15 +32,9 @@ const AdminSidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
         <a href="" className=' bg-white w-full my-8  h-10 rounded-xl flex justify-center items-center hover:cursor-pointer'>
           <p>Users</p>
         </a>
-        <a href="" className=' bg-white w-full my-8 h-10 rounded-xl flex justify-center items-center hover:cursor-pointer'>
-          <p>Users</p>
-        </a>
         <a href="" className=' bg-white w-full my-8  h-10 rounded-xl flex justify-center items-center hover:cursor-pointer'>
           <p>Users</p>
-        </a>
-        <a href="" className=' bg-white w-full my-8  h-10 rounded-xl flex justify-center items-center hover:cursor-pointer'>
-          <p>Users</p>
-        </a>
+        </a> */}
       </div>
     </div>
   )

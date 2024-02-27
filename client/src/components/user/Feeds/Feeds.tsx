@@ -111,6 +111,10 @@ const Feeds: React.FC = () => {
     }
   }
 
+  const sharePost = async (id: string) => {
+
+  }
+
   const handleClose = () => {
     setIssue('');
     setSubject('')
@@ -122,9 +126,9 @@ const Feeds: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-black">
+    <div className="flex justify-center min-h-screen">
       {/* Feeds Section */}
-      <div className="flex-1 ">
+      <div className="flex">
         <div className="px-6 mt-20">
           <div className="">
             {feedsData.length > 0 ? (
@@ -188,6 +192,9 @@ const Feeds: React.FC = () => {
                           onClick={() => openCommentModal(data)}
                         />
                         <span className="text-gray-600"></span>
+                      </div>
+                      <div>
+                        <button className="text-white" onClick={() => sharePost(data?._id)}>share</button>
                       </div>
                     </div>
                   </div>

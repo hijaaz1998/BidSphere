@@ -24,6 +24,8 @@ const auctionRouter = () => {
     router.get('/get_my_bids', jwtAuth,controller.getMyBids)
     router.put('/abort_bid/:id', jwtAuth, controller.abortBid)
     router.get('/notification', jwtAuth, controller.checkNotification)
+    router.put('/change_is_read', jwtAuth, controller.changeRead)
+    router.put('/auction_completed/:id', controller.completedAuction)
 
     return router
 }

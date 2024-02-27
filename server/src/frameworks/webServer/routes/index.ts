@@ -2,9 +2,8 @@ import { Application } from "express";
 import authRouter from "./authRoute";
 import productRouter from "./productRoute";
 import adminRouter from "./adminRoute";
-import auctionRouter from "./auctionRoute";
-import chatRouter from "./chatRoute";
-
+import auctionRouter from './auctionRoute'
+import chatRouter from './chatRoute'
 const routes = (app: Application) => {
     app.use('/api/product', productRouter())
     app.use('/api/user', authRouter())

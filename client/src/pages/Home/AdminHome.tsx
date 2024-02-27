@@ -5,6 +5,7 @@ import AdminSidebar from '../../components/user/Sidebar/AdminSidebar'
 import { useNavigate } from 'react-router-dom'
 import Auctions from '../../components/user/AdminComponents/Auction/Auctions'
 import PostsMgt from '../../components/user/AdminComponents/PostsManagement/PostsMgt'
+import Reports from '../../components/user/AdminComponents/Reports/Reports'
 
 const AdminHome: React.FC = () => {
 
@@ -19,6 +20,8 @@ const AdminHome: React.FC = () => {
         return <Auctions />;
       case 'posts':
         return <PostsMgt />;
+      case 'reports':
+        return <Reports />;
       default:
         return null;
     }

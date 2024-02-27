@@ -66,6 +66,10 @@ export const productDbRepository = (
         return await repository.favoriteRemove(userId, postId)
     }
 
+    const fetchReports = async () => {
+        return await repository.getReports()
+    }
+
     return {
         addProduct,
         getUsersAllProducts,
@@ -80,7 +84,8 @@ export const productDbRepository = (
         reportPost,
         addToFavorites,
         getFavorites,
-        removeFavorite
+        removeFavorite,
+        fetchReports
     }
 }
 

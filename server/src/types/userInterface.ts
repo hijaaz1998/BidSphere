@@ -23,3 +23,10 @@ export interface UserAfterLogin{
     password: string;
 }
 
+export interface updateInterface{
+    firstName: string,
+    lastName: string,
+    email: string,
+    image: string
+}
+

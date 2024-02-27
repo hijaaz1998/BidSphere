@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 
 const MyBids = () => {
     const [bids, setBids] = useState<any[]>([]);
+    const userIdString = localStorage.getItem('userId');
+    const userId = userIdString ? JSON.parse(userIdString) : null;
 
     useEffect(() => {
         fetchMyBids();
@@ -13,7 +15,8 @@ const MyBids = () => {
     const fetchMyBids = async () => {
         try {
             const response = await axiosInstance.get('/auction/get_my_bids');
-            console.log("bids", response.data.myBids);
+            console.log("respooooooo",response.data.myBids);
+            
             setBids(response.data.myBids);
         } catch (error) {
             console.error("Error fetching bids:", error);
@@ -64,11 +67,27 @@ const MyBids = () => {
                                     </div>
                                 </Link>
                                 </td>
+                                
                                 <td className="px-4 py-3 text-ms font-semibold border">
-                                <span style={{ color: bid.currentAmount === bid.auctionId.currentAmount ? 'green' : 'red' }}>
-                                    {bid.currentAmount === bid.auctionId.currentAmount ? 'currently you have the bid' : 'currently you dont have the bid'}
-                                </span>
+                                    {bid.auctionId.isCompleted ? (
+                                        userId === bid.auctionId.winner._id ? (
+                                            <span style={{ color: 'green' }}>Congratulations! You won this auction</span>
+                                        ) : (
+                                            <span style={{ color: 'green' }}>{bid.auctionId.winner.firstName} {bid.auctionId.winner.lastName} won this auction</span>
+                                        )
+                                    ) : (
+                                        <>
+                                            {userId === bid.auctionId.winner ? (
+                                                <span style={{ color: 'green' }}>Congratulations! You won this auction</span>
+                                            ) : (
+                                                <span style={{ color: bid.currentAmount === bid.auctionId.currentAmount ? 'green' : 'red' }}>
+                                                    {bid.currentAmount === bid.auctionId.currentAmount ? 'Currently, you have the bid' : 'Currently, you don\'t have the bid'}
+                                                </span>
+                                            )}
+                                        </>
+                                    )}
                                 </td>
+
                                 <td className="px-4 py-3 text-sm border">
                                     <button onClick={() => removeItem(bid._id)}>Remove</button>
                                 </td>

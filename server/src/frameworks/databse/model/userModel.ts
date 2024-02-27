@@ -41,6 +41,9 @@ const userSchema = new Schema(
         ],
         jti: {
             type: String
+        },
+        image: {
+            type: String
         }
     },
     

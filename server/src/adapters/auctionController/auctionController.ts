@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import { AuctionDbInterface, auctionDbRepository } from '../../application/interfaces/auctionDbRepository';
 import { AuctionRepositoryMongoDb } from '../../frameworks/databse/repositories/auctionRepositoryMongoDb';
-import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, bidNow, getMyListing, getIdForAuction, auctionRemove, getBids, bidAbort, notification } from '../../application/usecases/auction/auction';
+import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, bidNow, getMyListing, getIdForAuction, auctionRemove, getBids, bidAbort, notification, readChange, auctionCompleted } from '../../application/usecases/auction/auction';
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
     userId?: string;
@@ -16,25 +16,31 @@ const auctionController = (
     const dbRepositoryAuction = auctionDbRepository(auctionDbRepositoryImpl())
 
     const addAuction = asyncHandler ( async (req: Request, res: Response) => {
-        const data = req.body.data;
-        console.log("data",data);
-        
+        try {
+            const data = req.body.data;
+            console.log("data",data); 
 
-        const created = await addToAuction(data,dbRepositoryAuction)
+            const created = await addToAuction(data,dbRepositoryAuction)
 
-        res.json({
-            created
-        })
+            res.json({
+                created
+            })
+        } catch (error) {
+            console.log(error);
+            
+        }
     })
 
     const getUpcomingAuctions = asyncHandler ( async (req: Request, res: Response) => {
-        const upcomingAuctions = await getAuctionsUpcoming(dbRepositoryAuction)
-
-        console.log("upcomingAuctions",upcomingAuctions);
-
-        res.json({
-            upcomingAuctions
-        })
+        try {
+            const upcomingAuctions = await getAuctionsUpcoming(dbRepositoryAuction);
+            res.json({
+                upcomingAuctions
+            })
+        } catch (error) {
+            console.log(error);
+            
+        }
     })
 
     const isAuctioned = asyncHandler( async (req: Request, res: Response) => {
@@ -128,6 +134,29 @@ const auctionController = (
         }
     })
 
+    const changeRead = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+        try {
+            const userId = req.userId        
+            const updated = await readChange(dbRepositoryAuction, userId)
+
+            res.json({
+                updated
+            })
+        } catch (error) {
+            console.log(error);
+            
+        }
+    })
+
+    const completedAuction = asyncHandler ( async (req: Request, res: Response) => {
+        const auctionId = req.params.id
+        const updated = await auctionCompleted(dbRepositoryAuction,auctionId)
+
+        res.json({
+            updated
+        })
+    } )
+
     return {
         addAuction,
         getUpcomingAuctions,
@@ -139,7 +168,9 @@ const auctionController = (
         removeAuction,
         getMyBids,
         abortBid,
-        checkNotification
+        checkNotification,
+        changeRead,
+        completedAuction
     }
 }
 

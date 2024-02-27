@@ -5,69 +5,91 @@ import Product from "../model/productModel";
 import Participants from "../model/ParticipantsModel";
 import User from "../model/userModel";
 import Notifications from "../model/NotificationModel";
+import { log } from "console";
 
 
 export const auctionRepositoryMongoDb = () => {
 
-    const notificationCheck = async (userId: string | undefined) => {
-        const notificationsToSend= [];
-        const auctions = await Auction.find({ endingDate: { $lt: new Date() } }); // Find auctions where the ending date is in the past
-        for (const auction of auctions) {
-            const participant: any= await Participants.findOne({
-                auctionId: auction._id,
-                currentAmount: auction.currentAmount
-            }).populate('userId');
-            
-            if (participant) {
-                // Check if a notification already exists for this auction and participant
-                const existingNotification = await Notifications.findOne({
-                    receiver: participant.userId._id,
-                    auctionId: auction._id
-                });
-                
-                // If no existing notification, create one
-                if (!existingNotification) {
-                    const notification = new Notifications({
-                        receiver: participant.userId._id,
-                        auctionId: auction._id,
-                        message: "Congradulations, You got the Auction!!!"
+    const notificationCheck = async (userID: string | undefined) => {
+        try {
+            const notificationsToSend = [];
+            const auctions = await Auction.find({ endingDate: { $lt: new Date() } });
+            console.log("auctions", auctions);
+        
+            for (const auction of auctions) {
+                const participant: any = await Participants.findOne({
+                    currentAmount: auction.currentAmount,
+                    userId: userID,
+                    auctionId: auction._id,
+                }).populate('userId');
+                console.log("parti", participant);
+                if (participant) {
+                    console.log("[participant", participant);
+        
+                    const existingNotification = await Notifications.findOne({
+                        reciever: participant.userId._id,
+                        auctionId: auction._id
                     });
-                    const created: any = await notification.save();
-                    if (created.receiver.toString() === userId) {
-                        notificationsToSend.push(created);
+        
+                    if (!existingNotification) {
+                        const notification = new Notifications({
+                            reciever: participant.userId._id,
+                            auctionId: auction._id,
+                            message: "Congratulations, You got the Auction!!!"
+                        });
+                        const created: any = await notification.save();
+                        if (created.reciever === userID) {
+                            notificationsToSend.push(created);
+                        }
+                    } else if (existingNotification) {
+                        notificationsToSend.push(existingNotification)
                     }
                 }
             }
+            notificationsToSend.sort((a, b) => b.createdAt - a.createdAt);
+            
+            console.log("notifto send", notificationsToSend);
+        
+            return notificationsToSend;
+        } catch (error) {
+            console.log(error);
+            
         }
-        return notificationsToSend
     };
+    
 
     const addToAuction = async (auction: any) => {
-        const postId = auction.getPostId();
-        const currentAmount = auction.getCurrentAmount();
-        const startingDate = auction.getStartingDate();
-    
-        const endingDate = new Date(startingDate);
-        endingDate.setMinutes(endingDate.getMinutes() + 2); // Set endingDate to 2 minutes after startingDate
-    
-        const newAuction: any = new Auction({
-            postId,
-            currentAmount,
-            startingDate,
-            endingDate,
-        });
-    
-        await newAuction.save();
-    
-        await Product.findByIdAndUpdate(postId, { isAuctioned: true });
-    
-        return newAuction;
+        try {
+            const postId = auction.getPostId();
+            const currentAmount = auction.getCurrentAmount();
+            const startingDate = auction.getStartingDate();
+        
+            const endingDate = new Date(startingDate);
+            endingDate.setMinutes(endingDate.getDate() + 2); // Set endingDate to 2 minutes after startingDate
+        
+            const newAuction: any = new Auction({
+                postId,
+                currentAmount,
+                startingDate,
+                endingDate,
+            });
+        
+            await newAuction.save();
+        
+            await Product.findByIdAndUpdate(postId, { isAuctioned: true });
+        
+            return newAuction;
+        } catch (error) {
+            console.log(error);
+            
+        }
     };
 
     const getAuctionsUpcoming = async () => {
         try {
             const auctions = await Auction.find({ 
-                isRemoved: false
+                isRemoved: false,
+                isCompleted: false
             })
             .populate({
                 path: 'postId',
@@ -88,19 +110,28 @@ export const auctionRepositoryMongoDb = () => {
     };
     
     const isAuctioned = async (postId: string) => {
-        const auctioned = await Product.findById(postId,{isAuctioned})
-        return auctioned
+        try {
+            const auctioned = await Product.findById(postId,{isAuctioned})
+            return auctioned
+        } catch (error) {
+            console.log(error);
+            
+        }
     } 
 
     const getDetailsOfAuction = async (auctionId: string) => {
         
-        const details = await Auction.findById(auctionId).populate({
-            path: 'postId',
-            select: 'productName image',
-          });
-
-          console.log("auction", details);
-          return details
+        try {
+            const details = await Auction.findById(auctionId).populate({
+                path: 'postId',
+                select: 'productName image',
+              });
+    
+              return details
+        } catch (error) {
+            console.log(error);
+            
+        }
           
     }
 
@@ -109,49 +140,54 @@ export const auctionRepositoryMongoDb = () => {
         auctionId: string,
         amount: number
     ) => {
-        let newParticipant: any;
-        let existingParticipant: any;
-    
-        const auction = await Auction.findByIdAndUpdate(
-            auctionId,
-            { $inc: { currentAmount: amount } },
-            { new: true }
-        );
-    
-        if (!auction) {
-            return null;
-        }
-    
-        existingParticipant = await Participants.findOne({ userId, auctionId });
-    
-        if (existingParticipant) {
-            existingParticipant.currentAmount = auction.currentAmount;
-            await existingParticipant.save();
-        } else {
-            newParticipant = new Participants({
-                currentAmount: auction.currentAmount,
-                userId,
-                auctionId: auction._id
-            });
-            await newParticipant.save();
-        }
-    
-        const isParticipantInAuction = auction.participants.includes(existingParticipant ? existingParticipant._id : newParticipant?._id);
-    
-        if (!isParticipantInAuction) {
-            await Auction.findByIdAndUpdate(
+        try {
+            let newParticipant: any;
+            let existingParticipant: any;
+        
+            const auction = await Auction.findByIdAndUpdate(
                 auctionId,
-                { $push: { participants: existingParticipant ? existingParticipant._id : newParticipant?._id } },
+                { $inc: { currentAmount: amount } },
                 { new: true }
             );
+        
+            if (!auction) {
+                return null;
+            }
+        
+            existingParticipant = await Participants.findOne({ userId, auctionId });
+        
+            if (existingParticipant) {
+                existingParticipant.currentAmount = auction.currentAmount;
+                await existingParticipant.save();
+            } else {
+                newParticipant = new Participants({
+                    currentAmount: auction.currentAmount,
+                    userId,
+                    auctionId: auction._id
+                });
+                await newParticipant.save();
+            }
+        
+            const isParticipantInAuction = auction.participants.includes(existingParticipant ? existingParticipant._id : newParticipant?._id);
+        
+            if (!isParticipantInAuction) {
+                await Auction.findByIdAndUpdate(
+                    auctionId,
+                    { $push: { participants: existingParticipant ? existingParticipant._id : newParticipant?._id } },
+                    { new: true }
+                );
+            }
+        
+            const details = await Auction.findById(auctionId).populate({
+                path: 'postId',
+                select: 'productName image',
+            });
+        
+            return details;
+        } catch (error) {
+            console.log(error);
+            
         }
-    
-        const details = await Auction.findById(auctionId).populate({
-            path: 'postId',
-            select: 'productName image',
-        });
-    
-        return details;
     }
     
     
@@ -185,15 +221,25 @@ export const auctionRepositoryMongoDb = () => {
     
 
     const getIdForAuction = async ( postId: string) => {
-        const auction = await Auction.findOne({postId})
-        return auction?._id;
+        try {
+            const auction = await Auction.findOne({postId})
+            return auction?._id
+        } catch (error) {
+            console.log(error);
+            
+        };
     }
 
     const auctionRemove = async (id: string) => {
-        const removed = await Auction.findByIdAndUpdate(id, {isRemoved: true} )
+        try {
+            const removed = await Auction.findByIdAndUpdate(id, {isRemoved: true} )
 
-        if(removed){
-            return true
+            if(removed){
+                return true
+            }
+        } catch (error) {
+            console.log(error);
+            
         }
     } 
 
@@ -203,10 +249,16 @@ export const auctionRepositoryMongoDb = () => {
                 .populate({
                     path: 'auctionId',
                     match: { isRemoved: false }, // <-- Add this match condition
-                    populate: {
-                        path: 'postId',
-                        model: 'Product'
-                    }
+                    populate: [
+                        {
+                            path: 'postId',
+                            model: 'Product'
+                        },
+                        {
+                            path: 'winner', // Populate the winner field
+                            model: 'User'
+                        }
+                    ]
                 })
                 .exec(); // Execute the query to enable filtering in memory
     
@@ -219,6 +271,7 @@ export const auctionRepositoryMongoDb = () => {
             console.log(error);
         }
     }
+    
     
     const bidAbort = async (userId: string | undefined, participantId: string) => {
         try {
@@ -250,7 +303,74 @@ export const auctionRepositoryMongoDb = () => {
             throw error;
         }
     }
+
+    const blockAuction = async (auctionId: string) => {
+        try {
+            const auction = await Auction.findById(auctionId);
+            if (!auction) {
+                throw new Error("Auction not found");
+            }
     
+            const updatedAuction = await Auction.findByIdAndUpdate(auctionId,
+                { isBlocked: !auction.isBlocked }, { new: true });
+    
+            return updatedAuction;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    const readChange = async (userId: string | undefined) => {
+        try {
+            console.log("userId", userId);
+            
+            const changed = await Notifications.find({ reciever: userId }).exec();
+            console.log("changed", changed);
+            
+            // Iterate over each notification and update isRead to true
+            for (let notification of changed) {
+                notification.isRead = true;
+                await notification.save(); // Save the updated document
+            }
+    
+            const updated = await Notifications.find({reciever: userId}).populate({
+                path: 'auctionId',
+                match: { isRemoved: false }, // <-- Add this match condition
+                populate: {
+                    path: 'postId',
+                    model: 'Product'
+                }
+            })
+
+            return updated
+        } catch (error) {
+            console.log(error);
+        }
+    };
+      
+    const auctionCompleted = async (auctionId: string) => {
+        try {
+            
+            const auction = await Auction.findByIdAndUpdate(auctionId,
+                {isCompleted: true}, {new: true})
+            console.log("auction",auction);
+
+            const winner = await Participants.findOne({
+                currentAmount: auction?.currentAmount,
+                auctionId: auction?._id,
+            })
+
+            const updated = await Auction.findByIdAndUpdate(auctionId,
+                { winner: winner?.userId}, {new: true}).populate({
+                    path: 'postId',
+                    select: 'productName image',
+                  });
+            
+            return updated
+        } catch (error) {
+            console.log(error);  
+        }
+    }
 
     return {
         addToAuction,
@@ -263,7 +383,10 @@ export const auctionRepositoryMongoDb = () => {
         auctionRemove,
         getBids,
         bidAbort,
-        notificationCheck
+        notificationCheck,
+        blockAuction,
+        readChange,
+        auctionCompleted
     }
 
 }

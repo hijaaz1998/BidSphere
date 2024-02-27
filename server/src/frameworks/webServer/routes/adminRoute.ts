@@ -28,6 +28,8 @@ const adminRouter = () => {
     router.patch('/block_user/:userId', controller.blockUser)
     router.get('/getAuctions', controller.getAuctions)
     router.get('/getPosts', controller.getPosts)
+    router.put('/block_auction/:id', controller.blockAuction)
+    router.get('/get_reports', controller.getReports)
 
      return router
      

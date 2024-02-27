@@ -11,6 +11,10 @@ const NotificationSchema = new Schema ({
     },
     message: {
         type: String
+    },
+    isRead: {
+        type: Boolean,
+        default: false
     }
 })
 

@@ -22,13 +22,14 @@ const Auctions = () => {
   const currentRecords = auctionData.slice(indexOfFirstRecord, indexOfLastRecord);
   const nPages = Math.ceil(auctionData.length / recordsPerPage);
 
-  const handleBlockAuction = (auctionId: string) => {
-
+  const handleBlockAuction = async (auctionId: string) => {
+    const response = await axiosInstance.put(`/admin/block_auction/${auctionId}`)
+    setUpdate((previous) => !previous);
   }
 
   useEffect(() => {
     fetchAuctions();
-  }, []);
+  }, [update]);
 
   return (
     <>
@@ -46,7 +47,7 @@ const Auctions = () => {
                 <p className="flex-grow mr-4 text-pretty text-lg">Current Amount: {auction.currentAmount}</p>
                 <button
                     onClick={() => handleBlockAuction(auction?._id)}
-                    className={`py-2 px-4 rounded focus:outline-none w-20 h-10 ${
+                    className={`py-2 px-4 rounded focus:outline-none w-24 h-10 ${
                     auction.isBlocked
                         ? 'bg-green-500 text-white'
                         : 'bg-red-500 text-white'

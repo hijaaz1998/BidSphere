@@ -4,8 +4,8 @@ import { UserDbInterface } from '../../application/interfaces/userDbRepository';
 import { UserRepositoryMongoDb } from '../../frameworks/databse/repositories/userRepositoryMongoDb';
 import { AuthService } from '../../frameworks/services/authService';
 import { AuthServiceInterface, authServiceInterface } from '../../application/services/authServiceInterface';
-import { UserInterface, createUserInterface } from '../../types/userInterface';
-import { userRegister, userLogin, getUserSuggestion, followTheUser, getFollowersList, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword, getFollowingList, getUserInfo, userSearch, getFavorites } from '../../application/usecases/auth/userAuth';
+import { UserInterface, updateInterface } from '../../types/userInterface';
+import { userRegister, userLogin, getUserSuggestion, followTheUser, getFollowersList, googleAuthRegister, unfollowTheUser, checkEmail, changeThePassword, getFollowingList, getUserInfo, userSearch, profileUpdate, getFavorites } from '../../application/usecases/auth/userAuth';
 import AppError from '../../utils/middleware/appError';
 import {jwtDecode} from "jwt-decode";
 import { JwtPayload } from 'jwt-decode';
@@ -331,6 +331,12 @@ const authController = (
       })
     })
 
+    const updatProfile = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+      const userId = req.userId;
+      const data: updateInterface = req.body;
+      const updated = await profileUpdate(dbRepositoryUser, data, userId )
+    })
+
     return {
         registerUser,
         loginUser,
@@ -345,7 +351,8 @@ const authController = (
         getUserInfos,
         getOtpForRegister,
         searchUser,
-        getFavorite
+        getFavorite,
+        updatProfile
     }
 }
 

@@ -51,7 +51,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
         <div key={user._id} className=" flex items-center bg-black px-5 py-3 rounded-lg  mt-5  overflow-hidden shadow-lg border-2 border-slate-800 mr-1">
           <img src={userImage} alt="Profile Image" className="w-11 h-11 object-cover rounded-full mr-4" />
           <div className="flex items-center flex-grow w-full"> 
-            <div className='w-32'>
+            <div className='w-full min-w-32'>
                <h2 className="text-sm text-white font-semibold mr-4" title='...'>{user.firstName} {user.lastName}</h2> 
             </div>
             <button

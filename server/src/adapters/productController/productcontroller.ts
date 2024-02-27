@@ -44,7 +44,6 @@ const   productController = (
         const userId = req.params.userId;
         console.log('req.params:', req.params);
         console.log('userId:', userId);
-
         
         let myProducts;
         if(userId){

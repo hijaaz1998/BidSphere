@@ -10,6 +10,7 @@ const Messages = () => {
   const socket = io(ENDPOINT);
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
+  const [hidden, setHidden] = useState(false)
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedChat, setselectedChat] = useState<any>({});
@@ -53,6 +54,7 @@ const Messages = () => {
 
   const accessChat = async (reciever: string) => {
     const chat = await axiosInstance.post(`/messages/chat/${reciever}`);
+    setHidden(true)
     //console.log("accessed", chat.data.chats);
     setselectedChat(chat.data.chats);
     //console.log("chat.data.chat._id", chat.data.chats._id);
@@ -122,7 +124,7 @@ const Messages = () => {
   return (
     <div className="container h-full">
       <div className="min-w-full border rounded lg:grid lg:grid-cols-3">
-        <div className="border-r border-gray-300 lg:col-span-1">
+        <div className={`border-r border-gray-300 lg:col-span-1 ${hidden && "hidden"} `}>
           <div className="mx-3 my-3">
             <div className="relative text-gray-600">
               <span className="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -203,10 +205,10 @@ const Messages = () => {
                 ))}
           </ul>
         </div>
-        <div className="hidden lg:col-span-2 lg:block">
+        <div className={`lg:col-span-2 lg:block ${!hidden && "hidden"}`}>
           {Object.keys(selectedChat).length >= 1 ? (
             <div className="w-full">
-              <div className="relative flex items-center p-3 border-b border-gray-300">
+              <div className="relative flex items-center justify-between p-3 border-b border-gray-300">
                 <img
                   className="object-cover w-10 h-10 rounded-full"
                   src="https://cdn.pixabay.com/photo/2018/01/15/07/51/woman-3083383__340.jpg"
@@ -216,9 +218,10 @@ const Messages = () => {
                   {selectedChat.users.find((user: { _id: any; }) => user._id !== userId)?.firstName}{" "}
                   {selectedChat.users.find((user: { _id: any; }) => user._id !== userId)?.lastName}
                 </span>
+                <p onClick={() => setHidden(false)} className="text-indigo-500 px-2 cursor-pointer border-2 border-slate-800">x</p>
               </div>
               <ScrollableFeed>
-                <div className="relative w-full p-6 overflow-y-auto h-[40rem]">
+                <div className="relative w-full p-6 overflow-y-auto scrollbar-hidden h-[32rem]">
                   <ul className="space-y-2">
                     {messages?.map((message, index) => (
                       <React.Fragment key={message.id}>

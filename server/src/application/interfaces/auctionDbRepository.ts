@@ -52,6 +52,18 @@ export const auctionDbRepository = (
         return await repository.notificationCheck(userId)
     }
 
+    const auctionBlock = async (auctionId: string) => {
+        return await repository.blockAuction(auctionId)
+    }
+
+    const changeRead = async(userId: string | undefined) => {
+        return await repository.readChange(userId)
+    }
+
+    const completedAuction = async (auctionId: string) => {
+        return await repository.auctionCompleted(auctionId)
+    }
+
     return {
         addAuction,
         getUpcomingAuctions,
@@ -63,7 +75,10 @@ export const auctionDbRepository = (
         removeAuction,
         getMyBids,
         abortBid,
-        createNotification
+        createNotification,
+        auctionBlock,
+        changeRead,
+        completedAuction
     }
 }
 

@@ -10,8 +10,8 @@ import Favorite from '../model/FavoriteModel';
 
 export const productRepositoryMongoDb = () => {
     const addProductBefore = async(product: ProductEntityType) => {
-        
-        const newProduct: any = new Product({
+        try {
+          const newProduct: any = new Product({
             productName: product.getProductName(),
             description: product.getDescription(),
             age: product.getAge(),
@@ -19,17 +19,24 @@ export const productRepositoryMongoDb = () => {
             rarity: product.getRarity(),
             image: product.getImage(),
             userId: product.getUserId()
-        });
-        await newProduct.save();
+          });
+          await newProduct.save();
 
-        return newProduct
+          return newProduct
+        } catch (error) {
+          console.log(error)
+        }
     }
 
     const getUserProducts = async(userId: string) => {
+        try {
+          const products: any = await Product.find({ userId: userId, isDeleted: false }).lean();
         
-        const products: any = await Product.find({ userId: userId, isDeleted: false }).lean();
-        
-        return products
+          return products
+        } catch (error) {
+          console.log(error);
+          
+        }
     }
 
     const allPosts = async (userId: string) => {
@@ -54,19 +61,28 @@ export const productRepositoryMongoDb = () => {
     };
     
     const getPostDetails = async (postId: string) => {
-        const post = await Product.findById(postId).populate('userId');
-        
-        return post;
+        try {
+          const post = await Product.findById(postId).populate('userId');       
+          return post;
+        } catch (error) {
+          console.log(error)
+        }
     };
     
     const postDelete = async (postId: string) => {
-        await Product.findByIdAndUpdate(postId, {isDeleted: true})
+        try {
+          await Product.findByIdAndUpdate(postId, {isDeleted: true})
 
-        return true
+          return true
+        } catch (error) {
+          console.log(error);
+          
+        }
     }
 
     const postEdit = async (post: EditPostEntity ,postId: string) => {
-        const updatedProduct = await Product.findOneAndUpdate(
+        try {
+          const updatedProduct = await Product.findOneAndUpdate(
             { _id: postId },
             {
                 productName: post.getProductName(),
@@ -76,10 +92,13 @@ export const productRepositoryMongoDb = () => {
                 rarity: post.getRarity(),
             },
             { new: true }
-        );
+          );
 
-        if(updatedProduct){
-            return updatedProduct
+          if(updatedProduct){
+              return updatedProduct
+          }
+        } catch (error) {
+          console.log(error)
         }
     }
 
@@ -127,17 +146,17 @@ export const productRepositoryMongoDb = () => {
           const product = await Product.aggregate([
             { $match: { _id: new mongoose.Types.ObjectId(postId) } },
             {
-              $unwind: "$comments", // Deconstruct the comments array
+              $unwind: "$comments",
             },
             {
-              $sort: { "comments.createdOn": -1 }, // Sort comments in descending order based on creation time
+              $sort: { "comments.createdOn": -1 }, 
             },
             {
-              $limit: 5, // Limit the result to 5 comments
+              $limit: 5,
             },
             {
               $lookup: {
-                from: "users", // Replace with the actual collection name for users
+                from: "users",
                 localField: "comments.user",
                 foreignField: "_id",
                 as: "user",
@@ -191,15 +210,19 @@ export const productRepositoryMongoDb = () => {
     };
       
     const getPostsAdmin = async () => {
-      const posts = await Product.find({ isDeleted: false })
-      .populate({
-        path: 'userId',
-        model: 'User',
-        select: 'firstName lastName email',
-      })
-      .exec();
+      try {
+        const posts = await Product.find({ isDeleted: false })
+        .populate({
+          path: 'userId',
+          model: 'User',
+          select: 'firstName lastName email',
+        })
+        .exec();
 
-      return posts
+        return posts
+      } catch (error) {
+        console.log(error)
+      }
     }  
 
     const postReport = async (
@@ -208,23 +231,25 @@ export const productRepositoryMongoDb = () => {
       subject: string,
       issue: string
     ) => {
+      try {
+        const existing = await Incidents.findOne({reportedUser: userId});
 
-      const existing = await Incidents.findOne({reportedUser: userId});
+        if(existing){
+          return false
+        }
 
-      if(existing){
-        return false
+        const newIncident =  new Incidents({
+          subject,
+          issue,
+          reportedUser: userId,
+          ReportedPost: reportId
+        })
+
+        const saved = await newIncident.save();
+        return saved
+      } catch (error) {
+        console.log(error)
       }
-
-      const newIncident =  new Incidents({
-        subject,
-        issue,
-        reportedUser: userId,
-        ReportedPost: reportId
-      })
-
-      const saved = await newIncident.save();
-      return saved
-
     }
     
     const addFavorite = async (userId: string | undefined, postId: string) => {
@@ -270,17 +295,21 @@ export const productRepositoryMongoDb = () => {
             const removed = await Favorite.findOneAndUpdate(
                 { user: userId },
                 { $pull: { posts: postId } },
-                { new: true } // To return the updated document after the update operation
+                { new: true } 
             );
 
             console.log("Removed:", removed);
             return removed;
         } catch (error) {
             console.log(error);
-            throw error; // Re-throwing the error to handle it in the calling function if needed
+            throw error;
         }
     }
 
+  
+    const getReports = async()=> {
+
+    }
  
     return {
         addProductBefore,
@@ -296,7 +325,8 @@ export const productRepositoryMongoDb = () => {
         postReport,
         addFavorite,
         getFavorite,
-        favoriteRemove
+        favoriteRemove,
+        getReports
     }
 }
 

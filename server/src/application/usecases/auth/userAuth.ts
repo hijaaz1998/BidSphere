@@ -1,4 +1,4 @@
-import { UserInterface, createUserInterface, UserAfterLogin } from "../../../types/userInterface";
+import { UserInterface, createUserInterface, UserAfterLogin, updateInterface } from "../../../types/userInterface";
 import { AuthServiceInterface } from "../../services/authServiceInterface";
 import { UserDbInterface, userDbRepository } from "../../interfaces/userDbRepository";
 import { Types } from "mongoose";
@@ -6,6 +6,7 @@ import { HttpStatus } from "../../../types/httpStatus";
 import createUserEntity, { UserEntityType } from "../../../entities/user";
 import AppError from "../../../utils/middleware/appError";
 import { removePassword } from "../user/read";
+import { userRepositoryMongoDb } from "../../../frameworks/databse/repositories/userRepositoryMongoDb";
 
 export const userRegister = async (
     user: UserInterface,
@@ -40,13 +41,23 @@ export const userRegister = async (
     
 }
 
+export const profileUpdate = async (
+    userRepository: ReturnType<UserDbInterface>,
+    data: updateInterface,
+    userId: string | undefined
+) => {
+    const email = data?.email.toLowerCase();
+
+    const isExistingEmail = await userRepository.getUserByEmail(email)
+}
+
 export const userLogin = async (
     email: string,
     password: string,
     userRepository: ReturnType<UserDbInterface>,
     authService: ReturnType<AuthServiceInterface>
 ) => {
-    const user: UserAfterLogin | null = await userRepository.getUserByEmail(email)    
+    const user: any = await userRepository.getUserByEmail(email)    
     
     if(!user){
         return new AppError('This user doesnt exist', HttpStatus.UNAUTHORIZED)

@@ -80,7 +80,7 @@ const PostDetails = ({ postDetail, isOwnPost }: { postDetail: any, isOwnPost: bo
             </button>
           )}
 
-          {!isOwnPost && postDetail?.isAuctioned && (
+          {!isOwnPost && postDetail?.isAuctioned && !postDetail?.isBlocked &&(
             <Link to={`/auctions/details/${auctionId}`}>
               <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 Go to Auction
