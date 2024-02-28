@@ -65,6 +65,14 @@ const authController = (
         }
      });
 
+     const updatProfile = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+      const userId = req.userId;
+      const data: updateInterface = req.body;
+      const updated = await profileUpdate(dbRepositoryUser, data, userId )
+
+      res.json({updated})
+    })
+
      const getOtpForRegister = asyncHandler ( async (req: Request, res: Response) => {
 
         RegisterOtp = generateOtp();
@@ -331,11 +339,7 @@ const authController = (
       })
     })
 
-    const updatProfile = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
-      const userId = req.userId;
-      const data: updateInterface = req.body;
-      const updated = await profileUpdate(dbRepositoryUser, data, userId )
-    })
+    
 
     return {
         registerUser,

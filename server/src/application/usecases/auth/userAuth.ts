@@ -46,9 +46,11 @@ export const profileUpdate = async (
     data: updateInterface,
     userId: string | undefined
 ) => {
-    const email = data?.email.toLowerCase();
 
-    const isExistingEmail = await userRepository.getUserByEmail(email)
+    const updated = userRepository.updateProfile(data, userId)
+
+    return updated
+
 }
 
 export const userLogin = async (

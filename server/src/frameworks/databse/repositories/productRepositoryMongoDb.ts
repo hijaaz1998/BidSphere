@@ -50,7 +50,7 @@ export const productRepositoryMongoDb = () => {
     
             const posts = await Product.find({ userId: { $in: followingIds }, isDeleted: false })
                         .sort({ createdOn: -1 })
-                        .populate('userId', 'firstName lastName');
+                        .populate('userId', 'firstName lastName image');
     
             return posts;
     
@@ -308,7 +308,8 @@ export const productRepositoryMongoDb = () => {
 
   
     const getReports = async()=> {
-
+      const reports = await Incidents.find();
+      
     }
  
     return {

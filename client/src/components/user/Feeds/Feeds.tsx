@@ -28,6 +28,8 @@ const Feeds: React.FC = () => {
 
   const fetchData = async () => {
     const response = await axiosInstance.get(`/product/get_all_posts`);
+    console.log("feeds",response.data.posts);
+    
     setFeedsData(response.data.posts);
   };
 
@@ -141,7 +143,7 @@ const Feeds: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <img
-                          src={userImage}
+                          src={data?.userId?.image ? data?.userId?.image : userImage}
                           alt="User Profile"
                           className="w-9 h-9 object-fill rounded-full"
                         />

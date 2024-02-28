@@ -14,7 +14,6 @@ export const auctionRepositoryMongoDb = () => {
         try {
             const notificationsToSend = [];
             const auctions = await Auction.find({ endingDate: { $lt: new Date() } });
-            console.log("auctions", auctions);
         
             for (const auction of auctions) {
                 const participant: any = await Participants.findOne({
@@ -22,9 +21,7 @@ export const auctionRepositoryMongoDb = () => {
                     userId: userID,
                     auctionId: auction._id,
                 }).populate('userId');
-                console.log("parti", participant);
                 if (participant) {
-                    console.log("[participant", participant);
         
                     const existingNotification = await Notifications.findOne({
                         reciever: participant.userId._id,
@@ -47,9 +44,7 @@ export const auctionRepositoryMongoDb = () => {
                 }
             }
             notificationsToSend.sort((a, b) => b.createdAt - a.createdAt);
-            
-            console.log("notifto send", notificationsToSend);
-        
+                    
             return notificationsToSend;
         } catch (error) {
             console.log(error);

@@ -116,7 +116,10 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
             ) : data.isCompleted ? (
               <div className="bg-black rounded-xl overflow-hidden shadow-md md:flex md:items-center border-2 border-slate-800 p-8">
                 {data.winner === userId ? (
-                  <p className="text-white">Congratulations for the win!</p>
+                  <>
+                    <p className="text-white">Congratulations for the win!</p>
+                    <button className='text-indigo-500 bg-black rounded-xl drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 p-2 hover:bg-indigo-500 hover:text-white'>Pay Now</button>
+                  </>
                 ) : (
                   <p className="text-white">The auction has ended.</p>
                 )}

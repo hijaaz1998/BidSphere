@@ -72,7 +72,7 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
 
   useEffect(() => {
     fetchUserData();
-  }, [userId]);
+  }, [userId, userData]);
 
   const handleEditProfile = async () => {
     setIsModalOpen(true);
@@ -147,15 +147,24 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
   const editProfileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!firstName.trim() || !lastName.trim() || !email.trim() ) {
+      setError('All fields are required.');
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    setIsModalOpen(false)
     const image = await handleImageUpload();
     console.log('image',image);
     const response = await axiosInstance.put('/user/update',{
       firstName,
       lastName,
-      email,
       image
     })
-    
+    console.log("updated",response.data.updated);
+    setUser(response.data.updated)
   }
 
   const renderContent = () => {
@@ -209,6 +218,7 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
               name='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              readOnly
             />
             <input
               type='file'
@@ -236,7 +246,7 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
       <div className="bg-black p-4 rounded-md border-2 border-slate-800 flex items-center justify-around">
         <div className="w-32 h-32 overflow-hidden rounded-full">
           <img
-            src={profile}
+            src={user?.image? user?.image : profile}
             alt="Profile"
             className="w-full h-full object-cover"
           />

@@ -8,11 +8,13 @@ import { RiListIndefinite } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { GrFavorite } from "react-icons/gr";
 import { FaHome } from "react-icons/fa";
+import axiosInstance from "../../../axiosEndPoints/userAxios";
 
 interface UserData {
   _id: string;
   firstName: string;
   lastName: string;
+  image: string
 }
 
 interface SidebarProps {
@@ -23,12 +25,19 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ onButtonClick, notifications }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [showSidebar, setShowSidebar] = useState<boolean>(false);
+  const userId = JSON.parse(localStorage.getItem('userId') || 'null');
+
+  const fetchData = async () => {
+    console.log(userId);
+    console.log(typeof userId);
+    
+    const response = await axiosInstance.get(`/user/getUserInfo/${userId}`)
+    setUserData(response.data.user)
+    console.log('user', response.data.user)
+  }
 
   useEffect(() => {
-    const data = localStorage.getItem("userData");
-    if (data) {
-      setUserData(JSON.parse(data));
-    }
+   fetchData();
   }, []);
 
   useEffect(() => {
@@ -46,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onButtonClick, notifications }) => {
           <div className="flex flex-col items-center p-4 rounded-lg mx-5 my-3 bg-black h-56 mt-5 drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800">
             <div className="mb-4">
               <img
-                src={userImage}
+                src={userData?.image ? userData?.image : userImage}
                 alt="Profile Image"
                 className="w-20 h-20 object-cover rounded-full"
               />

@@ -1,6 +1,6 @@
 import {ObjectId} from 'mongoose';
 import User from '../model/userModel';
-import { UserInterface, createUserInterface, UserAfterLogin } from '../../../types/userInterface';
+import { UserInterface, createUserInterface, UserAfterLogin, updateInterface } from '../../../types/userInterface';
 import { UserEntityType } from '../../../entities/user';
 import { log } from 'console';
 import Favorite from '../model/FavoriteModel';
@@ -206,6 +206,7 @@ export const userRepositoryMongoDb = () => {
         try {
 
             const user = await User.findById(userId);
+            console.log('user',user)
             return user;
 
         } catch (error) {
@@ -257,6 +258,25 @@ export const userRepositoryMongoDb = () => {
         }
     };
      
+    const profileUpdate = async (
+        user: updateInterface,
+        userId: string | undefined
+    ) => {
+        try {
+            const updated = User.findByIdAndUpdate(userId, {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                image: user.image
+            }, {new: true})
+
+            console.log("updated", updated);
+
+            return updated
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return{
         addUser,
@@ -273,7 +293,8 @@ export const userRepositoryMongoDb = () => {
         getFollowersList,
         getUserInfo,
         userSearch,
-        getFavorites
+        getFavorites,
+        profileUpdate
     }
 }
 

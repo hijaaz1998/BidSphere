@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { UserRepositoryMongoDb } from "../../frameworks/databse/repositories/userRepositoryMongoDb";
 import { UserEntityType } from "../../entities/user";
+import { updateInterface } from "../../types/userInterface";
 
 export const userDbRepository = (
     repository: ReturnType<UserRepositoryMongoDb>
@@ -65,6 +66,13 @@ export const userDbRepository = (
         return await repository.getFavorites(userId)
     }
 
+    const updateProfile = async (
+        data: updateInterface,
+        userId: string | undefined
+    ) => {
+        return await repository.profileUpdate(data, userId)
+    }
+
     return {
         addUser,
         getUserByEmail,
@@ -80,7 +88,8 @@ export const userDbRepository = (
         getFollowers,
         getUsersInfo,
         searchUser,
-        getFavorite
+        getFavorite,
+        updateProfile
     }
 }
 

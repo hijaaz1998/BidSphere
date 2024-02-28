@@ -18,3 +18,24 @@ export interface EditProductInterface {
     rarity: string
 }
 
+export interface Report {
+    _id: string;
+    subject: string;
+    issue: string;
+    createdOn: string;
+    reportedUser: string;
+    ReportedPost: string;
+    __v: number;
+  }
+  
+ export interface GroupedReport {
+    _id: string;
+    subject: string;
+    issue: string;
+    createdOn: string;
+    reportedUser: string;
+    ReportedPost: string;
+    __v: number;
+    count: number;
+  }
+

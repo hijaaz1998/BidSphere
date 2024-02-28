@@ -26,7 +26,6 @@ export interface UserAfterLogin{
 export interface updateInterface{
     firstName: string,
     lastName: string,
-    email: string,
     image: string
 }
 
