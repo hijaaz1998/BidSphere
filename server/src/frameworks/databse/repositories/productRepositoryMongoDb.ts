@@ -48,7 +48,7 @@ export const productRepositoryMongoDb = () => {
                 followingIds = user.following.map(followedUser => followedUser.toString());
             }
     
-            const posts = await Product.find({ userId: { $in: followingIds }, isDeleted: false })
+            const posts = await Product.find({ userId: { $in: followingIds }, isDeleted: false, isBlocked: false })
                         .sort({ createdOn: -1 })
                         .populate('userId', 'firstName lastName image');
     
@@ -245,6 +245,19 @@ export const productRepositoryMongoDb = () => {
           ReportedPost: reportId
         })
 
+        const updated = await Product.findByIdAndUpdate(
+          reportId,
+          { $inc: { reportCount: 1 } },
+          { new: true }
+        );
+        
+        if (updated && updated.reportCount >= 5) {
+          await Product.findByIdAndUpdate(
+            reportId,
+            { isBlocked: true }
+          );
+        }        
+
         const saved = await newIncident.save();
         return saved
       } catch (error) {
@@ -309,7 +322,21 @@ export const productRepositoryMongoDb = () => {
   
     const getReports = async()=> {
       const reports = await Incidents.find();
+
+      const filteredData = reports.reduce((acc: any, obj) => {
+        const key = obj.ReportedPost.toString();
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(obj);
+        return acc;
+      }, {});
       
+      const resultArray = Object.values(filteredData);
+      console.log(reports)
+      
+      console.log("filtered",resultArray);
+
     }
  
     return {

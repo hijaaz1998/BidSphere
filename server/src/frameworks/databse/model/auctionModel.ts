@@ -7,6 +7,9 @@ const auctionSchema = new Schema(
             required: true,
             ref: 'Product'
         },
+        startingAmount: {
+            type: Number
+        },
         currentAmount: {
             type: Number
         },

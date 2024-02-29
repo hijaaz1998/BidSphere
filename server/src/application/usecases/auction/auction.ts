@@ -130,3 +130,23 @@ export const auctionCompleted = async (
     const updated = await auctionRepository.completedAuction(auctionId)
     return updated
 }
+
+export const paymentGateway = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    userId: string | undefined,
+    auctionId: string
+) => {
+    const paid = await auctionRepository.payment(userId, auctionId);
+    
+    return paid
+}
+
+export const updatePayment = async (
+    auctionRepository: ReturnType<AuctionDbInterface>,
+    userId: string | undefined,
+    auctionId: string,
+    paymentId: string
+) => {
+    const updated = await auctionRepository.paymentUpdate(userId, auctionId, paymentId)
+    return updated;
+}

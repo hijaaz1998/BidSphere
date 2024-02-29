@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { toast } from 'react-toastify';
 import io from 'socket.io-client';
+import axios from 'axios';
 
 let socket: any
 
@@ -21,6 +22,7 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
   const fetchData = async () => {
     try {
       const res = await axiosInstance.get(`/auction/auctionDetails/${auctionId}`);
+      console.log('auctiondetails', res.data.details)
       setData(res.data.details);
       const endingDate = new Date(res.data.details.endingDate);
       const currentTime = new Date();
@@ -40,6 +42,16 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
       socket.emit('leaveAuction', auctionId);
     };
   }, [auctionId]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(prevTime => Math.max(0, prevTime - 1000));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+  
+  
 
   useEffect(() => {
     socket.on('bid', (bidData: any) => {
@@ -74,6 +86,26 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
     setCustomAmount('');
   };
 
+  const auctionCompleted = async () => {
+    console.log("id",data?._id);
+    
+    await axiosInstance.put(`/auction/auction_completed/${data?._id}`).then((response) => {
+      console.log("response after",response.data.updated);
+      
+      setData(response.data.updated)
+    })
+  }
+
+  useEffect(() => {
+    console.log(time);
+    
+    if(time === 0 && data?.isCompleted === false) {
+      
+      auctionCompleted();
+      
+    }
+  },[time])
+
   const performAction = async (amount: number) => {
     try {
       const updated = await axiosInstance.post('/auction/bid', {
@@ -91,6 +123,85 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
       toast.error('Failed to place bid');
     }
   };
+
+  function loadScript(src: string) {
+    return new Promise((resolve) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = () => {
+            resolve(true);
+        };
+        script.onerror = () => {
+            resolve(false);
+        };
+        document.body.appendChild(script);
+    });
+}
+
+async function displayRazorpay() {
+    const res = await loadScript(
+        "https://checkout.razorpay.com/v1/checkout.js"
+    );
+
+    if (!res) {
+        alert("Razorpay SDK failed to load. Are you online?");
+        return;
+    }
+
+    const result = await axiosInstance.post(`/auction/payment/${data._id}`)
+
+    if (!result) {
+        alert("Server error. Are you online?");
+        return;
+    }
+
+    console.log("response",result.data.paid);
+    
+    const { amount, id: order_id, currency, } = result.data.paid;
+    const {auctionId} = result.data;
+    const {paymentId} = result.data;
+    alert("payment")
+    alert(paymentId)
+
+    const options = {
+        key: "rzp_test_fWH63GUDMTI221",
+        amount: amount,
+        currency: currency,
+        name: "Soumya Corp.",
+        description: "Test Transaction",
+        image: '',
+        order_id: order_id,
+        handler: async function (response: { razorpay_payment_id: any; razorpay_order_id: any; razorpay_signature: any; }) {
+            const data = {
+                paymentId,
+                auctionId,
+                orderCreationId: order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpaySignature: response.razorpay_signature,
+            };
+
+            alert("going")
+            const result = await axiosInstance.post("/auction/paymentverification", data);
+
+            alert(result.data.msg);
+        },
+        prefill: {
+            name: "Soumya Dey",
+            email: "SoumyaDey@example.com",
+            contact: "9999999999",
+        },
+        notes: {
+            address: "Soumya Dey Corporate Office",
+        },
+        theme: {
+            color: "#61dafb",
+        },
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+}
 
   const getFormattedTime = (time: number) => {
     const days = Math.floor(time / (1000 * 60 * 60 * 24));
@@ -118,7 +229,7 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
                 {data.winner === userId ? (
                   <>
                     <p className="text-white">Congratulations for the win!</p>
-                    <button className='text-indigo-500 bg-black rounded-xl drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 p-2 hover:bg-indigo-500 hover:text-white'>Pay Now</button>
+                    <button onClick={displayRazorpay} className='text-indigo-500 bg-black rounded-xl drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 p-2 hover:bg-indigo-500 hover:text-white'>Pay Now</button>
                   </>
                 ) : (
                   <p className="text-white">The auction has ended.</p>

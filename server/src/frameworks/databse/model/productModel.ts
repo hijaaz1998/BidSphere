@@ -70,6 +70,14 @@ const productSchema = new Schema(
         favorited: {
             type: Boolean,
             default: false
+        },
+        reportCount: {
+            type: Number,
+            default: 0
+        },
+        isBlocked: {
+            type: Boolean,
+            default: false
         }
     }
 )

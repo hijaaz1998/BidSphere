@@ -2,7 +2,9 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import { AuctionDbInterface, auctionDbRepository } from '../../application/interfaces/auctionDbRepository';
 import { AuctionRepositoryMongoDb } from '../../frameworks/databse/repositories/auctionRepositoryMongoDb';
-import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, bidNow, getMyListing, getIdForAuction, auctionRemove, getBids, bidAbort, notification, readChange, auctionCompleted } from '../../application/usecases/auction/auction';
+import { addToAuction, getAuctionsUpcoming, checkAuctioned, getDetailsOfAuction, updatePayment, bidNow, getMyListing, getIdForAuction, paymentGateway, auctionRemove, getBids, bidAbort, notification, readChange, auctionCompleted } from '../../application/usecases/auction/auction';
+import { auction } from '../../entities/auction';
+import { paymentVerify } from '../../utils/middleware/razorPay';
 
 interface AuthenticatedRequest extends Request { // Rename the interface to avoid naming conflict
     userId?: string;
@@ -157,6 +159,36 @@ const auctionController = (
         })
     } )
 
+    const payment = asyncHandler (async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.userId
+        const auctionId = req.params.id;
+        const paid = await paymentGateway(dbRepositoryAuction, userId, auctionId )        
+        console.log("paid",paid?.order);
+        console.log("paid",paid?.id);
+        
+        res.json({
+           paid: paid?.order,
+           paymentId: paid?.id,
+            auctionId
+        })
+        
+    })
+
+    const verifyPayment = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+        const details = req.body;
+        const auctionId = req.body.auctionId
+        const userId = req.userId
+        const paymentId = req.body.paymentId
+        console.log("paymentId", paymentId); 
+
+        const response = await paymentVerify(details);
+
+        if(response){
+            const update = await updatePayment(dbRepositoryAuction, userId, auctionId, paymentId)
+        }
+        
+    })
+
     return {
         addAuction,
         getUpcomingAuctions,
@@ -170,8 +202,12 @@ const auctionController = (
         abortBid,
         checkNotification,
         changeRead,
-        completedAuction
+        completedAuction,
+        payment,
+        verifyPayment
     }
 }
 
 export default auctionController
+
+

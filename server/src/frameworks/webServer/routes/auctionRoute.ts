@@ -26,6 +26,8 @@ const auctionRouter = () => {
     router.get('/notification', jwtAuth, controller.checkNotification)
     router.put('/change_is_read', jwtAuth, controller.changeRead)
     router.put('/auction_completed/:id', controller.completedAuction)
+    router.post('/payment/:id', jwtAuth, controller.payment)
+    router.post('/paymentverification', jwtAuth, controller.verifyPayment)
 
     return router
 }

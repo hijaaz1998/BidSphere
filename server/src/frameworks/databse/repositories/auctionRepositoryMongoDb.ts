@@ -6,6 +6,9 @@ import Participants from "../model/ParticipantsModel";
 import User from "../model/userModel";
 import Notifications from "../model/NotificationModel";
 import { log } from "console";
+import { errorMonitor } from "events";
+import Payment from "../model/PaymentModel";
+import { generareRazorpay } from "../../../utils/middleware/razorPay";
 
 
 export const auctionRepositoryMongoDb = () => {
@@ -60,10 +63,11 @@ export const auctionRepositoryMongoDb = () => {
             const startingDate = auction.getStartingDate();
         
             const endingDate = new Date(startingDate);
-            endingDate.setMinutes(endingDate.getDate() + 2); // Set endingDate to 2 minutes after startingDate
+            endingDate.setMinutes(endingDate.getMinutes() + 1); // Set endingDate to 2 minutes after startingDate
         
             const newAuction: any = new Auction({
                 postId,
+                startingAmount: currentAmount,
                 currentAmount,
                 startingDate,
                 endingDate,
@@ -367,6 +371,46 @@ export const auctionRepositoryMongoDb = () => {
         }
     }
 
+    const paymentGateway = async (userId: string | undefined, auctionId: string) => {
+        try {
+            const auction: any = await Auction.findById(auctionId).populate('postId');
+    
+            const startinPrice = auction?.startingAmount;
+            const endingPrice = auction?.currentAmount;
+    
+            if (startinPrice && endingPrice) {
+                const difference = endingPrice - startinPrice;
+                const adminProfit = 0.1 * difference;
+    
+                const payment: any = new Payment({
+                    auctionId: auction._id,
+                    amount: adminProfit,
+                    payer: userId,
+                    auctioner: (auction.postId as any)?.userId  
+                });
+    
+                await payment.save();
+    
+                return generareRazorpay(payment._id, payment.amount);
+            }
+        } catch (error) {
+            console.error('Error processing payment:', error);
+        }
+    };
+
+    const updatePayment = async (userId: string | undefined, auctionId: string, paymentId: string) => {
+        try {
+            const updated = await Payment.findByIdAndUpdate(paymentId, {isPaid: true}, {new:true}).populate('auctionId');
+            console.log("updated", updated);
+            
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
+    
+
     return {
         addToAuction,
         getAuctionsUpcoming,
@@ -381,7 +425,9 @@ export const auctionRepositoryMongoDb = () => {
         notificationCheck,
         blockAuction,
         readChange,
-        auctionCompleted
+        auctionCompleted,
+        paymentGateway,
+        updatePayment
     }
 
 }
