@@ -321,21 +321,12 @@ export const productRepositoryMongoDb = () => {
 
   
     const getReports = async()=> {
-      const reports = await Incidents.find();
-
-      const filteredData = reports.reduce((acc: any, obj) => {
-        const key = obj.ReportedPost.toString();
-        if (!acc[key]) {
-          acc[key] = [];
-        }
-        acc[key].push(obj);
-        return acc;
-      }, {});
-      
-      const resultArray = Object.values(filteredData);
-      console.log(reports)
-      
-      console.log("filtered",resultArray);
+      try {
+        const reports = await Incidents.find().populate('ReportedPost');
+        return reports
+      } catch (error) {
+        console.log(error)
+      }
 
     }
  

@@ -30,6 +30,8 @@ const adminRouter = () => {
     router.get('/getPosts', controller.getPosts)
     router.put('/block_auction/:id', controller.blockAuction)
     router.get('/get_reports', controller.getReports)
+    router.get('/get_income', controller.getIncome)
+    router.put('/approve_auction/:paymentId', controller.approveAuction)
 
      return router
      

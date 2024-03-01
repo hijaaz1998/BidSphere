@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import Auctions from '../../components/user/AdminComponents/Auction/Auctions'
 import PostsMgt from '../../components/user/AdminComponents/PostsManagement/PostsMgt'
 import Reports from '../../components/user/AdminComponents/Reports/Reports'
+import Income from '../../components/user/AdminComponents/Income/Income'
 
 const AdminHome: React.FC = () => {
 
@@ -18,6 +19,8 @@ const AdminHome: React.FC = () => {
         return <UserMgt />;
       case 'auctions':
         return <Auctions />;
+      case 'income':
+        return <Income />;
       case 'posts':
         return <PostsMgt />;
       case 'reports':

@@ -46,83 +46,115 @@ const auctionController = (
     })
 
     const isAuctioned = asyncHandler( async (req: Request, res: Response) => {
-        const postId = req.params.postId
-        const auctioned = await checkAuctioned(dbRepositoryAuction, postId)
+        try {
+            const postId = req.params.postId
+            const auctioned = await checkAuctioned(dbRepositoryAuction, postId)
 
-        res.json({
-            auctioned
-        })
+            res.json({
+                auctioned
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const getAuctionDetails = asyncHandler( async (req: Request, res: Response) => {
-        const auctionId = req.params.auctionId;
-        const details = await getDetailsOfAuction(dbRepositoryAuction, auctionId)
+        try {
+            const auctionId = req.params.auctionId;
+            const details = await getDetailsOfAuction(dbRepositoryAuction, auctionId)
 
-        res.json({
-            details
-        })
+            res.json({
+                details
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const bid = asyncHandler ( async ( req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId;
-        const {auctionId, amount } = req.body;
+        try {
+            const userId = req.userId;
+            const {auctionId, amount } = req.body;
 
-        const auctionID = auctionId;
-    
-        const updated = await bidNow(dbRepositoryAuction, userId, auctionID, amount)
+            const auctionID = auctionId;
+        
+            const updated = await bidNow(dbRepositoryAuction, userId, auctionID, amount)
 
-        res.json({
-            updated
-        })
+            res.json({
+                updated
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const getMyListings = asyncHandler (async (req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId;
+        try {
+            const userId = req.userId;
 
-        const listings = await getMyListing(dbRepositoryAuction, userId)
-        
-        res.json({
-            listings
-        })
+            const listings = await getMyListing(dbRepositoryAuction, userId)
+            
+            res.json({
+                listings
+            })
+        } catch (error) {
+            console.log(error)
+        }
         
     })
 
     const getAuctionId = asyncHandler ( async (req: Request, res: Response) => {
-        const postId = req.params.postId;
-        const id = await getIdForAuction(dbRepositoryAuction, postId)
+        try {
+            const postId = req.params.postId;
+            const id = await getIdForAuction(dbRepositoryAuction, postId)
 
-        res.json({
-            id
-        })
+            res.json({
+                id
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const removeAuction = asyncHandler ( async (req: Request, res: Response) => {
-        const id = req.params.auctionId
-        const removed = await auctionRemove(dbRepositoryAuction, id)
+        try {
+            const id = req.params.auctionId
+            const removed = await auctionRemove(dbRepositoryAuction, id)
 
-        res.json({
-            removed: true
-        })
+            res.json({
+                removed: true
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const getMyBids = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId;
+        try {
+            const userId = req.userId;
 
-        const myBids = await getBids(dbRepositoryAuction, userId)
+            const myBids = await getBids(dbRepositoryAuction, userId)
 
-        res.json({
-            myBids
-        })
+            res.json({
+                myBids
+            })
+        } catch (error) {
+            console.log(error)    
+        }
     })
 
     const abortBid = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId;
-        const auctionId = req.params.id
-        const myBids = await bidAbort(dbRepositoryAuction, userId, auctionId)
+        try {
+            const userId = req.userId;
+            const auctionId = req.params.id
+            const myBids = await bidAbort(dbRepositoryAuction, userId, auctionId)
 
-        res.json({
-            myBids
-        })
+            res.json({
+                myBids
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const checkNotification = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
@@ -151,40 +183,53 @@ const auctionController = (
     })
 
     const completedAuction = asyncHandler ( async (req: Request, res: Response) => {
-        const auctionId = req.params.id
-        const updated = await auctionCompleted(dbRepositoryAuction,auctionId)
+        try {
+            const auctionId = req.params.id
+            const updated = await auctionCompleted(dbRepositoryAuction,auctionId)
 
-        res.json({
-            updated
-        })
+            res.json({
+                updated
+            })
+        } catch (error) {
+            console.log(error)
+        }
     } )
 
     const payment = asyncHandler (async (req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId
-        const auctionId = req.params.id;
-        const paid = await paymentGateway(dbRepositoryAuction, userId, auctionId )        
-        console.log("paid",paid?.order);
-        console.log("paid",paid?.id);
-        
-        res.json({
-           paid: paid?.order,
-           paymentId: paid?.id,
-            auctionId
-        })
+        try {
+            const userId = req.userId
+            const auctionId = req.params.id;
+            const paid = await paymentGateway(dbRepositoryAuction, userId, auctionId )        
+            console.log("paid",paid?.order);
+            console.log("paid",paid?.id);
+            
+            res.json({
+            paid: paid?.order,
+            paymentId: paid?.id,
+                auctionId
+            })
+        } catch (error) {
+            console.log(error)
+        }
         
     })
 
     const verifyPayment = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
-        const details = req.body;
-        const auctionId = req.body.auctionId
-        const userId = req.userId
-        const paymentId = req.body.paymentId
-        console.log("paymentId", paymentId); 
+        try {
+            const details = req.body;
+            const auctionId = req.body.auctionId
+            const userId = req.userId
+            const paymentId = req.body.paymentId
+            console.log("paymentId", paymentId); 
 
-        const response = await paymentVerify(details);
+            const response = await paymentVerify(details);
 
-        if(response){
-            const update = await updatePayment(dbRepositoryAuction, userId, auctionId, paymentId)
+            if(response){
+                const update = await updatePayment(dbRepositoryAuction, userId, auctionId, paymentId)
+                res.json({update})
+            }
+        } catch (error) {
+            console.log(error)
         }
         
     })

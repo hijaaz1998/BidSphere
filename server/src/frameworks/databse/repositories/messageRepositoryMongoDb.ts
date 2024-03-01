@@ -7,42 +7,47 @@ import Message from "../model/MessageModel";
 export const messageRepositoryMongoDb = () => {
   const chatAccess = async (userId: string | undefined, receiver: string) => {
     
-    let isChat: any = await Chat.find({
-      $and: [
-        { users: { $elemMatch: { $eq: userId } } },
-        { users: { $elemMatch: { $eq: receiver } } },
-      ],
-    })
-      .populate("users", "-password")
-      .populate("latestMessage");
-
-    isChat = await User.populate(isChat, {
-      path: "latestMessage.sender",
-      select: "firstName email",
-    });
-
-    if (isChat.length > 0) {      
-      return isChat[0];
-    } else {
-      let chatData = {
-        chatName: "sender",
-        creator: userId,
-        users: [userId, receiver],
-      };
-
-      try {
-        const createdChat = await Chat.create(chatData);
-
-        const FullChat = await Chat.findOne({ _id: createdChat._id }).populate(
-          "users",
-          "-password"
-        );
-        
-        return FullChat;
-      } catch (error) {
-        console.log(error);
+    try {
+      let isChat: any = await Chat.find({
+        $and: [
+          { users: { $elemMatch: { $eq: userId } } },
+          { users: { $elemMatch: { $eq: receiver } } },
+        ],
+      })
+        .populate("users", "-password")
+        .populate("latestMessage");
+  
+      isChat = await User.populate(isChat, {
+        path: "latestMessage.sender",
+        select: "firstName email",
+      });
+  
+      if (isChat.length > 0) {      
+        return isChat[0];
+      } else {
+        let chatData = {
+          chatName: "sender",
+          creator: userId,
+          users: [userId, receiver],
+        };
+  
+        try {
+          const createdChat = await Chat.create(chatData);
+  
+          const FullChat = await Chat.findOne({ _id: createdChat._id }).populate(
+            "users",
+            "-password"
+          );
+          
+          return FullChat;
+        } catch (error) {
+          console.log(error);
+        }
       }
+    } catch (error) {
+      console.log(error)
     }
+    
   };
 
   const fetchChats = async (userId: string | undefined) => {

@@ -20,6 +20,9 @@ const AdminSidebar: React.FC<SidebarProps> = ({onButtonClick}) => {
         <span onClick={() => onButtonClick('reports')}  className=" bg-white w-full my-8 h-10 rounded-xl flex justify-center items-center hover:cursor-pointer">
             Reports
         </span>
+        <span onClick={() => onButtonClick('income')}  className=" bg-white w-full my-8 h-10 rounded-xl flex justify-center items-center hover:cursor-pointer">
+            Income
+        </span>
         {/* <a href="" className=' bg-white w-full my-8 h-10 rounded-xl flex justify-center items-center hover:cursor-pointer'>
           <p>Users</p>
         </a>

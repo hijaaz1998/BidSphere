@@ -48,7 +48,11 @@ const auctionSchema = new Schema(
         winner: {
             type: Schema.Types.ObjectId,
             ref: 'User'
-        } 
+        },
+        isPaid: {
+            type: Boolean,
+            default: false
+        }
     }
 )
 

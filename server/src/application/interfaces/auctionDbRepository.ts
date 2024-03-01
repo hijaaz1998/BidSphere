@@ -72,6 +72,14 @@ export const auctionDbRepository = (
         return await repository.updatePayment(userId, auctionId, paymentId)
     }
 
+    const getIncomes = async () => {
+        return await repository.getIncome()
+    }
+
+    const auctionApprove = async (paymentId: string) => {
+        return await repository.approveAuction(paymentId)
+    }
+
     return {
         addAuction,
         getUpcomingAuctions,
@@ -88,7 +96,9 @@ export const auctionDbRepository = (
         changeRead,
         completedAuction,
         payment,
-        paymentUpdate
+        paymentUpdate,
+        getIncomes,
+        auctionApprove
     }
 }
 

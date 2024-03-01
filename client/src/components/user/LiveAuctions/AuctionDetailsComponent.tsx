@@ -183,6 +183,9 @@ async function displayRazorpay() {
 
             alert("going")
             const result = await axiosInstance.post("/auction/paymentverification", data);
+            console.log('afterverify', result.data.update);
+            
+            setData(result.data.update)
 
             alert(result.data.msg);
         },
@@ -214,69 +217,74 @@ async function displayRazorpay() {
 
   return (
     <div className="max-w-screen-xl mx-auto p-4 h-full">
-      {data ? (
-        <div className="bg-black rounded-xl overflow-hidden shadow-md md:flex md:items-center border-2 border-slate-800 ">
-          <div className="md:flex-shrink-0 md:w-1/2">
-            <img src={data.postId.image} alt="Product" className="w-full h-full object-cover md:max-h-96" />
-          </div>
-          <div className="p-8 md:w-1/2 flex flex-col justify-center items-center">
-            {data.isBlocked ? (
-              <div className="bg-black rounded-xl overflow-hidden shadow-md md:flex md:items-center border-2 border-slate-800 p-8">
-                <p className="text-white">Currently the auction has been blocked.</p>
-              </div>
-            ) : data.isCompleted ? (
-              <div className="bg-black rounded-xl overflow-hidden shadow-md md:flex md:items-center border-2 border-slate-800 p-8">
-                {data.winner === userId ? (
-                  <>
-                    <p className="text-white">Congratulations for the win!</p>
-                    <button onClick={displayRazorpay} className='text-indigo-500 bg-black rounded-xl drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 p-2 hover:bg-indigo-500 hover:text-white'>Pay Now</button>
-                  </>
-                ) : (
-                  <p className="text-white">The auction has ended.</p>
-                )}
-              </div>
-            ) : (
-              <>
-                <span className='text-white'>{getFormattedTime(time)}</span>
-                <h2 className="text-2xl font-medium text-white mb-4">{data.postId.productName}</h2>
-                <p className="mb-4">
-                  <span className='text-white'>Current Amount:</span> <span className="text-green-600 font-extrabold">{data.currentAmount}</span>
-                </p>
-                <div className="mb-4">
-                  <button onClick={() => handleButtonClick(100)} className="mr-2 text-indigo-500 px-4 py-2 rounded border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
-                    100
-                  </button>
-                  <button onClick={() => handleButtonClick(200)} className="mr-2  text-indigo-500 px-4 py-2 rounded  border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
-                    200
-                  </button>
-                  <button onClick={() => handleButtonClick(500)} className=" text-indigo-500 px-4 py-2 rounded border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
-                    500
-                  </button>
-                </div>
-                <form onSubmit={handleSubmit}>
-                  <label htmlFor="customAmount" className="block mb-2 text-white">
-                    Custom Amount:
-                  </label>
-                  <input
-                    type="text"
-                    id="customAmount"
-                    value={customAmount}
-                    onChange={handleInputChange}
-                    placeholder="Enter amount"
-                    className=" px-4 py-2 text-white rounded mb-2 mr-5 outline-none bg-black border-2 border-slate-800"
-                  />
-                  <button type="submit" className="b text-indigo-500 px-4 py-2 rounded border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
-                    BID
-                  </button>
-                </form>
-              </>
-            )}
-          </div>
+    {data ? (
+      <div className="bg-black rounded-xl overflow-hidden shadow-md md:flex md:items-center border-2 border-slate-800 ">
+        <div className="md:flex-shrink-0 md:w-1/2">
+          <img src={data.postId.image} alt="Product" className="w-full h-full object-cover md:max-h-96" />
         </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+        <div className="p-8 md:w-1/2 flex flex-col justify-center items-center">
+          {data.isBlocked ? (
+            <div className="bg-black rounded-xl overflow-hidden shadow-md md:flex md:items-center border-2 border-slate-800 p-8">
+              <p className="text-white">Currently the auction has been blocked.</p>
+            </div>
+          ) : data.isCompleted ? (
+            <div className="bg-black rounded-xl overflow-hidden shadow-md md:flex md:items-center border-2 border-slate-800 p-8">
+              {data.winner === userId ? (
+                <>
+                  <p className="text-white">Congratulations for the win!</p>
+                  {data.isPaid ? (
+                    <p className="text-white">Payment is done. Once the admin verifies, an email will be sent to you.</p>
+                  ) : (
+                    <button onClick={displayRazorpay} className='text-indigo-500 bg-black rounded-xl drop-shadow-2xl overflow-hidden shadow-lg border-2 border-slate-800 p-2 hover:bg-indigo-500 hover:text-white'>Pay Now</button>
+                  )}
+                </>
+              ) : (
+                <p className="text-white">The auction has ended.</p>
+              )}
+            </div>
+          ) : (
+            <>
+              <span className='text-white'>{getFormattedTime(time)}</span>
+              <h2 className="text-2xl font-medium text-white mb-4">{data.postId.productName}</h2>
+              <p className="mb-4">
+                <span className='text-white'>Current Amount:</span> <span className="text-green-600 font-extrabold">{data.currentAmount}</span>
+              </p>
+              <div className="mb-4">
+                <button onClick={() => handleButtonClick(100)} className="mr-2 text-indigo-500 px-4 py-2 rounded border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
+                  100
+                </button>
+                <button onClick={() => handleButtonClick(200)} className="mr-2  text-indigo-500 px-4 py-2 rounded  border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
+                  200
+                </button>
+                <button onClick={() => handleButtonClick(500)} className=" text-indigo-500 px-4 py-2 rounded border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
+                  500
+                </button>
+              </div>
+              <form onSubmit={handleSubmit}>
+                <label htmlFor="customAmount" className="block mb-2 text-white">
+                  Custom Amount:
+                </label>
+                <input
+                  type="text"
+                  id="customAmount"
+                  value={customAmount}
+                  onChange={handleInputChange}
+                  placeholder="Enter amount"
+                  className=" px-4 py-2 text-white rounded mb-2 mr-5 outline-none bg-black border-2 border-slate-800"
+                />
+                <button type="submit" className="b text-indigo-500 px-4 py-2 rounded border-2 border-slate-800 hover:bg-indigo-500 hover:text-white">
+                  BID
+                </button>
+              </form>
+            </>
+          )}
+        </div>
+      </div>
+    ) : (
+      <p>Loading...</p>
+    )}
+  </div>
+  
   );
 };
 

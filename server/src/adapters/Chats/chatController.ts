@@ -14,36 +14,48 @@ const chatController = (
     const dbRepositoryMessage = messageDbRepository(messageDbRepositoryImpl())
 
     const accessChats = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId
-        const reciever = req.params.reciever
+        try {
+            const userId = req.userId
+            const reciever = req.params.reciever
 
-        const chats = await chatAccess(dbRepositoryMessage, userId, reciever)
+            const chats = await chatAccess(dbRepositoryMessage, userId, reciever)
 
-        res.json({
-            chats
-        })
+            res.json({
+                chats
+            })
+        } catch (error) {
+            console.log(error)
+        }
 
     })
 
     const getChats = asyncHandler( async(req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId
+        try {
+            const userId = req.userId
 
-        const fetchedChats = await fetchChats(dbRepositoryMessage, userId)
-        
-        res.json({
-            fetchedChats
-        })
+            const fetchedChats = await fetchChats(dbRepositoryMessage, userId)
+            
+            res.json({
+                fetchedChats
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const sendMessage = asyncHandler( async(req: AuthenticatedRequest, res: Response) => {
-        const sender = req.userId;
-        const {content, chatId} = req.body
+        try {
+            const sender = req.userId;
+            const {content, chatId} = req.body
 
-        const message = await messageSent(dbRepositoryMessage, sender, content, chatId)
+            const message = await messageSent(dbRepositoryMessage, sender, content, chatId)
 
-        res.json({
-            message
-        })
+            res.json({
+                message
+            })
+        } catch (error) {
+            console.log(error)
+        }
 
     })
 

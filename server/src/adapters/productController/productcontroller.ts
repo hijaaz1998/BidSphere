@@ -21,6 +21,7 @@ const   productController = (
     const dbRepositoryProduct = productDbRepository(productDbRepositoryImpl());
 
     const addProduct = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
+       try {
         const product: ProductInterface = req.body.data;
         
         const userId = req.userId;
@@ -38,24 +39,30 @@ const   productController = (
             status: 'success',
             message: 'product added'
         })
+       } catch (error) {
+        console.log(error)
+       }
     })
 
     const handleGetProductsOfUser = asyncHandler ( async (req: Request, res: Response) => {
-        const userId = req.params.userId;
-        console.log('req.params:', req.params);
-        console.log('userId:', userId);
+        try {
+            const userId = req.params.userId;
         
-        let myProducts;
-        if(userId){
-             myProducts = await getUserProducts(dbRepositoryProduct, userId);
-        }        
+            let myProducts;
+            if(userId){
+                myProducts = await getUserProducts(dbRepositoryProduct, userId);
+            }        
 
-        res.json({
-            myProducts
-        })
+            res.json({
+                myProducts
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const getAllPosts = asyncHandler( async (req: AuthenticatedRequest, res:Response) => {
+       try {
         const userId = req.userId
         let posts;
         if(userId){
@@ -65,117 +72,157 @@ const   productController = (
         res.json({
             posts
         })
+       } catch (error) {
+        console.log(error)
+       }
     })
 
     const getPostDetails = asyncHandler ( async (req: Request, res: Response) => {
-        const postId = req.params.postId
-        const details = await getPostDetail(dbRepositoryProduct, postId)        
+        try {
+            const postId = req.params.postId
+            const details = await getPostDetail(dbRepositoryProduct, postId)        
 
-        res.json(
-            details
-        )
+            res.json(
+                details
+            )
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const deletePost = asyncHandler ( async (req: Request, res: Response) => {
-        const postId = req.params.postId;
-        const isDeleted = await postDelete(dbRepositoryProduct, postId);
+        try {
+            const postId = req.params.postId;
+            const isDeleted = await postDelete(dbRepositoryProduct, postId);
 
-        if(isDeleted){
-            res.json({
-                message: "Deleted successfully"
-            })
+            if(isDeleted){
+                res.json({
+                    message: "Deleted successfully"
+                })
+            }
+        } catch (error) {
+            console.log(error)
         }
     })
 
     const editPost = asyncHandler( async (req: Request, res: Response) => {
-        const post: EditProductInterface = req.body.data
+        try {
+            const post: EditProductInterface = req.body.data
         
-        const postId = req.params.postId;
-        const updated = await postEdit(dbRepositoryProduct, post, postId);
+            const postId = req.params.postId;
+            const updated = await postEdit(dbRepositoryProduct, post, postId);
 
-        if(updated){
-            res.json({
-                updated
-            })
+            if(updated){
+                res.json({
+                    updated
+                })
+            }
+        } catch (error) {
+            console.log(error)
         }
     })
 
     const likePost = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
-        const postId = req.params.postId;
-        const userId = req.userId;
+        try {
+            const postId = req.params.postId;
+            const userId = req.userId;
 
-        const updated = await postLike(dbRepositoryProduct, postId, userId);
+            const updated = await postLike(dbRepositoryProduct, postId, userId);
 
-        res.json({
-            updated
-        })
+            res.json({
+                updated
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const getComments = asyncHandler( async (req: Request, res: Response) => {
-        const postId = req.params.postId;
+        try {
+            const postId = req.params.postId;
 
-        const comments = await getComment(dbRepositoryProduct, postId)
+            const comments = await getComment(dbRepositoryProduct, postId)
 
-        res.json({
-            comments
-        })
+            res.json({
+                comments
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const addComment = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
-        const postId = req.params.postId;
-        const {comment} = req.body;
-        const userId = req.userId
-        const commented = await addComments(dbRepositoryProduct, userId, postId, comment)
+        try {
+            const postId = req.params.postId;
+            const {comment} = req.body;
+            const userId = req.userId
+            const commented = await addComments(dbRepositoryProduct, userId, postId, comment)
 
-        res.json({
-            commented
-        })
+            res.json({
+                commented
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const reportPost = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
 
-        const {reportId, issue, subject } = req.body.data
-        const userId = req.userId
+        try {
+            const {reportId, issue, subject } = req.body.data
+            const userId = req.userId
 
-        const reported = await postReport(dbRepositoryProduct, userId, reportId, subject, issue);
-        
-        if(!reported){
-            res.json({
-                success: false,
-                message: "Already Reported"
-            })
-        } else {
-            res.json({
-                success: true,
-                message: "Reported successfully"
-            })
-        }   
+            const reported = await postReport(dbRepositoryProduct, userId, reportId, subject, issue);
+            
+            if(!reported){
+                res.json({
+                    success: false,
+                    message: "Already Reported"
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: "Reported successfully"
+                })
+            } 
+        } catch (error) {
+            console.log(error)
+        }  
     })
 
     const addToFavorite = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId
-        const postId = req.body.postId
+        try {
+            const userId = req.userId
+            const postId = req.body.postId
 
-        const favorite = await addFavorite(dbRepositoryProduct ,userId, postId)
+            const favorite = await addFavorite(dbRepositoryProduct ,userId, postId)
 
-        if(favorite){
-            res.json({
-                message: 'Added to favorites'
-            })
+            if(favorite){
+                res.json({
+                    message: 'Added to favorites'
+                })
+            }
+        } catch (error) {
+            console.log(error)
         }
         
     })
 
     const getFavorites = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
-        const userId = req.userId;
-        const favorites = await getFavorite(dbRepositoryProduct,userId)
+        try {
+            const userId = req.userId;
+            const favorites = await getFavorite(dbRepositoryProduct,userId)
 
-        res.json({
-            favorites
-        })
+            res.json({
+                favorites
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })
 
     const removeFavorite = asyncHandler( async (req: AuthenticatedRequest, res: Response) => {
+       try {
         const userId = req.userId;
         const postId = req.params.id;
 
@@ -184,6 +231,9 @@ const   productController = (
         res.json({
             favorites
         })
+       } catch (error) {
+        console.log(error)
+       }
     })
  
     return {

@@ -12,6 +12,7 @@ import { AuctionRepositoryMongoDb, auctionRepositoryMongoDb } from "../../framew
 import { auction } from "../../entities/auction";
 import { ProductDbInterface } from "../../application/interfaces/productDbRepository";
 import { ProductRepositoryMongoDb, productRepositoryMongoDb } from "../../frameworks/databse/repositories/productRepositoryMongoDb";
+import nodemailer from 'nodemailer'
 
 
 const adminAuthController = (
@@ -125,10 +126,89 @@ const adminAuthController = (
     const getReports = asyncHandler ( async (req: Request, res: Response) => {
         try {
             const reports = await dbRepositoryProduct.fetchReports()
+            res.json({reports})
         } catch (error) {
             console.log(error);
             
         }
+    })
+
+    const getIncome = asyncHandler ( async (req: Request, res: Response) => {
+        try {
+            const incomes = await dbRepositoryAuction.getIncomes()
+            res.json({incomes})
+        } catch (error) {
+            console.log(error)
+        }
+    })
+
+    const approveAuction = asyncHandler ( async (req: Request, res: Response) => {
+        try {
+            const paymentId = req.params.paymentId
+            const approved = await dbRepositoryAuction.auctionApprove(paymentId)
+
+            const payerEmail = approved?.payerEmail as string;
+            const auctionerEmail = approved?.auctionerEmail as string
+            const updated = approved?.updated
+
+            console.log(updated);
+            console.log(payerEmail);
+            console.log(auctionerEmail);
+            
+            if (approved) {
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    host: 'smtp.gmail.com',
+                    port: 587,
+                    auth: {
+                        user: 'muhammadijasbtc@gmail.com',
+                        pass: 'lcui urmh witl gaah'
+                    }
+                });
+        
+                // Send email to the payer
+                const payerMailOptions = {
+                    from: 'test@wristcrafts.com',
+                    to: payerEmail,
+                    subject: "Auction Success",
+                    text: `Your auction has been successful and approved. Now you can contact with the auctioner using the email: ${auctionerEmail}`
+                };
+        
+                // Send email to the auctioner
+                const auctionerMailOptions = {
+                    from: 'test@wristcrafts.com',
+                    to: auctionerEmail,
+                    subject: "Auction Success",
+                    text: `Your auction has been successful and approved. Now you can chat with the final bidder using the email: ${payerEmail}`
+                };
+        
+                // Send email to the payer
+                transporter.sendMail(payerMailOptions, (error) => {
+                    if (error) {
+                        console.log("Error sending email to payer:", error);
+                    } else {
+                        console.log('Email sent to payer:', approved.payerEmail);
+                    }
+                });
+        
+                // Send email to the auctioner
+                transporter.sendMail(auctionerMailOptions, (error) => {
+                    if (error) {
+                        console.log("Error sending email to auctioner:", error);
+                    } else {
+                        console.log('Email sent to auctioner:', approved.auctionerEmail);
+                    }
+                });
+        
+                res.json({
+                    message: 'Email have been sent',
+                    updated
+                });
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        
     })
 
     return{
@@ -138,7 +218,9 @@ const adminAuthController = (
         getAuctions,
         getPosts,
         blockAuction,
-        getReports
+        getReports,
+        getIncome,
+        approveAuction
     }
 }
 
