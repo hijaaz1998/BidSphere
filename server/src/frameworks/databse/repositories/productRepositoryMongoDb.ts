@@ -322,7 +322,10 @@ export const productRepositoryMongoDb = () => {
   
     const getReports = async()=> {
       try {
-        const reports = await Incidents.find().populate('ReportedPost');
+        const reports = await Incidents.find()
+                .populate('ReportedPost')
+                .populate('reportedUser');
+
         return reports
       } catch (error) {
         console.log(error)

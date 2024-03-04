@@ -8,7 +8,7 @@ import { TiThumbsUp, TiMessage } from "react-icons/ti";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { toast } from "react-toastify";
 
-const Feeds: React.FC = () => {
+const   Feeds: React.FC = () => {
   const [feedsData, setFeedsData] = useState<any[]>([]);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState<any | null>(null);
@@ -195,9 +195,9 @@ const Feeds: React.FC = () => {
                         />
                         <span className="text-gray-600"></span>
                       </div>
-                      <div>
+                      {/* <div>
                         <button className="text-white" onClick={() => sharePost(data?._id)}>share</button>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                   <div className="ml-5 mb-2">
@@ -214,7 +214,7 @@ const Feeds: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <div className="mb-1 flex items-center">
+                  {/* <div className="mb-1 flex items-center">
                     <input
                       type="text"
                       placeholder="Add a comment..."
@@ -232,7 +232,7 @@ const Feeds: React.FC = () => {
                         Post
                       </button>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               ))
             ) : (

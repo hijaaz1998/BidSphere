@@ -24,7 +24,11 @@ const PaymentSchema = new Schema({
         type: Boolean,
         default: false
     }
-})
+},
+{
+    timestamps: true
+}
+)
 
 const Payment = model('Payment', PaymentSchema);
 export default Payment

@@ -32,6 +32,7 @@ const adminRouter = () => {
     router.get('/get_reports', controller.getReports)
     router.get('/get_income', controller.getIncome)
     router.put('/approve_auction/:paymentId', controller.approveAuction)
+    router.get('/dashboard', controller.dashboard)
 
      return router
      

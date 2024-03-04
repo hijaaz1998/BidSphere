@@ -37,17 +37,9 @@ const Reports = () => {
             <div className="flex flex-col flex-grow">
                 <h2 className="text-lg font-bold mb-2">{report.ReportedPost.productName}</h2>
                 <div className="flex items-center">
-                {/* <p className="flex-grow mr-4 text-pretty text-lg">Current Amount: {auction.currentAmount}</p>
-                <button
-                    onClick={() => handleBlockAuction(auction?._id)}
-                    className={`py-2 px-4 rounded focus:outline-none w-24 h-10 ${
-                    auction.isBlocked
-                        ? 'bg-green-500 text-white'
-                        : 'bg-red-500 text-white'
-                    }`}
-                >
-                    {auction.isBlocked ? 'Unblock' : 'Block'}
-                </button> */}
+                <p className="flex-grow mr-4 text-pretty text-lg">Issue {report?.issue}</p>
+                <p className="flex-grow mr-4 text-pretty text-lg">Reported User: {report?.reportedUser?.firstName}</p>
+                
                 </div>
             </div>
             </div>

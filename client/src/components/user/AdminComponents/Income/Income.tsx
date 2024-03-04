@@ -42,23 +42,24 @@ const Income = () => {
                 alt={`Auctioned ${data?.auctionId?.postId?.productName}`}
                 className="w-16 h-16 mr-4"
             />
-            <div className="flex flex-col flex-grow">
+            <div className="flex justify-between items-center flex-grow">
                 <h2 className="text-lg font-bold mb-2">{data?.auctionId?.postId?.productName}</h2>
-                <div className="flex items-center">
-                <p className="flex-grow mr-4 text-pretty text-lg">Current Amount: {data?.auctionId.currentAmount}</p>
+                
+                <p className=" mr-4 text-pretty text-lg">Final Amount: {data?.auctionId.currentAmount}</p>
+                <p>Amount Paid: {data?.amount}</p>
                 <button
                     onClick={() => handleApprove(data?._id)}
                     className={`py-2 px-4 rounded focus:outline-none  h-10 ${
-                    data?.isConfirmed
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-green-500 text-white'
+                        data?.isConfirmed
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-green-500 text-white'
                     }`}
                 >
                     {data?.isConfirmed ? 'Approved' : 'Approve Now'}
                 </button>
-                </div>
             </div>
-            </div>
+        </div>
+        
         ))}
         </div>
         <Pagination

@@ -100,14 +100,14 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
         </button>
       );
     } else {
-      return (
-        <button
-          className="text-sm text-indigo-500 shadow-lg border-2 border-slate-800 rounded-lg px-5 py-2 mt-4 hover:bg-indigo-500 hover:text-white"
-          onClick={handleUnfollow}
-        >
-          Unfollow
-        </button>
-      );
+      // return (
+      //   <button
+      //     className="text-sm text-indigo-500 shadow-lg border-2 border-slate-800 rounded-lg px-5 py-2 mt-4 hover:bg-indigo-500 hover:text-white"
+      //     onClick={handleUnfollow}
+      //   >
+      //     Unfollow
+      //   </button>
+      // );
     }
   };
 

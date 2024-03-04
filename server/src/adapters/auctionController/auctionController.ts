@@ -36,6 +36,7 @@ const auctionController = (
     const getUpcomingAuctions = asyncHandler ( async (req: Request, res: Response) => {
         try {
             const upcomingAuctions = await getAuctionsUpcoming(dbRepositoryAuction);
+            console.log("auctions",upcomingAuctions)
             res.json({
                 upcomingAuctions
             })
@@ -79,6 +80,7 @@ const auctionController = (
             const auctionID = auctionId;
         
             const updated = await bidNow(dbRepositoryAuction, userId, auctionID, amount)
+            console.log("data", updated)
 
             res.json({
                 updated

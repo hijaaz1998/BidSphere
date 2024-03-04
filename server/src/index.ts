@@ -52,10 +52,10 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on('bidded', ({ amount, userId }) => {
+  socket.on('bidded', ({ amount, userId, firstName, lastName }) => {
     console.log("userid", userId);
     console.log("amount", amount);
-    io.emit("bid", {userId, amount});
+    io.emit("bid", {userId, amount, firstName, lastName });
   });
 });
 

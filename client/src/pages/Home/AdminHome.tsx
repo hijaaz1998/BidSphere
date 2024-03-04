@@ -7,6 +7,7 @@ import Auctions from '../../components/user/AdminComponents/Auction/Auctions'
 import PostsMgt from '../../components/user/AdminComponents/PostsManagement/PostsMgt'
 import Reports from '../../components/user/AdminComponents/Reports/Reports'
 import Income from '../../components/user/AdminComponents/Income/Income'
+// import Dashboard from '../../components/user/AdminComponents/Dashboard/Dashboard'
 
 const AdminHome: React.FC = () => {
 
@@ -15,6 +16,8 @@ const AdminHome: React.FC = () => {
 
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
+      // case 'dashboard':
+      //   return <Dashboard />;
       case 'users':
         return <UserMgt />;
       case 'auctions':
@@ -37,7 +40,7 @@ const AdminHome: React.FC = () => {
   return (
     <div className='flex h-screen '>
         <AdminNavbar />
-        <div className="flex flex-col flex-1 w-full">
+        <div className="flex flex-col w-full">
             <AdminSidebar onButtonClick = {handleButtonClick} />
             <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
             {renderSelectedComponent()}

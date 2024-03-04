@@ -18,11 +18,15 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
   const [data, setData] = useState<any>(null);
   const [customAmount, setCustomAmount] = useState<string>('');
   const [time, setTime] = useState<number>(0);
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
 
   const fetchData = async () => {
     try {
       const res = await axiosInstance.get(`/auction/auctionDetails/${auctionId}`);
       console.log('auctiondetails', res.data.details)
+      setFirstName(res.data.details.currentBidder.firstName)
+      setLastName(res.data.details.currentBidder.lastName)
       setData(res.data.details);
       const endingDate = new Date(res.data.details.endingDate);
       const currentTime = new Date();
@@ -57,6 +61,7 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
     socket.on('bid', (bidData: any) => {
       fetchData();
       if (bidData.userId !== userId) {
+        console.log("biddata",bidData)
         toast.info(`New bid: Rs ${bidData.amount}`);
       }
     });
@@ -115,7 +120,7 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
 
       if (updated) {
         toast.success(`Congratulations! Rs ${amount} has been Bidded`);
-        socket.emit('bidded', { amount, userId, auctionId });
+        socket.emit('bidded', { amount, userId, auctionId, firstName, lastName });        
         setData(updated.data.updated);
       }
     } catch (error) {

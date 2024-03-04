@@ -9,6 +9,8 @@ import { log } from "console";
 import { errorMonitor } from "events";
 import Payment from "../model/PaymentModel";
 import { generareRazorpay } from "../../../utils/middleware/razorPay";
+import moment from 'moment';
+
 
 export const auctionRepositoryMongoDb = () => {
   const notificationCheck = async (userID: string | undefined) => {
@@ -58,7 +60,7 @@ export const auctionRepositoryMongoDb = () => {
       const startingDate = auction.getStartingDate();
 
       const endingDate = new Date(startingDate);
-      endingDate.setMinutes(endingDate.getMinutes() + 1); // Set endingDate to 2 minutes after startingDate
+      endingDate.setMinutes(endingDate.getMinutes() + 50); // Set endingDate to 2 minutes after startingDate
 
       const newAuction: any = new Auction({
         postId,
@@ -95,6 +97,8 @@ export const auctionRepositoryMongoDb = () => {
         })
         .exec();
 
+        console.log("auction",auctions);
+        
       return auctions;
     } catch (error) {
       console.error("Error fetching upcoming auctions:", error);
@@ -113,16 +117,31 @@ export const auctionRepositoryMongoDb = () => {
 
   const getDetailsOfAuction = async (auctionId: string) => {
     try {
-      const details = await Auction.findById(auctionId).populate({
-        path: "postId",
-        select: "productName image",
-      });
+        let populateOptions: any[] = [
+            {
+                path: "postId",
+                select: "productName image",
+            }
+        ];
 
-      return details;
+        const auction = await Auction.findById(auctionId);
+
+        if (auction?.currentBidder) {
+            populateOptions.push({
+                path: "currentBidder",
+                select: "firstName lastName",
+            });
+        }
+
+        const details = await Auction.findById(auctionId)
+            .populate(populateOptions);
+
+        return details;
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-  };
+};
+
 
   const bidNow = async (
     userId: string | undefined,
@@ -135,9 +154,13 @@ export const auctionRepositoryMongoDb = () => {
 
       const auction = await Auction.findByIdAndUpdate(
         auctionId,
-        { $inc: { currentAmount: amount } },
+        { 
+            $inc: { currentAmount: amount },
+            $set: { currentBidder: userId }
+        },
         { new: true }
-      );
+    );
+    
 
       if (!auction) {
         return null;
@@ -175,10 +198,22 @@ export const auctionRepositoryMongoDb = () => {
         );
       }
 
-      const details = await Auction.findById(auctionId).populate({
+      // await Auction.findByIdAndUpdate(
+      //   auctionId,
+      //   { currentBidder: existingParticipant ? existingParticipant._id : newParticipant?._id },
+      //   { new: true }
+      // );
+
+      const details = await Auction.findById(auctionId)
+      .populate({
         path: "postId",
         select: "productName image",
+      })
+      .populate({
+        path: "currentBidder",
+        select: "firstName lastName",
       });
+
 
       return details;
     } catch (error) {
@@ -482,7 +517,33 @@ export const auctionRepositoryMongoDb = () => {
     } catch (error) {
         console.log(error);
     }
-};
+  };
+
+  const paymentsData = async () => {
+    const auctions = await Auction.find({ isCompleted: true });
+
+    const payments = await Payment.find({isPaid: true})
+
+    console.log("paymenr",payments);
+    
+  
+    const auctionCountByWeek: { [weekNumber: number]: number } = {};
+  
+    auctions.forEach(auction => {
+      const weekNumber: number = moment(auction.createdOn).isoWeek();
+  
+      if (!auctionCountByWeek[weekNumber]) {
+        auctionCountByWeek[weekNumber] = 1;
+      } else {
+        auctionCountByWeek[weekNumber]++;
+      }
+    });
+  
+    console.log("week", Object.values(auctionCountByWeek));
+
+    return Object.values(auctionCountByWeek)
+  };
+  
 
 
   return {
@@ -503,7 +564,8 @@ export const auctionRepositoryMongoDb = () => {
     paymentGateway,
     updatePayment,
     getIncome,
-    approveAuction
+    approveAuction,
+    paymentsData
   };
 };
 

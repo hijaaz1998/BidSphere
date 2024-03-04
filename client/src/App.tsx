@@ -12,10 +12,11 @@ import Auction from "./pages/Auction/Auction"
 import AuctionDetails from "./pages/Auction/AuctionDetailsPage"
 import ForgotPassword from "./pages/Auth/ForgotPassword"
 import Profile from "./pages/Profile/Profile"
+import VideoChat from "./components/user/VideoChat/VideoChat"
+import Room from "./components/user/VideoChat/Room"
 
 
 function App() {
-
   return (
     <>
       <ToastContainer />
@@ -31,6 +32,8 @@ function App() {
             <Route path="/auctions" element={< Auction />}/>
             <Route path="/auctions/details/:auctionId" element={< AuctionDetails />}/>
             <Route path="/profile/:userId" element = { <Profile /> }/>
+            <Route path="/videoChat" element = { <VideoChat /> }/>
+            <Route path="/room/:roomLink" element = { <Room /> }/>
           </Route>
 
           <Route element = { <AdminPrivateRoutes />}> 

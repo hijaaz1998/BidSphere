@@ -211,6 +211,11 @@ const adminAuthController = (
         
     })
 
+    const dashboard = asyncHandler( async (req: Request, res: Response) => {
+        const payments = await dbRepositoryAuction.getPayments()
+        res.json({payments})
+    })
+
     return{
         loginAdmin,
         getAllUsers,
@@ -220,7 +225,8 @@ const adminAuthController = (
         blockAuction,
         getReports,
         getIncome,
-        approveAuction
+        approveAuction,
+        dashboard
     }
 }
 

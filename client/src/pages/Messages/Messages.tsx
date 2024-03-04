@@ -3,10 +3,12 @@ import axiosInstance from "../../axiosEndPoints/userAxios";
 import profileImage from "../../components/user/assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg";
 import ScrollableFeed from "react-scrollable-feed";
 import io from 'socket.io-client';
+import { useNavigate } from "react-router-dom";
 
 const ENDPOINT = 'http://localhost:1000'
 let selectedChatCompare: any;
 const Messages = () => {
+  const navigate = useNavigate();
   const socket = io(ENDPOINT);
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
@@ -18,7 +20,8 @@ const Messages = () => {
   const [chatId, setChatId] = useState()
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
-  const [socketConnected, setSocketConnected] = useState(false)
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -67,7 +70,9 @@ const Messages = () => {
     setNewMessage(e.target.value);
   }
 
-
+  const startVideoCall = () => {
+    navigate(`/videoChat`)
+  }
 
   const sendMessage = async (e: any) => {
     e.preventDefault();
@@ -246,22 +251,38 @@ const Messages = () => {
               </ScrollableFeed>
               <div className="flex items-center justify-between w-full p-3 border-t border-gray-300">
                 <input
-                  onChange={(e) => typingHandler(e)}
-                  type="text"
-                  placeholder="Message"
-                  className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
-                  name="message"
-                  value={newMessage}
+                    onChange={(e) => typingHandler(e)}
+                    type="text"
+                    placeholder="Message"
+                    className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
+                    name="message"
+                    value={newMessage}
                 />
                 <button onClick={(e) => sendMessage(e)}>
-                  <svg
-                    className="w-5 h-5 text-gray-500 origin-center transform rotate-90"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                  </svg>
+                    <svg
+                        className="w-5 h-5 text-gray-500 origin-center transform rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                    >
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                </button>
+                <button onClick={startVideoCall}>
+                    <svg
+                        className="w-5 h-5 text-gray-500"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path>
+                        <path d="M15 3V7a2 2 0 002 2h4"></path>
+                        <path d="M10 17L15 12 10 7"></path>
+                    </svg>
                 </button>
               </div>
             </div>

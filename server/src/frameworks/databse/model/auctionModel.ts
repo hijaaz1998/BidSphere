@@ -52,6 +52,10 @@ const auctionSchema = new Schema(
         isPaid: {
             type: Boolean,
             default: false
+        },
+        currentBidder: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
         }
     }
 )
