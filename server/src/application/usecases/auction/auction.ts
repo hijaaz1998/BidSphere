@@ -57,9 +57,7 @@ export const bidNow = async (
     auctionId: string,
     amount: number
 ) => {
-        console.log("a",auctionId);
-        console.log(amount);
-        console.log(userId);
+
     const updated = await auctionRepository.bidPost(userId, auctionId, amount)
 
     return updated

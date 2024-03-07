@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import image from '../../assets/Old globe.jpg'
+import { useEffect, useState } from 'react';
 import axiosInstance from '../../../../axiosEndPoints/userAxios';
 import Pagination from '../../../Pagination/Pagination';
+import { Product } from '../../../../interfaces/Interface';
 
 const PostsMgt = () => {
     
-    const [postData, setPostData] = useState<any[]>([]);
-    const [update, setUpdate] = useState(false);
+    const [postData, setPostData] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(5); 
+    // const [recordsPerPage, setRecordsPerPage] = useState(5);
+    let recordsPerPage = 5; 
     
 
   const blockUser = () => {
@@ -17,8 +17,6 @@ const PostsMgt = () => {
 
   const fetchPosts = async () => {
     const response = await axiosInstance.get('/admin/getPosts');
-    console.log("postData", response.data.posts);
-    
     setPostData(response.data.posts)
 
   }
@@ -40,7 +38,7 @@ const PostsMgt = () => {
             <div key={post._id} className="border rounded p-4 mb-4 shadow-md flex items-center">
             <img
                 src={post.image}
-                alt={post.firstName}
+                alt={post.productName}
                 className="w-16 h-16 rounded-full mr-4"
             />
             <div className="flex-grow">

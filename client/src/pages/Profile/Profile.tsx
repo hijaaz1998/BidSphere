@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/user/Header/Navbar'
 import ProfileComponent from '../../components/user/Profile/Profile'
 import { useParams } from 'react-router-dom'

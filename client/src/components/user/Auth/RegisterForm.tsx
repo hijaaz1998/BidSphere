@@ -1,8 +1,6 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
-import { signup } from '../../../slices/userSlice';
-import {useDispatch,useSelector} from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,10 +12,9 @@ const RegisterForm = () => {
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
   const [error, setError] = useState<string>('');
-  const [otp, setOTP] = useState();
+  const [otp, setOTP] = useState('');
   const [validOtp, setValidOtp] = useState();
   
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -41,7 +38,7 @@ const RegisterForm = () => {
       return;
     }
 
-    if(!otp || isNaN(otp) || parseInt(otp) !== validOtp){
+    if(!otp || parseInt(otp) !== validOtp){
       setError('Incorrect OTP');
       setTimeout(() => {
         setError('');
@@ -77,8 +74,8 @@ const RegisterForm = () => {
           setError('');
         }, 3000);
       }
-    } catch (error:any) {
-      toast.error(error.response)
+    } catch (errory) {
+      toast.error(error)
     }
 
   };

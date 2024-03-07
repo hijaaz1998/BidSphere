@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
-import { Link, Params } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-interface UserIdProps {
-  userId: Readonly<Params<string>>
-}
+// interface UserIdProps {
+//   userId: Readonly<Params<string>>
+// }
 
-const Posts: React.FC<any> = ({userId, updateUi}) => {
+const Posts: React.FC<any> = ({userId}) => {
 
   const [posts, setPosts] = useState<any[]>([]);
 

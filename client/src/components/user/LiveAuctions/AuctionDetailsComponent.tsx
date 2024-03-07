@@ -1,42 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { toast } from 'react-toastify';
-import io from 'socket.io-client';
-import axios from 'axios';
+import io, {Socket} from 'socket.io-client';
+import { AuctionDetails, bidData } from '../../../interfaces/Interface';
 
-let socket: any
 
-interface AuctionDetails {
+
+let socket: Socket
+
+interface AuctionDetail {
   auctionId: string | undefined;
 }
 
-const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
+const AuctionDetailsComponent: React.FC<AuctionDetail> = ({ auctionId }) => {
   const ENDPOINT = 'http://localhost:1000';
   const userIdString = localStorage.getItem('userId');
   const userId = userIdString ? JSON.parse(userIdString) : null;
 
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AuctionDetails>();
   const [customAmount, setCustomAmount] = useState<string>('');
   const [time, setTime] = useState<number>(0);
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
+  // const [firstName, setFirstName] = useState();
+  // const [lastName, setLastName] = useState();
 
   const fetchData = async () => {
     try {
-      const res = await axiosInstance.get(`/auction/auctionDetails/${auctionId}`);
-      console.log('auctiondetails', res.data.details)
-      setFirstName(res.data.details.currentBidder.firstName)
-      setLastName(res.data.details.currentBidder.lastName)
-      setData(res.data.details);
-      const endingDate = new Date(res.data.details.endingDate);
-      const currentTime = new Date();
-      const differenceInMilliseconds = Math.max(0, endingDate.getTime() - currentTime.getTime());
-      setTime(differenceInMilliseconds);      
+        const res = await axiosInstance.get(`/auction/auctionDetails/${auctionId}`);
+        setData(res.data.details);
+        const endingDate = new Date(res.data.details.endingDate);
+        const currentTime = new Date();
+        const differenceInMilliseconds = Math.max(0, endingDate.getTime() - currentTime.getTime());
+        setTime(differenceInMilliseconds);
+
+        if (res.data.details.currentBidder) {
+            // setFirstName(res.data.details.currentBidder.firstName);
+            // setLastName(res.data.details.currentBidder.lastName);
+        }
     } catch (error) {
-      console.error('Error fetching data:', error);
-      toast.error('Failed to fetch auction details');
+        console.error('Error fetching data:', error);
+        toast.error('Failed to fetch auction details');
     }
-  };
+};
+
 
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -58,11 +63,10 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
   
 
   useEffect(() => {
-    socket.on('bid', (bidData: any) => {
+    socket.on('bid', (bidData: bidData) => {
       fetchData();
       if (bidData.userId !== userId) {
-        console.log("biddata",bidData)
-        toast.info(`New bid: Rs ${bidData.amount}`);
+        toast.info(`New bid: ${bidData?.firstName} ${bidData?.lastName} has bidded  Rs ${bidData.amount}`);
       }
     });
   
@@ -91,18 +95,13 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
     setCustomAmount('');
   };
 
-  const auctionCompleted = async () => {
-    console.log("id",data?._id);
-    
-    await axiosInstance.put(`/auction/auction_completed/${data?._id}`).then((response) => {
-      console.log("response after",response.data.updated);
-      
+  const auctionCompleted = async () => {    
+    await axiosInstance.put(`/auction/auction_completed/${data?._id}`).then((response) => {      
       setData(response.data.updated)
     })
   }
 
   useEffect(() => {
-    console.log(time);
     
     if(time === 0 && data?.isCompleted === false) {
       
@@ -113,14 +112,15 @@ const AuctionDetailsComponent: React.FC<AuctionDetails> = ({ auctionId }) => {
 
   const performAction = async (amount: number) => {
     try {
+      
       const updated = await axiosInstance.post('/auction/bid', {
         auctionId: auctionId,
         amount: amount
       });
 
-      if (updated) {
+      if (updated) {        
         toast.success(`Congratulations! Rs ${amount} has been Bidded`);
-        socket.emit('bidded', { amount, userId, auctionId, firstName, lastName });        
+        socket.emit('bidded', { amount, userId, auctionId, firstName: updated?.data?.updated?.currentBidder?.firstName, lastName: updated?.data?.updated?.currentBidder?.lastName });        
         setData(updated.data.updated);
       }
     } catch (error) {
@@ -153,20 +153,16 @@ async function displayRazorpay() {
         return;
     }
 
-    const result = await axiosInstance.post(`/auction/payment/${data._id}`)
+    const result = await axiosInstance.post(`/auction/payment/${data?._id}`)
 
     if (!result) {
         alert("Server error. Are you online?");
         return;
     }
-
-    console.log("response",result.data.paid);
     
     const { amount, id: order_id, currency, } = result.data.paid;
     const {auctionId} = result.data;
     const {paymentId} = result.data;
-    alert("payment")
-    alert(paymentId)
 
     const options = {
         key: "rzp_test_fWH63GUDMTI221",
@@ -176,7 +172,7 @@ async function displayRazorpay() {
         description: "Test Transaction",
         image: '',
         order_id: order_id,
-        handler: async function (response: { razorpay_payment_id: any; razorpay_order_id: any; razorpay_signature: any; }) {
+        handler: async function (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string; }) {
             const data = {
                 paymentId,
                 auctionId,
@@ -186,13 +182,10 @@ async function displayRazorpay() {
                 razorpaySignature: response.razorpay_signature,
             };
 
-            alert("going")
             const result = await axiosInstance.post("/auction/paymentverification", data);
-            console.log('afterverify', result.data.update);
             
             setData(result.data.update)
 
-            alert(result.data.msg);
         },
         prefill: {
             name: "Soumya Dey",
@@ -206,9 +199,13 @@ async function displayRazorpay() {
             color: "#61dafb",
         },
     };
-
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+    if (window.Razorpay) {
+      const paymentObject = new window.Razorpay(options); // Creating a new instance of Razorpay
+      paymentObject.open(); // Opening the payment dialog
+    } else {
+      // Handle case where Razorpay is not available
+      alert("Razorpay SDK is not available");
+    }
 }
 
   const getFormattedTime = (time: number) => {
@@ -221,7 +218,7 @@ async function displayRazorpay() {
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto p-4 h-full">
+    <div className="max-w-screen-xl mx-auto p-4 h-screen">
     {data ? (
       <div className="bg-black rounded-xl overflow-hidden shadow-md md:flex md:items-center border-2 border-slate-800 ">
         <div className="md:flex-shrink-0 md:w-1/2">

@@ -1,17 +1,19 @@
-import { Pagination } from 'antd';
+import Pagination from '../../../Pagination/Pagination';
 import { useEffect, useState } from 'react'
 import axiosInstance from '../../../../axiosEndPoints/userAxios';
+import { ReportedPost } from '../../../../interfaces/Interface';
 
 const Reports = () => {
 
-    const [Reports, setReports] = useState<any[]>([]);
-    const [update, setUpdate] = useState(false)
+    const [Reports, setReports] = useState<ReportedPost[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(5)
+    // const [recordsPerPage, setRecordsPerPage] = useState(5)
+    let recordsPerPage = 5;
 
     const fetchReports = async () => {
         const response = await axiosInstance.get('/admin/get_reports')
-        console.log("reports", response.data.reports)
+        console.log("reports",response.data.reports)
+
         setReports(response.data.reports)
     }
 
@@ -28,7 +30,7 @@ const Reports = () => {
     <div>
          <div className='top-28 ml-96 mt-32'>
         {currentRecords.map((report) => (
-            <div key={report.id} className="border rounded p-4 mb-4 shadow-md flex items-center">
+            <div key={report._id} className="border rounded p-4 mb-4 shadow-md flex items-center">
             <img
                 src={report.ReportedPost.image}
                 alt={report.ReportedPost.productName}

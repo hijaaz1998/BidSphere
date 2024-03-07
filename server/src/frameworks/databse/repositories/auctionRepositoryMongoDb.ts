@@ -96,8 +96,6 @@ export const auctionRepositoryMongoDb = () => {
           select: "productName description image",
         })
         .exec();
-
-        console.log("auction",auctions);
         
       return auctions;
     } catch (error) {
@@ -198,12 +196,6 @@ export const auctionRepositoryMongoDb = () => {
         );
       }
 
-      // await Auction.findByIdAndUpdate(
-      //   auctionId,
-      //   { currentBidder: existingParticipant ? existingParticipant._id : newParticipant?._id },
-      //   { new: true }
-      // );
-
       const details = await Auction.findById(auctionId)
       .populate({
         path: "postId",
@@ -235,7 +227,6 @@ export const auctionRepositoryMongoDb = () => {
           path: "userId",
         },
       });
-      console.log("zuctions", auctions);
 
       return auctions;
     } catch (error) {
@@ -270,24 +261,22 @@ export const auctionRepositoryMongoDb = () => {
       const myBids = await Participants.find({ userId })
         .populate({
           path: "auctionId",
-          match: { isRemoved: false }, // <-- Add this match condition
+          match: { isRemoved: false }, 
           populate: [
             {
               path: "postId",
               model: "Product",
             },
             {
-              path: "winner", // Populate the winner field
+              path: "winner",
               model: "User",
             },
           ],
         })
-        .exec(); // Execute the query to enable filtering in memory
+        .exec(); 
 
-      // Filter out documents where auctionId is null
       const filteredBids = myBids.filter((bid) => bid.auctionId !== null);
 
-      console.log("myBIds", filteredBids);
       return filteredBids;
     } catch (error) {
       console.log(error);
@@ -307,7 +296,6 @@ export const auctionRepositoryMongoDb = () => {
         throw new Error("Participant not found.");
       }
 
-      // Step 2: Remove the participant ID from the array in Auction
       const updatedAuction = await Auction.findOneAndUpdate(
         { participants: participantId },
         { $pull: { participants: participantId } },
@@ -317,9 +305,6 @@ export const auctionRepositoryMongoDb = () => {
       if (!updatedAuction) {
         throw new Error("Auction not found.");
       }
-
-      console.log("Participant removed:", removedParticipant);
-      console.log("Auction updated:", updatedAuction);
 
       return updatedAuction;
     } catch (error) {
@@ -349,20 +334,17 @@ export const auctionRepositoryMongoDb = () => {
 
   const readChange = async (userId: string | undefined) => {
     try {
-      console.log("userId", userId);
-
+      
       const changed = await Notifications.find({ reciever: userId }).exec();
-      console.log("changed", changed);
-
-      // Iterate over each notification and update isRead to true
+     
       for (let notification of changed) {
         notification.isRead = true;
-        await notification.save(); // Save the updated document
+        await notification.save(); 
       }
 
       const updated = await Notifications.find({ reciever: userId }).populate({
         path: "auctionId",
-        match: { isRemoved: false }, // <-- Add this match condition
+        match: { isRemoved: false }, 
         populate: {
           path: "postId",
           model: "Product",
@@ -382,7 +364,6 @@ export const auctionRepositoryMongoDb = () => {
         { isCompleted: true },
         { new: true }
       );
-      console.log("auction", auction);
 
       const winner = await Participants.findOne({
         currentAmount: auction?.currentAmount,
@@ -445,7 +426,6 @@ export const auctionRepositoryMongoDb = () => {
         { isPaid: true },
         { new: true }
       ).populate("auctionId");
-      console.log("updated", updated);
 
       const auction = await Auction.findByIdAndUpdate(
         auctionId,
@@ -471,7 +451,6 @@ export const auctionRepositoryMongoDb = () => {
           model: "Product",
         },
       });
-      console.log("paymentt", incomes);
       return incomes;
     } catch (error) {
       console.log(error);
@@ -523,9 +502,6 @@ export const auctionRepositoryMongoDb = () => {
     const auctions = await Auction.find({ isCompleted: true });
 
     const payments = await Payment.find({isPaid: true})
-
-    console.log("paymenr",payments);
-    
   
     const auctionCountByWeek: { [weekNumber: number]: number } = {};
   
@@ -539,8 +515,6 @@ export const auctionRepositoryMongoDb = () => {
       }
     });
   
-    console.log("week", Object.values(auctionCountByWeek));
-
     return Object.values(auctionCountByWeek)
   };
   

@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
-import React from 'react';
 import image from '../../assets/Old globe.jpg';
 import axiosInstance from '../../../../axiosEndPoints/userAxios';
 import Pagination from '../../../Pagination/Pagination';
+import { AuctionDetails } from '../../../../interfaces/Interface';
 
 const Auctions = () => {
-  const [auctionData, setAuctionData] = useState<any[]>([]);
+  const [auctionData, setAuctionData] = useState<AuctionDetails[]>([]);
   const [update, setUpdate] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage, setRecordsPerPage] = useState(5)
+  // const [recordsPerPage, setRecordsPerPage] = useState(5)
+  let recordsPerPage = 5;
 
 
   const fetchAuctions = async () => {
     const response = await axiosInstance.get('/admin/getAuctions');
     setAuctionData(response.data.auctions);
-    console.log("auctions", response.data.auctions);
   }
 
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -23,7 +23,7 @@ const Auctions = () => {
   const nPages = Math.ceil(auctionData.length / recordsPerPage);
 
   const handleBlockAuction = async (auctionId: string) => {
-    const response = await axiosInstance.put(`/admin/block_auction/${auctionId}`)
+    await axiosInstance.put(`/admin/block_auction/${auctionId}`)
     setUpdate((previous) => !previous);
   }
 
@@ -35,7 +35,7 @@ const Auctions = () => {
     <>
         <div className='top-28 ml-96 mt-32'>
         {currentRecords.map((auction) => (
-            <div key={auction.id} className="border rounded p-4 mb-4 shadow-md flex items-center">
+            <div key={auction._id} className="border rounded p-4 mb-4 shadow-md flex items-center">
             <img
                 src={image}
                 alt={`Auctioned ${auction?.postId?.image}`}

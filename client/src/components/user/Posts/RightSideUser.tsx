@@ -2,15 +2,20 @@ import React, { useEffect, useState } from 'react'
 import userImage from '../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg'
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
-import UserRootState from '../../../app/rootState/userRootState';
+// import { useSelector } from 'react-redux';
+// import UserRootState from '../../../app/rootState/userRootState';
 
 interface UserData {
-  userId: {
+  
     _id: string;
     firstName: string;
     lastName: string;
-  }
+    
+  
+  // followers: any
+  // firstName: string;
+  // lastName: string;
+  // _id: string;
 }
 interface RightSideUserProps {
   userData: UserData; // Add this prop to receive user data
@@ -20,14 +25,9 @@ const RightSideUser: React.FC<RightSideUserProps> = ({ userData }) => {
 
   const [following, setFollowing] = useState(true)
   const [data, setData] = useState<UserData>(userData)
-  const logedUser = useSelector((state: UserRootState) => state.user);
+  // const logedUser = useSelector((state: UserRootState) => state.user);
 
-  console.log("userDataassssssssssss", userData);
-  console.log("Dataassssssssssss", data);
-
-  const isFollowing = userData?.followers?.includes(logedUser?.user?._id) 
-  console.log("isfolloe", isFollowing);
-  
+  // const isFollowing = userData?.followers?.includes(logedUser?.user?._id)
   
   const handleUnfollow = async (userId: string) => {
     const response = await axiosInstance.patch(`/user/unfollow/${userId}`)
@@ -47,7 +47,7 @@ const RightSideUser: React.FC<RightSideUserProps> = ({ userData }) => {
 
   useEffect(() => {
     setData(userData);
-  },[]);
+  },[data]);
 
   return (
     <div className="flex flex-col items-center justify-center bg-black p-6 rounded-lg mx-5 my-3 h-64 mt-4 border-2 border-slate-800 w-52">

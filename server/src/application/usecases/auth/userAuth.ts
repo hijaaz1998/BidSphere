@@ -32,8 +32,6 @@ export const userRegister = async (
         password
     );
 
-    console.log(userEntity.getFirstName());
-
     const createdUser: any = await userRepository.addUser(userEntity)
 
     const token = authService.generateToken(createdUser?._id.toString());
@@ -63,6 +61,10 @@ export const userLogin = async (
     
     if(!user){
         return new AppError('This user doesnt exist', HttpStatus.UNAUTHORIZED)
+    }
+
+    if(!user.password){
+        return new AppError('This user is already signed in with google, try login with google', HttpStatus.UNAUTHORIZED)
     }
 
     const isPasswordCorrect = await authService.comparePassword(
@@ -108,11 +110,7 @@ export const googleAuthRegister = async (
     userRepository: ReturnType<UserDbInterface>,
     authService: ReturnType<AuthServiceInterface>
 ) => {
-    const user: any = await userRepository.addUserByGoogle(firstName,lastName, email, jti);
-
-
-    console.log("user",user);
-    
+    const user: any = await userRepository.addUserByGoogle(firstName,lastName, email, jti);    
 
     const token = authService.generateToken(JSON.stringify(user?._id));
 

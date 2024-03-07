@@ -1,15 +1,14 @@
 // Post.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import userImage from "../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg"; // replace with actual path
 import axiosInstance from "../../../axiosEndPoints/userAxios";
-import { login } from "../../../slices/userSlice";
 import { Link } from "react-router-dom";
-import { TiThumbsUp, TiMessage } from 'react-icons/ti'; // Import react-icons
 
 interface Product {
   _id: string;
   productName: string;
   image: string;
+  description: string
 }
 
 interface UserData {
@@ -33,7 +32,6 @@ const Posts = () => {
 
       const response = await axiosInstance.get(`/product/getProducts`);
       const fetchedProducts = response.data.myProducts;
-      console.log("fetchedProducts",fetchedProducts);
       
       setProducts(fetchedProducts);
     } catch (error) {

@@ -9,7 +9,6 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config"));
 const authService = () => {
     const encryptPassword = async (password) => {
-        console.log(password);
         const salt = await bcryptjs_1.default.genSalt(10);
         password = await bcryptjs_1.default.hash(password, salt);
         return password;

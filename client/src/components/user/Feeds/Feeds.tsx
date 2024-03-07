@@ -12,24 +12,23 @@ const   Feeds: React.FC = () => {
   const [feedsData, setFeedsData] = useState<any[]>([]);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState<any | null>(null);
-  const [comments, setComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [subject, setSubject] = useState("");
   const [issue, setIssue] = useState("");
-  const [newCommentInputs, setNewCommentInputs] = useState<{
-    [postId: string]: string;
-  }>({});
+  // const [newCommentInputs, setNewCommentInputs] = useState<{
+  //   [postId: string]: string;
+  // }>({});
   const [reportId, setReportId] = useState<string>('');
 
-  const setNewCommentInputForPost = (postId: string, value: string) => {
-    setNewCommentInputs((prevInputs) => ({ ...prevInputs, [postId]: value }));
-  };
+  // const setNewCommentInputForPost = (postId: string, value: string) => {
+  //   setNewCommentInputs((prevInputs) => ({ ...prevInputs, [postId]: value }));
+  // };
 
   const fetchData = async () => {
     const response = await axiosInstance.get(`/product/get_all_posts`);
-    console.log("feeds",response.data.posts);
-    
+    console.log('dataa',response.data.posts)
     setFeedsData(response.data.posts);
   };
 
@@ -63,7 +62,6 @@ const   Feeds: React.FC = () => {
       const response = await axiosInstance.get(
         `product/comments/${selectedPost?._id}`
       );
-      console.log("comments", response.data.comments);
       setComments(response.data.comments);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -113,9 +111,9 @@ const   Feeds: React.FC = () => {
     }
   }
 
-  const sharePost = async (id: string) => {
+  // const sharePost = async (id: string) => {
 
-  }
+  // }
 
   const handleClose = () => {
     setIssue('');

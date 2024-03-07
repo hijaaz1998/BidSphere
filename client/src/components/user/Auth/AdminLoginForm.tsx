@@ -1,8 +1,7 @@
-import React, { useState, FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { useDispatch } from 'react-redux';
-import AdminLogin from '../../../pages/Auth/AdminLogin';
 import { adminLogin } from '../../../slices/adminSlice/adminSlice';
 
 function AdminLoginForm() {
@@ -43,10 +42,7 @@ function AdminLoginForm() {
       })
 
       const adminData = response.data;
-      console.log("admoin",adminData);
-      
-
-      
+            
       localStorage.setItem("adminToken", JSON.stringify(adminData.adminToken));
       
       dispatch(adminLogin(adminData))

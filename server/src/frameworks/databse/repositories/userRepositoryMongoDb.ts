@@ -206,7 +206,6 @@ export const userRepositoryMongoDb = () => {
         try {
 
             const user = await User.findById(userId);
-            console.log('user',user)
             return user;
 
         } catch (error) {
@@ -238,9 +237,7 @@ export const userRepositoryMongoDb = () => {
                 ]
             })
             .select('firstName lastName');
-        
-            console.log("users", users);
-        
+                
             return users;
         } catch (error) {
             console.log(error)
@@ -269,7 +266,6 @@ export const userRepositoryMongoDb = () => {
                 image: user.image
             }, {new: true})
 
-            console.log("updated", updated);
 
             return updated
             

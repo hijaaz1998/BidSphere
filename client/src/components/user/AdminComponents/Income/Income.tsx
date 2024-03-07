@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axiosInstance from '../../../../axiosEndPoints/userAxios';
 import Pagination from '../../../Pagination/Pagination';
 import { toast } from 'react-toastify';
@@ -6,9 +6,9 @@ import { toast } from 'react-toastify';
 const Income = () => {
 
     const [IncomeData, setIncomeData] = useState<any[]>([]);
-    const [update, setUpdate] = useState(false)
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(5)
+    // const [recordsPerPage, setRecordsPerPage] = useState(5)
+    let recordsPerPage = 5;
 
     const fetchData = async () => {
         const response = await axiosInstance.get('/admin/get_income')

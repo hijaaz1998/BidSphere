@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import image from '../../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg';
 import axiosInstance from '../../../../axiosEndPoints/userAxios';
-import { useNavigate } from 'react-router-dom';
 import Pagination from '../../../Pagination/Pagination';
+import { User } from '../../../../interfaces/Interface';
 
 const UserMgt = () => {
-  const navigate = useNavigate()
-  const [users, setUsers] = useState<any[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [update, setUpdate] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage, setRecordsPerPage] = useState(5)
+  // const [recordsPerPage, setRecordsPerPage] = useState(5)
+  let recordsPerPage = 5;
 
   const fetchUsers = async () => {
     const response = await axiosInstance.get('/admin/users');
+    console.log("users",response.data.result)
     setUsers(response.data.result);
   }
 
@@ -23,11 +24,9 @@ const UserMgt = () => {
 
   const blockUser = async (userId: string) => {
     try {
-      console.log("sending req");
       
       const response = await axiosInstance.patch(`/admin/block_user/${userId}`);
       if(response.data.message){
-        console.log(response.data.message);
         
         setUpdate((previous) => !previous);
       }
@@ -48,7 +47,7 @@ const UserMgt = () => {
             <div key={user._id} className="border rounded p-4 mb-4 shadow-md flex items-center">
               <img
                 src={image}
-                alt={user.name}
+                alt='profile'
                 className="w-16 h-16 rounded-full mr-4"
               />
               <div className="flex-grow">

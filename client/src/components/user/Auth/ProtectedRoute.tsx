@@ -15,8 +15,6 @@ export const PrivateRoutes = () => {
 };
 
 export const AdminPrivateRoutes = () => {
-  const admin = useSelector(selectAdmin);
-  console.log("adddddddddmmminnin", admin);
-  
+  const admin = useSelector(selectAdmin);  
   return admin ? <Outlet /> : <Navigate to="/admin" />;
 }

@@ -26,7 +26,6 @@ export const generareRazorpay = async (id: any, total: number) => {
 
 
 export const paymentVerify = (details: any) => {
-    console.log(details)
     return new Promise((resolve, reject) => {
         const crypto = require('crypto');
         let hmac = crypto.createHmac('sha256', 'k0tmdvbtpmf11fcrrV5ay7dI')

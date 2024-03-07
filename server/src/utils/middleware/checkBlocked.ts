@@ -11,17 +11,12 @@ interface AuthenticatedRequest extends Request { // Rename the interface to avoi
 
 const checkBlocked = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const id = req.userId;
-    console.log("id",id);
     
     const user = await User.findById(id)
 
-    const isBlocked = user?.isBlocked
-    console.log("blocked",isBlocked);
-    
+    const isBlocked = user?.isBlocked    
 
-    if(isBlocked){
-        console.log("it is blocked");
-        
+    if(isBlocked){        
        return res.json({
         blocked: true
        }) 

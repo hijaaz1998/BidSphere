@@ -13,16 +13,12 @@ interface Props {
 }
 
 const Notifications: React.FC<Props> = ({ notifications }) => {
-    console.log("rendering");
     
     const [notification, setNotification] = useState<Notification[]>([]);
 
     const changeIsRead = async () => {
-        console.log("api going"); 
         const response = await axiosInstance.put('/auction/change_is_read')
-        setNotification(response.data.updated)
-        console.log("chhhhhh",response.data.updated);
-        
+        setNotification(response.data.updated)        
     }
 
     useEffect(() => {

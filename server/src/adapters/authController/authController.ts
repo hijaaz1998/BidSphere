@@ -290,9 +290,7 @@ const authController = (
     const unfollow = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
       try {
         const logedInUser = req.userId;
-        const unfollowedId = req.params.unfollowedId;
-        console.log("unfollowing");
-        
+        const unfollowedId = req.params.unfollowedId;        
 
         const isUnfollowed = await unfollowTheUser(dbRepositoryUser ,logedInUser, unfollowedId)
 

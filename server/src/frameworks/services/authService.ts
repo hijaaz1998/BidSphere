@@ -4,9 +4,7 @@ import configKeys from '../../config';
 
 export const authService = () => {
     
-    const encryptPassword = async (password: string) => {
-        console.log(password);
-        
+    const encryptPassword = async (password: string) => {        
         const salt = await bcrypt.genSalt(10);
         password = await bcrypt.hash(password,salt);
         return password

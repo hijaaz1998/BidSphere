@@ -5,7 +5,7 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-    user: ''
+    user: '' 
 }
 
 const userSlice = createSlice({
@@ -13,12 +13,12 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action: PayloadAction<string>) => {
-            console.log("stateee", action);
-            console.log("stateee", action.payload);
+
             state.user = action.payload; 
             
         },
         signup: (state, action: PayloadAction<string> ) => {
+            console.log(state)
             console.log("action.payload",action.payload);
         },
         logout: (state) => {

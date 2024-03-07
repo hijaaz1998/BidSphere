@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const baseUrl = import.meta.env.VITE_URL
+
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:1000/api"
+    baseURL: baseUrl
 })
 
 axiosInstance.interceptors.request.use(
@@ -9,9 +11,7 @@ axiosInstance.interceptors.request.use(
         const tokenString = localStorage.getItem('userToken');
         
         if (tokenString) {
-            try {
-                console.log("tokenString",tokenString);
-                
+            try {                
                 const token = JSON.parse(tokenString);
 
                 config.headers.Authorization = `Bearer ${token}`;

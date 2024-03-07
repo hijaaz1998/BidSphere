@@ -1,23 +1,23 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 
 const VideoChat = () => {
-    const { chatId } = useParams();
+    // const { chatId } = useParams();
     const [roomLink, setRoomLink] = useState('');
-    const [value, setValue] = useState();
+    // const [value, setValue] = useState();
     const navigate = useNavigate();
 
 
-    const generateRandomCode = () => {
-        // Generate a random string of characters
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let randomCode = '';
-        for (let i = 0; i < 8; i++) {
-          randomCode += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        return randomCode;
-      };
+    // const generateRandomCode = () => {
+    //     // Generate a random string of characters
+    //     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    //     let randomCode = '';
+    //     for (let i = 0; i < 8; i++) {
+    //       randomCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    //     }
+    //     return randomCode;
+    //   };
 
       const handleJoinRoom = useCallback(() => {
         navigate(`/room/${roomLink}`)

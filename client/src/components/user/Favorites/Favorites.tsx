@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Product } from '../../../interfaces/Interface';
 
 
 const Favorites = () => {
-    const [favorites, setFavorites] = useState<any[]>([]);
+    const [favorites, setFavorites] = useState<Product[]>([]);
 
     const fetchFavorites = async () => {
         const response = await axiosInstance.get('/product/get_favorites')
-        console.log("fav",response.data.favorites);
-        
+        console.log("fav",response.data.favorites)
         setFavorites(response.data.favorites)
     }
 
     useEffect(() => {
         fetchFavorites();
     },[])
-    const removeFavorite = async (id: any) => {
-        const response = await axiosInstance.put(`/product/remove_favorite/${id}`)
+    const removeFavorite = async (id: string) => {
+        await axiosInstance.put(`/product/remove_favorite/${id}`)
         toast.success('Removed Succcessfully')        
     }
 
   return (
-    <div className="top-28 mt-32 h-full w-full">
+    <div className="top-28 mt-32 h-screen w-full">
         {favorites && favorites.length > 0 ? (
             <table className="w-full">
             <thead>

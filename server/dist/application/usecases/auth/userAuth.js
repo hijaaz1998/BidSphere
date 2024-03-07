@@ -9,7 +9,6 @@ const userRegister = async (user, userRepository, authService) => {
     user.password = await authService.encryptPassword(user?.password);
     const { firstName, lastName, email, phoneNumber, password } = user;
     const userEntity = (0, user_1.default)(firstName, lastName, email, phoneNumber, password);
-    console.log(userEntity.getFirstName());
     const createdUser = await userRepository.addUser(userEntity);
     const applicantId = createdUser?._id;
     const token = authService.generateToken(createdUser?._id.toString());

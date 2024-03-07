@@ -35,7 +35,6 @@ const adminAuthController = (
     const loginAdmin = asyncHandler( async (req: Request, res: Response) => {
         try {
             const {email, password} = req.body;
-            console.log(email);
             
             const adminToken = await adminLogin(
                 email,
@@ -84,7 +83,6 @@ const adminAuthController = (
     const getAuctions = asyncHandler ( async(req: Request, res: Response) => {
         try {
             const auctions = await dbRepositoryAuction.getUpcomingAuctions()
-            console.log("auctions",auctions);
 
             res.json({
                 auctions
@@ -150,10 +148,6 @@ const adminAuthController = (
             const payerEmail = approved?.payerEmail as string;
             const auctionerEmail = approved?.auctionerEmail as string
             const updated = approved?.updated
-
-            console.log(updated);
-            console.log(payerEmail);
-            console.log(auctionerEmail);
             
             if (approved) {
                 const transporter = nodemailer.createTransport({

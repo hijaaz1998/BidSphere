@@ -20,41 +20,32 @@ const io = new SocketIoServer(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("connected to socket.io");
 
   socket.on('setup', (userData) => {
-    console.log("userdata", userData);
     socket.join(userData);
     socket.emit('connected');
   });
 
   socket.on('joinChat', (room) => {
     socket.join(room);
-    console.log('user joined room', room);
   });
 
   socket.on('leaveChat', (room) => {
     socket.leave(room);
-    console.log('user left room', room);
   });
 
   socket.on('new message', (newMessageRecieved) => {
     let chat = newMessageRecieved.chat;
-    console.log("chat", chat);
-    console.log("newMessageRecieved.sender._id", newMessageRecieved.sender._id);
 
     if (!chat.users) return console.log("not defined");
 
     chat.users.forEach((user: any) => {
       if (user._id == newMessageRecieved.sender._id) return;
-      console.log('socketing');
       socket.in(user._id).emit("message recieved", newMessageRecieved);
     });
   });
 
   socket.on('bidded', ({ amount, userId, firstName, lastName }) => {
-    console.log("userid", userId);
-    console.log("amount", amount);
     io.emit("bid", {userId, amount, firstName, lastName });
   });
 });

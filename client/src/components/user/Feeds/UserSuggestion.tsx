@@ -39,7 +39,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
 
   const followUser = async (followed: string) => {
     
-    const isFollowed = await axiosInstance.patch(`/user/follow/${followed}`)
+    await axiosInstance.patch(`/user/follow/${followed}`)
     
     setFollow((prev) => !prev);
   }

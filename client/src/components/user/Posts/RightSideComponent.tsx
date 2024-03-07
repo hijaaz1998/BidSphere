@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 
 interface PostId {
-  postId: string
+  postId: string | undefined
 }
 
 const RightSideComponent: React.FC<PostId> = ({ postId }) => {
@@ -34,12 +33,12 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
     setAuctionModalOpen(true);
   };
 
-  const handleAuctionConfirm = async (postId: string) => {
+  const handleAuctionConfirm = async (postId: string | undefined) => {
 
     const formattedAuctionDate = auctionDate?.toISOString(); // Convert to ISO string
     const numericBasePrice = Number(basePrice);
 
-    const res = await axiosInstance.post('/auction/addToAuction',{
+    await axiosInstance.post('/auction/addToAuction',{
       data: {
         postId,
         basePrice: numericBasePrice,
@@ -57,7 +56,7 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
     setAuctionModalOpen(false);
   };
 
-  const handleEditButtonClick = async (postId: string) => {
+  const handleEditButtonClick = async (postId: string | undefined) => {
     const response = await axiosInstance.get(`/product/postDetails/${postId}`)
     const data = response.data;
     setProductName(data?.productName);
@@ -82,7 +81,7 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
   const handleEditConfirm = async (e: React.FormEvent, id: string) => {
     e.preventDefault();
 
-    const res = await axiosInstance.put(`/product/editPost/${id}`, {
+    await axiosInstance.put(`/product/editPost/${id}`, {
       data: {
         productName,
         description,
@@ -110,7 +109,6 @@ const RightSideComponent: React.FC<PostId> = ({ postId }) => {
 
   const findAuctioned = async () => {
     const isAuctioned = await axiosInstance.get(`/auction/isOnAuction/${postId}`)
-    console.log("auctioned",isAuctioned);
     setAuctioned(isAuctioned.data.auctioned.isAuctioned)
   }
 

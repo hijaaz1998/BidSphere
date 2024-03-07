@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import image from '../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg'
-import { Params, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-interface FollowingUser {
-  id: number;
-  username: string;
-  image: string;
-}
+// interface FollowingUser {
+//   id: number;
+//   username: string;
+//   image: string;
+// }
 
-interface UserIdProps {
-  userId: Readonly<Params<string>>
-}
+// interface UserIdProps {
+//   userId: Readonly<Params<string>>
+// }
 
-interface FollowingProps {
-  following: FollowingUser[];
-}
+// interface FollowingProps {
+//   following: FollowingUser[];
+// }
 
 const Following: React.FC<any> = ({userId, setActiveTab}) => {
   

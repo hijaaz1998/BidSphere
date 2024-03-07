@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 const PostDetails = ({ postDetail, isOwnPost }: { postDetail: any, isOwnPost: boolean }) => {
 
@@ -12,7 +11,6 @@ const PostDetails = ({ postDetail, isOwnPost }: { postDetail: any, isOwnPost: bo
   const [favorites, setFavorites] = useState<any[]>([]); // Store the favorites list
 
   const getAuctionId = async () => {
-    console.log("postdetails",postDetail);
     
     try {
       const response = await axiosInstance.get(`/auction/getAuction/${postDetail._id}`);
@@ -25,7 +23,6 @@ const PostDetails = ({ postDetail, isOwnPost }: { postDetail: any, isOwnPost: bo
   const fetchFavorites = async () => {
     try {
       const response = await axiosInstance.get(`/user/getFavorite/${userId}`);
-      console.log("response.data.favorites.posts",response.data.favorites);
       
       setFavorites(response.data.favorites); // Update the favorites list
     } catch (error) {

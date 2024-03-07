@@ -20,7 +20,6 @@ const auctionController = (
     const addAuction = asyncHandler ( async (req: Request, res: Response) => {
         try {
             const data = req.body.data;
-            console.log("data",data); 
 
             const created = await addToAuction(data,dbRepositoryAuction)
 
@@ -36,7 +35,6 @@ const auctionController = (
     const getUpcomingAuctions = asyncHandler ( async (req: Request, res: Response) => {
         try {
             const upcomingAuctions = await getAuctionsUpcoming(dbRepositoryAuction);
-            console.log("auctions",upcomingAuctions)
             res.json({
                 upcomingAuctions
             })
@@ -80,7 +78,6 @@ const auctionController = (
             const auctionID = auctionId;
         
             const updated = await bidNow(dbRepositoryAuction, userId, auctionID, amount)
-            console.log("data", updated)
 
             res.json({
                 updated
@@ -202,8 +199,6 @@ const auctionController = (
             const userId = req.userId
             const auctionId = req.params.id;
             const paid = await paymentGateway(dbRepositoryAuction, userId, auctionId )        
-            console.log("paid",paid?.order);
-            console.log("paid",paid?.id);
             
             res.json({
             paid: paid?.order,
@@ -222,7 +217,6 @@ const auctionController = (
             const auctionId = req.body.auctionId
             const userId = req.userId
             const paymentId = req.body.paymentId
-            console.log("paymentId", paymentId); 
 
             const response = await paymentVerify(details);
 

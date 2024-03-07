@@ -9,6 +9,4 @@ const configKeys = {
     JWT_SECRET_ADMIN: process.env.JWT_SECRET_ADMIN as string
 };
 
-console.log(configKeys.PORT);
-
 export default configKeys;

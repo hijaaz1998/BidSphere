@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Navbar from '../../components/user/Header/Navbar';
 import Sidebar from "../../components/user/Sidebar/Sidebar";
-import Posts from "../../components/user/Posts/Posts";
 import AddPost from "../../components/user/AddPost/AddPost";
 import Feeds from "../../components/user/Feeds/Feeds";
 import UserSuggestions from "../../components/user/Feeds/UserSuggestion";
 import Messages from "../Messages/Messages";
 import MyListings from "../../components/user/Listing/MyListings";
-import Listings from "../../components/user/Notifications/Notifications";
 import Favorites from "../../components/user/Favorites/Favorites";
 import MyBids from "../../components/user/MyBids/MyBids";
 import axiosInstance from "../../axiosEndPoints/userAxios";
@@ -22,7 +19,6 @@ const Home: React.FC = () => {
     const checkNotification = async () => {
       try {
         const response = await axiosInstance.get('/auction/notification')
-        console.log('notifi',response.data.created);
         setNotifications(response.data.created)
       } catch (error) {
         console.log("noti err",error);

@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosEndPoints/userAxios";
 import { toast } from "react-toastify";
+import { AuctionListing } from "../../../interfaces/Interface";
 
 
 const MyListings = () => {
 
-  const [listings, setListings] = useState<any[]>([]);
+  const [listings, setListings] = useState<AuctionListing[]>([]);
 
   const fetchListings = async () => {
-      const response = await axiosInstance.get('/auction/get_my_listings')
-      console.log("response", response.data.listings);
-      
+      const response = await axiosInstance.get('/auction/get_my_listings')   
+      console.log('list', response.data.listings)   
       setListings(response.data.listings)
   }
 
-  const removeItem = async (id: any) => {
+  const removeItem = async (id: string) => {
       const response = await axiosInstance.patch(`/auction/removeAuction/${id}`)
 
       if(response.data.removed){
@@ -27,7 +27,7 @@ const MyListings = () => {
   },[])
 
   return (
-    <section className="container mx-auto p-6 font-mono">
+    <section className="container mx-auto p-6 font-mono h-screen">
   <div className="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
     <div className="w-full overflow-x-auto">
       {listings && listings.length > 0 ? (

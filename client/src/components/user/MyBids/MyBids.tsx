@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosInstance from '../../../axiosEndPoints/userAxios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -14,9 +14,8 @@ const MyBids = () => {
 
     const fetchMyBids = async () => {
         try {
-            const response = await axiosInstance.get('/auction/get_my_bids');
-            console.log("respooooooo",response.data.myBids);
-            
+            const response = await axiosInstance.get('/auction/get_my_bids');  
+            console.log("first",response.data.myBids)          
             setBids(response.data.myBids);
         } catch (error) {
             console.error("Error fetching bids:", error);
@@ -25,7 +24,7 @@ const MyBids = () => {
 
     const removeItem = async (bidId: string) => {
         try {
-            const response = await axiosInstance.put(`/auction/abort_bid/${bidId}`);
+            await axiosInstance.put(`/auction/abort_bid/${bidId}`);
             toast.success('Aborted auction')
         } catch (error) {
             console.error("Error removing bid:", error);
@@ -33,7 +32,7 @@ const MyBids = () => {
     };
 
     return (
-        <div className="top-28 mt-32 h-full w-full">
+        <div className="top-28 mt-32 h-screen w-full">
             {bids && bids.length > 0 ? (
                 <table className="w-full">
                     <thead>
@@ -96,7 +95,7 @@ const MyBids = () => {
                     </tbody>
                 </table>
             ) : (
-                <p className="text-white">You didn't participate in any auction</p>
+                <p className="text-white font-medium">You didn't participate in any auction</p>
             )}
         </div>
     );

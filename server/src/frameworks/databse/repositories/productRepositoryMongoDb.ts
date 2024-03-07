@@ -311,7 +311,6 @@ export const productRepositoryMongoDb = () => {
                 { new: true } 
             );
 
-            console.log("Removed:", removed);
             return removed;
         } catch (error) {
             console.log(error);

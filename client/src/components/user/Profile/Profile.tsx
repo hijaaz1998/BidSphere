@@ -1,46 +1,44 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import profile from "../assets/User Avatar Vector Design Images, User Vector Avatar, Human Clipart, Female User, Icon PNG Image For Free Download.jpg";
-import image from "../assets/Old globe.jpg";
 import Posts from "../Profile/Posts";
 import Following from "../Profile/Following";
 import Followers from "../Profile/Followers";
-import { Params } from "react-router";
 import axiosInstance from "../../../axiosEndPoints/userAxios";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-interface userIdProps {
-  userId: Readonly<Params<string>>;
-}
+// interface userIdProps {
+//   userId: Readonly<Params<string>>;
+// }
 
-interface UserProfile {
-  photo: string;
-  name: string;
-  followersCount: number;
-  followingCount: number;
-  postsCount: number;
-  posts: Post[];
-  followers: Follower[];
-  following: FollowingUser[];
-}
+// interface UserProfile {
+//   photo: string;
+//   name: string;
+//   followersCount: number;
+//   followingCount: number;
+//   postsCount: number;
+//   posts: Post[];
+//   followers: Follower[];
+//   following: FollowingUser[];
+// }
 
-interface Post {
-  id: number;
-  image: string;
-  caption: string;
-}
+// interface Post {
+//   id: number;
+//   image: string;
+//   caption: string;
+// }
 
-interface Follower {
-  id: number;
-  username: string;
-  image: string;
-}
+// interface Follower {
+//   id: number;
+//   username: string;
+//   image: string;
+// }
 
-interface FollowingUser {
-  id: number;
-  username: string;
-  image: string;
-}
+// interface FollowingUser {
+//   id: number;
+//   username: string;
+//   image: string;
+// }
 
 const ProfileComponent: React.FC<any> = ({ userId }) => {
 
@@ -67,7 +65,6 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
   const fetchUserData = async () => {
     const response = await axiosInstance.get(`/user/getUserInfo/${userId}`);
     setUser(response.data.user);
-    console.log("userINfo", response.data.user);
   };
 
   useEffect(() => {
@@ -79,15 +76,13 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
     const response = await axiosInstance.get(`/user/getUserInfo/${logedinUserId}`)
     setFirstName(response.data.user.firstName)
     setLastName(response.data.user.lastName)
-    setEmail(response.data.user.email)
-    console.log("user",response.data.user);
-    
+    setEmail(response.data.user.email)    
     setUserData(response.data.user)
   };
 
-  const handleUnfollow = () => {
-    // Logic for unfollowing
-  };
+  // const handleUnfollow = () => {
+  //   // Logic for unfollowing
+  // };
 
   const renderButton = () => {
     if (logedinUserId === userId) {
@@ -134,9 +129,7 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
         formData.append('cloud_name', CLOUD_NAME);
 
         const response = await axios.post(UPLOAD_URL, formData)
-        
-        console.log('profile',response.data.secure_url);
-        
+                
         return response.data.secure_url;
       } 
     } catch (error) {
@@ -157,13 +150,11 @@ const ProfileComponent: React.FC<any> = ({ userId }) => {
 
     setIsModalOpen(false)
     const image = await handleImageUpload();
-    console.log('image',image);
     const response = await axiosInstance.put('/user/update',{
       firstName,
       lastName,
       image
     })
-    console.log("updated",response.data.updated);
     setUser(response.data.updated)
   }
 

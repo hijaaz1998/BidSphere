@@ -21,7 +21,6 @@ const Messages = () => {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [socketConnected, setSocketConnected] = useState(false);
-  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -30,10 +29,8 @@ const Messages = () => {
       const response = await axiosInstance.get(
         `/messages/fetchMessages/${selectedChat._id}`
       );
-      console.log("messsssages", response.data.messages);
 
       setMessages(response.data.messages);
-      console.log("hiiiiiiiiiiiiiiiiiiii",messages);
       
       socket.emit('joinChat',chatId)
     } catch (error) {
@@ -44,23 +41,19 @@ const Messages = () => {
   const handleSearch = async (e: any) => {
     setSearch(e.target.value);
     const response = await axiosInstance.get(`/user/search?search=${search}`);
-    //console.log("lllllll", response.data.results);
 
     setSearchResults(response.data.results);
   };
 
   const getChats = async () => {
     const chats = await axiosInstance.get(`/messages/chat`);
-    //console.log("allchats", chats.data.fetchedChats);
     setChats(chats.data.fetchedChats);
   };
 
   const accessChat = async (reciever: string) => {
     const chat = await axiosInstance.post(`/messages/chat/${reciever}`);
     setHidden(true)
-    //console.log("accessed", chat.data.chats);
     setselectedChat(chat.data.chats);
-    //console.log("chat.data.chat._id", chat.data.chats._id);
     
     setChatId(chat.data.chats._id)
     setChats(chat.data.chat);
@@ -83,9 +76,6 @@ const Messages = () => {
       chatId: selectedChat._id,
     });
 
-    //console.log("messages", data.data.message);
-    // console.log(messages);
-
     socket.emit('new message', data.data.message)
     setMessages([...messages, data.data.message]);
   };
@@ -94,6 +84,7 @@ const Messages = () => {
   useEffect(() => {
     socket.emit('setup',userId)
     socket.on('connection', () => setSocketConnected(true))
+    console.log(socketConnected)
   },[socket])
 
   useEffect(() => {
@@ -103,14 +94,11 @@ const Messages = () => {
 
   useEffect(() => {
     socket.on('message recieved',(newMessageRecieved: any) => {
-      console.log("coming in front",newMessageRecieved);
       
       if(!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id){
-        //console.log("not setting");
+        console.log("not setting");
         
       } else {
-        //console.log("setting");
-        console.log("mmmmmmmmmmesssssssss",messages);
         
         setMessages([...messages, newMessageRecieved])
         
@@ -121,7 +109,6 @@ const Messages = () => {
 
   useEffect(() => {
     getChats();
-    //console.log(chats);
   }, [selectedChat]);
 
 
@@ -228,12 +215,12 @@ const Messages = () => {
               <ScrollableFeed>
                 <div className="relative w-full p-6 overflow-y-auto scrollbar-hidden h-[32rem]">
                   <ul className="space-y-2">
-                    {messages?.map((message, index) => (
+                    {messages?.map((message) => (
                       <React.Fragment key={message.id}>
                         {message.sender._id === userId ?
                         (
                           <li className="flex justify-end">
-                            <div className="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
+                            <div className="relative max-w-xl px-4 py-2 text-gray-100 bg-gray-700 rounded shadow">
                               <span className="block">{message.content}</span>
                             </div>
                           </li>

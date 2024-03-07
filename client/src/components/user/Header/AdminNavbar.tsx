@@ -1,7 +1,5 @@
-import React from 'react';
 import './Navbar.css';
 import logo from '/defaults/logo.png';
-import search_icon from '/defaults/search-b.png';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { adminLogout } from '../../../slices/adminSlice/adminSlice';
@@ -22,17 +20,17 @@ function AdminNavbar() {
       </div>
 
       <div className='flex items-center'>
-        <div className='flex items-center bg-white rounded-lg'>
+        {/* <div className='flex items-center bg-white rounded-lg'>
           <input
             type="text"
             placeholder='Search'
             className='py-2 bg-transparent border-0 outline-none text-black text-sm max-w-96 w-96 px-2 '
           />
           <img src={search_icon} alt="search_icon" className='w-5 cursor-pointer mx-2' />
-        </div>
+        </div> */}
       </div>
 
-      <div className='flex items-center'>
+      <div className='flex items-center mr-10'>
         <button className='text-white' onClick={handleLogout}>Logout</button>
       </div>
     </div>

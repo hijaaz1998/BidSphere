@@ -5,7 +5,6 @@ import Sidebar from "../../components/user/Sidebar/Sidebar";
 import AddPost from "../../components/user/AddPost/AddPost";
 import Feeds from "../../components/user/Feeds/Feeds";
 import Posts from '../../components/user/Posts/Posts';
-import UserSuggestions from "../../components/user/Feeds/UserSuggestion";
 import { ToastContainer } from "react-toastify";
 
 const HomeMyPosts: React.FC = () => {
@@ -45,7 +44,7 @@ const HomeMyPosts: React.FC = () => {
       <button onClick={handleLogout}>Logout</button>
       <div className="flex flex-1">
         {/* Fixed Sidebar */}
-        <Sidebar onButtonClick={handleButtonClick} />
+        <Sidebar onButtonClick={handleButtonClick} notifications={[]} />
         <div className="flex-1 flex flex-col">
           <div className="flex-none">
             {/* Placeholder for spacing (if needed) */}

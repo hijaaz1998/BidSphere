@@ -1,6 +1,4 @@
 import logo from '/defaults/logo.png';
-import default_profile from '/defaults/blank_profile.png';
-import searchIcon from '/defaults/search-b.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../slices/userSlice';

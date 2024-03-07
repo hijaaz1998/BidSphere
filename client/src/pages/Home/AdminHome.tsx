@@ -2,7 +2,6 @@ import { useState } from 'react'
 import UserMgt from '../../components/user/AdminComponents/UserMgt/UserMgt'
 import AdminNavbar from '../../components/user/Header/AdminNavbar'
 import AdminSidebar from '../../components/user/Sidebar/AdminSidebar'
-import { useNavigate } from 'react-router-dom'
 import Auctions from '../../components/user/AdminComponents/Auction/Auctions'
 import PostsMgt from '../../components/user/AdminComponents/PostsManagement/PostsMgt'
 import Reports from '../../components/user/AdminComponents/Reports/Reports'
@@ -12,7 +11,6 @@ import Income from '../../components/user/AdminComponents/Income/Income'
 const AdminHome: React.FC = () => {
 
   const [selectedComponent, setSelectedComponent] = useState<string>('users')
-  const navigate = useNavigate();
 
   const renderSelectedComponent = () => {
     switch (selectedComponent) {

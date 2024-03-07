@@ -28,12 +28,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onButtonClick, notifications }) => {
   const userId = JSON.parse(localStorage.getItem('userId') || 'null');
 
   const fetchData = async () => {
-    console.log(userId);
-    console.log(typeof userId);
-    
     const response = await axiosInstance.get(`/user/getUserInfo/${userId}`)
     setUserData(response.data.user)
-    console.log('user', response.data.user)
   }
 
   useEffect(() => {

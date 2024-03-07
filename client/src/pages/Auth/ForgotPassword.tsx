@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import axiosInstance from '../../axiosEndPoints/userAxios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
     const [cpassword, setCpassword] = useState('')
-    const [otp, setOtp] = useState()
+    const [otp, setOtp] = useState<any>()
     const [error, setError] = useState<string>('')
     const [validOtp, setValidOtp] = useState()
 
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
         return;
       }
 
-      await axiosInstance.post(`/user/set_new_password`,{email, password}).then((response) => {
+      await axiosInstance.post(`/user/set_new_password`,{email, password}).then(() => {
         toast.success('password changed successfully');
         navigate('/');
         
