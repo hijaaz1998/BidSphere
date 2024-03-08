@@ -6,9 +6,13 @@ const authServiceInterface = (service) => {
         return service.encryptPassword(password);
     };
     const generateToken = (payload) => service.generateToken(payload);
+    const generateTokenAdmin = (id) => service.generateTokenAdmin(id);
+    const comparePassword = (password, hashedPassword) => service.comparePassword(password, hashedPassword);
     return {
         encryptPassword,
-        generateToken
+        generateToken,
+        comparePassword,
+        generateTokenAdmin
     };
 };
 exports.authServiceInterface = authServiceInterface;

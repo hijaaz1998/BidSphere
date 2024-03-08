@@ -19,9 +19,18 @@ const authService = () => {
         });
         return token;
     };
+    const generateTokenAdmin = (id) => {
+        const adminToken = jsonwebtoken_1.default.sign({ id }, config_1.default.JWT_SECRET_ADMIN, {
+            expiresIn: '5d'
+        });
+        return adminToken;
+    };
+    const comparePassword = (password, hashedPassword) => bcryptjs_1.default.compare(password, hashedPassword);
     return {
         encryptPassword,
-        generateToken
+        generateToken,
+        comparePassword,
+        generateTokenAdmin
     };
 };
 exports.authService = authService;

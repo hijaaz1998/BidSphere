@@ -11,12 +11,11 @@ const app: Application = express();
 const server = http.createServer(app);
 
 const io = new SocketIoServer(server, {
-  pingTimeout: 60000,
   cors: {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST'],
-    credentials: true
-  }
+    origin: ["http://localhost:5173", 'https://ijasmuhammed.online', 'https://ijasmuhammed.online', '*'],
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
 
 io.on("connection", (socket) => {
@@ -52,10 +51,17 @@ io.on("connection", (socket) => {
 
 connectDB();
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:5173', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-}));
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://ijasmuhammed.online",
+    "http://localhost:1000",
+    "https://ijasmuhammed.online",
+  ],
+  methods: "GET,PUT,PATCH,POST,DELETE",
+};
+
+app.use(cors(corsOptions));
 
 expressConfig(app);
 

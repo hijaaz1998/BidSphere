@@ -22,6 +22,28 @@ const userSchema = new mongoose_1.Schema({
     password: {
         type: String,
         trim: true,
+    },
+    isBlocked: {
+        type: Boolean,
+        default: false
+    },
+    followers: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    following: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    jti: {
+        type: String
+    },
+    image: {
+        type: String
     }
 }, { timestamps: true });
 const User = (0, mongoose_1.model)('User', userSchema);

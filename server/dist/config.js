@@ -9,5 +9,6 @@ const configKeys = {
     PORT: process.env.PORT,
     JWT_SECRET: process.env.JWT_SECRET,
     MONGO_DB_URL: process.env.DATABASE,
+    JWT_SECRET_ADMIN: process.env.JWT_SECRET_ADMIN
 };
 exports.default = configKeys;

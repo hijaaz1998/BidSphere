@@ -1,0 +1,33 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const authController_1 = __importDefault(require("../../../adapters/authController/authController"));
+const userDbRepository_1 = require("../../../application/interfaces/userDbRepository");
+const authServiceInterface_1 = require("../../../application/services/authServiceInterface");
+const authService_1 = require("../../services/authService");
+const userRepositoryMongoDb_1 = require("../../databse/repositories/userRepositoryMongoDb");
+const jwtAuth_1 = __importDefault(require("../../../utils/middleware/jwtAuth"));
+const authRouter = () => {
+    const router = express_1.default.Router();
+    const controller = (0, authController_1.default)(authServiceInterface_1.authServiceInterface, authService_1.authService, userDbRepository_1.userDbRepository, userRepositoryMongoDb_1.userRepositoryMongoDb);
+    router.post('/signup', controller.registerUser);
+    router.post('/login', controller.loginUser);
+    router.get('/get_suggestions', jwtAuth_1.default, controller.getSuggestion);
+    router.patch('/follow/:followed', jwtAuth_1.default, controller.followUser);
+    router.post('/googleAuth', controller.googleAuth);
+    router.patch('/unfollow/:unfollowedId', jwtAuth_1.default, controller.unfollow);
+    router.post('/get_otp_for_registration', controller.getOtpForRegister);
+    router.post('/get_otp', controller.getOtp);
+    router.post('/set_new_password', controller.changePassword);
+    router.get('/getFollowing/:userId', jwtAuth_1.default, controller.getFollowing);
+    router.get('/getFollowers/:userId', jwtAuth_1.default, controller.getFollowers);
+    router.get('/getUserInfo/:userId', controller.getUserInfos);
+    router.get('/search', jwtAuth_1.default, controller.searchUser);
+    router.get('/getFavorite/:userId', controller.getFavorite);
+    router.put('/update', jwtAuth_1.default, controller.updatProfile);
+    return router;
+};
+exports.default = authRouter;

@@ -1,0 +1,31 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const auctionController_1 = __importDefault(require("../../../adapters/auctionController/auctionController"));
+const auctionDbRepository_1 = require("../../../application/interfaces/auctionDbRepository");
+const auctionRepositoryMongoDb_1 = require("../../databse/repositories/auctionRepositoryMongoDb");
+const jwtAuth_1 = __importDefault(require("../../../utils/middleware/jwtAuth"));
+const auctionRouter = () => {
+    const router = express_1.default.Router();
+    const controller = (0, auctionController_1.default)(auctionDbRepository_1.auctionDbRepository, auctionRepositoryMongoDb_1.auctionRepositoryMongoDb);
+    router.post('/addToAuction', controller.addAuction);
+    router.get('/getAuctions', jwtAuth_1.default, controller.getUpcomingAuctions);
+    router.get('/isOnAuction/:postId', controller.isAuctioned);
+    router.get('/auctionDetails/:auctionId', controller.getAuctionDetails);
+    router.post('/bid', jwtAuth_1.default, controller.bid);
+    router.get('/get_my_listings', jwtAuth_1.default, controller.getMyListings);
+    router.get('/getAuction/:postId', controller.getAuctionId);
+    router.patch('/removeAuction/:auctionId', controller.removeAuction);
+    router.get('/get_my_bids', jwtAuth_1.default, controller.getMyBids);
+    router.put('/abort_bid/:id', jwtAuth_1.default, controller.abortBid);
+    router.get('/notification', jwtAuth_1.default, controller.checkNotification);
+    router.put('/change_is_read', jwtAuth_1.default, controller.changeRead);
+    router.put('/auction_completed/:id', controller.completedAuction);
+    router.post('/payment/:id', jwtAuth_1.default, controller.payment);
+    router.post('/paymentverification', jwtAuth_1.default, controller.verifyPayment);
+    return router;
+};
+exports.default = auctionRouter;
