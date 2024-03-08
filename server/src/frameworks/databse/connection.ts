@@ -3,7 +3,7 @@ import configKeys from "../../config";
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(configKeys.MONGO_DB_URL);
+        await mongoose.connect(configKeys.MONGO_DB_CLUSTER);
         console.log("Database connected successfully");
         
     } catch (error) {
