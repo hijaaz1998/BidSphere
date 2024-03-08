@@ -5,7 +5,7 @@ import ScrollableFeed from "react-scrollable-feed";
 import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
 
-const ENDPOINT = 'http://localhost:1000'
+const ENDPOINT = 'http://localhost:5001'
 let selectedChatCompare: any;
 const Messages = () => {
   const navigate = useNavigate();

@@ -13,7 +13,7 @@ interface AuctionDetail {
 }
 
 const AuctionDetailsComponent: React.FC<AuctionDetail> = ({ auctionId }) => {
-  const ENDPOINT = 'http://localhost:1000';
+  const ENDPOINT = 'http://localhost:5001';
   const userIdString = localStorage.getItem('userId');
   const userId = userIdString ? JSON.parse(userIdString) : null;
 
