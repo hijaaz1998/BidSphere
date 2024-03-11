@@ -57,6 +57,7 @@ const corsOptions = {
     "https://ijasmuhammed.online",
     "http://localhost:5001",
     "https://ijasmuhammed.online",
+    "*"
   ],
   methods: "GET,PUT,PATCH,POST,DELETE",
 };
