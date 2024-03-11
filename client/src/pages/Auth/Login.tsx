@@ -19,7 +19,6 @@ function Login() {
     <>
       <GoogleOAuthProvider clientId="425142744806-js9dcb8k4u60lffids3uj3ebgjef5mrp.apps.googleusercontent.com">
         <LoginForm />
-        
       </GoogleOAuthProvider>;
     </>
   )
