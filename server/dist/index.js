@@ -53,6 +53,8 @@ const corsOptions = {
         "https://ijasmuhammed.online",
         "http://localhost:5001",
         "https://ijasmuhammed.online",
+        "*",
+        "https://bid-sphere.vercel.app"
     ],
     methods: "GET,PUT,PATCH,POST,DELETE",
 };
