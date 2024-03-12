@@ -54,9 +54,10 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "http://localhost:5173",
-    "https://ijasmuhammed.online",
+    "http://ijasmuhammed.online",
     "http://localhost:5001",
     "https://ijasmuhammed.online",
+    "https://www.ijasmuhammed.online",
     "*",
     "https://bid-sphere.vercel.app"
   ],
