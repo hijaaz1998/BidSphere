@@ -47,7 +47,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
 
   return (
     <>
-      {suggestions.map((user) => (
+      {suggestions?.map((user) => (
         <div key={user._id} className=" flex items-center bg-black px-5 py-3 rounded-lg  mt-5  overflow-hidden shadow-lg border-2 border-slate-800 mr-1">
           <img src={userImage} alt="Profile Image" className="w-11 h-11 object-cover rounded-full mr-4" />
           <div className="flex items-center flex-grow w-full"> 

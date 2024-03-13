@@ -38,7 +38,7 @@ const Followers: React.FC<any> = ({ userId, setActiveTab }) => {
 
   return (
     <div>
-      {followers.map((follower) => (
+      {followers?.map((follower) => (
         <div
           key={follower._id}
           className="flex items-center bg-black p-2 rounded-md mb-2"

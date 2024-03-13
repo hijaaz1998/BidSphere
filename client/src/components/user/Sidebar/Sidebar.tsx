@@ -81,9 +81,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onButtonClick, notifications }) => {
               Add Post
             </span>
             <span className="block relative mx-10 my-3">
-              {notifications.filter(notification => !notification.isRead).length > 0 && (
+              {notifications?.filter(notification => !notification.isRead).length > 0 && (
                 <span className="absolute top-0 left-0 h-6 w-6 bg-red-500 rounded-full z-50">
-                  {notifications.filter(notification => !notification.isRead).length}
+                  {notifications?.filter(notification => !notification.isRead).length}
                 </span>
               )}
               <span

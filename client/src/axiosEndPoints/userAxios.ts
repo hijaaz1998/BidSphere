@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = import.meta.env.VITE_URL
+const baseUrl = import.meta.env.VITE_URL;
 
 const axiosInstance = axios.create({
     baseURL: baseUrl
@@ -9,7 +9,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         const tokenString = localStorage.getItem('userToken');
-        
         if (tokenString) {
             try {                
                 const token = JSON.parse(tokenString);

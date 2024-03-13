@@ -5,7 +5,7 @@ import ScrollableFeed from "react-scrollable-feed";
 import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
 
-const ENDPOINT = 'http://ijasmuhammed.online/api'
+const ENDPOINT = import.meta.env.VITE_BASE_URL;
 let selectedChatCompare: any;
 const Messages = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Messages = () => {
   const [hidden, setHidden] = useState(false)
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [selectedChat, setselectedChat] = useState<any>({});
+  const [selectedChat, setselectedChat] = useState<any>(false);
   const [chats, setChats] = useState<any[]>([]);
   const [chatId, setChatId] = useState()
   const [messages, setMessages] = useState<any[]>([]);
@@ -83,13 +83,15 @@ const Messages = () => {
   
   useEffect(() => {
     socket.emit('setup',userId)
-    socket.on('connection', () => setSocketConnected(true))
+    socket.emit('connection', () => setSocketConnected(true))
     console.log(socketConnected)
   },[socket])
 
   useEffect(() => {
-    fetchMessages();
-    selectedChatCompare = selectedChat
+    if(selectedChat){
+      fetchMessages();
+      selectedChatCompare = selectedChat
+    }
   }, [selectedChat]);
 
   useEffect(() => {

@@ -42,7 +42,7 @@ const Following: React.FC<any> = ({userId, setActiveTab}) => {
 
   return (
     <div>
-      {following.map((user) => (
+      {following?.map((user) => (
         <div key={user.id} className="flex items-center bg-black p-2 rounded-md mb-2">
           <img src={image} alt='profile' className="w-8 h-8 object-cover rounded-full mr-2" />
           <span onClick={() => handleCHange(user._id)}

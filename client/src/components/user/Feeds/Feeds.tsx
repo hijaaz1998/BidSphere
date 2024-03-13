@@ -131,8 +131,8 @@ const   Feeds: React.FC = () => {
       <div className="flex">
         <div className="px-6 mt-20">
           <div className="">
-            {feedsData.length > 0 ? (
-              feedsData.map((data, index) => (
+            {feedsData?.length > 0 ? (
+              feedsData?.map((data, index) => (
                 <div
                   key={index}
                   className="max-w-xl mx-auto drop-shadow-2xl rounded-md overflow-hidden shadow-lg my-4 mt-14 border-2 border-slate-800 relative"

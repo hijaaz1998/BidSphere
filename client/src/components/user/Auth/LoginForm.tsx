@@ -100,9 +100,10 @@ function LoginForm() {
           <form onSubmit={loginHandler} className="space-y-4">
             <div className="flex flex-col">
               <input
-                type="text"
+                type="email"
                 className="py-2 px-3 mb-3 w-full border rounded-md"
                 placeholder="Email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
