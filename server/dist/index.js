@@ -21,6 +21,7 @@ const io = new socket_io_1.Server(server, {
     },
 });
 io.on("connection", (socket) => {
+    console.log("socket connected");
     socket.on('setup', (userData) => {
         socket.join(userData);
         socket.emit('connected');
@@ -50,9 +51,10 @@ app.use(express_1.default.json());
 const corsOptions = {
     origin: [
         "http://localhost:5173",
-        "https://ijasmuhammed.online",
+        "http://ijasmuhammed.online",
         "http://localhost:5001",
         "https://ijasmuhammed.online",
+        "https://www.ijasmuhammed.online",
         "*",
         "https://bid-sphere.vercel.app"
     ],

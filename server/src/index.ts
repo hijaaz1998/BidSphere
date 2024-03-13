@@ -20,6 +20,7 @@ const io = new SocketIoServer(server, {
 
 io.on("connection", (socket) => {
 
+  console.log("socket connected");
   socket.on('setup', (userData) => {
     socket.join(userData);
     socket.emit('connected');

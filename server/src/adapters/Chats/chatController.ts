@@ -63,6 +63,7 @@ const chatController = (
         try {
 
             const chatId = req.params.chatId
+            console.log(chatId)
             const messages = await fetchAllMessage(dbRepositoryMessage, chatId);
 
             res.json({

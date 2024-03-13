@@ -48,6 +48,7 @@ const chatController = (messageDbRepository, messageDbRepositoryImpl) => {
     const fetchMessages = (0, express_async_handler_1.default)(async (req, res) => {
         try {
             const chatId = req.params.chatId;
+            console.log(chatId);
             const messages = await (0, chats_1.fetchAllMessage)(dbRepositoryMessage, chatId);
             res.json({
                 messages
