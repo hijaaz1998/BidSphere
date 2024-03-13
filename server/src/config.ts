@@ -10,4 +10,5 @@ const configKeys = {
     MONGO_DB_CLUSTER: process.env.CLUSTER_URL  as string
 };
 
+
 export default configKeys;
