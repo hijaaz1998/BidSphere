@@ -96,13 +96,14 @@ const AuctionDetailsComponent: React.FC<AuctionDetail> = ({ auctionId }) => {
   };
 
   const auctionCompleted = async () => {    
+    console.log("completing auction api calling")
     await axiosInstance.put(`/auction/auction_completed/${data?._id}`).then((response) => {      
       setData(response.data.updated)
     })
   }
 
   useEffect(() => {
-    
+    console.log(time)
     if(time === 0 && data?.isCompleted === false) {
       
       auctionCompleted();
