@@ -23,7 +23,7 @@ const   productController = (
     const addProduct = asyncHandler ( async (req: AuthenticatedRequest, res: Response) => {
        try {
         const product: ProductInterface = req.body.data;
-        
+        console.log(req.body.data)
         const userId = req.userId;
         
         if(userId !== undefined){

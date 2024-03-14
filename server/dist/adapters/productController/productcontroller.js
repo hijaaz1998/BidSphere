@@ -11,6 +11,7 @@ const productController = (productDbRepository, productDbRepositoryImpl) => {
     const addProduct = (0, express_async_handler_1.default)(async (req, res) => {
         try {
             const product = req.body.data;
+            console.log(req.body.data);
             const userId = req.userId;
             if (userId !== undefined) {
                 const createdProduct = await (0, addProduct_1.productAdd)(userId, product, dbRepositoryProduct);

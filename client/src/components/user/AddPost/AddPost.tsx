@@ -15,7 +15,7 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
 
   const UPLOAD_PRESET = import.meta.env.VITE_UPLOAD_PRESET;
   const CLOUD_NAME = import.meta.env.VITE_CLOUD_NAME;
-  const UPLOAD_URL = import.meta.env.VITE_BASE_URL;
+  const UPLOAD_URL = import.meta.env.VITE_CLOUDINARY_URL;
 
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
@@ -43,12 +43,13 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
     try {
       const formData =new FormData();
       if(image){
+        console.log(image,"llll")
         formData.append('file', image)
         formData.append('upload_preset', UPLOAD_PRESET);
         formData.append('cloud_name', CLOUD_NAME);
 
         const response = await axios.post(UPLOAD_URL, formData)
-        
+        console.log("response",response.data.secure_url)
         return response.data.secure_url;
       } 
     } catch (error) {
@@ -62,7 +63,7 @@ const AddPost : React.FC<AddPostProps> = ({setSelectedComponent}) => {
     e.preventDefault();
 
     const image = await handleImageUpload();
-
+    console.log(image)
     const response = await axiosInstance.post('/product/addProduct', {
       data: {
         productName,

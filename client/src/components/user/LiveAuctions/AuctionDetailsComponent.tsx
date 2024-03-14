@@ -13,7 +13,7 @@ interface AuctionDetail {
 }
 
 const AuctionDetailsComponent: React.FC<AuctionDetail> = ({ auctionId }) => {
-  const ENDPOINT = 'http://ijasmuhammed.online/api';
+  const ENDPOINT = import.meta.env.VITE_BASE_URL;
   const userIdString = localStorage.getItem('userId');
   const userId = userIdString ? JSON.parse(userIdString) : null;
 

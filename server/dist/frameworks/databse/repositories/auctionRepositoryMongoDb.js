@@ -57,7 +57,7 @@ const auctionRepositoryMongoDb = () => {
             const currentAmount = auction.getCurrentAmount();
             const startingDate = auction.getStartingDate();
             const endingDate = new Date(startingDate);
-            endingDate.setMinutes(endingDate.getMinutes() + 50); // Set endingDate to 2 minutes after startingDate
+            endingDate.setMinutes(endingDate.getMinutes() + 2); // Set endingDate to 2 minutes after startingDate
             const newAuction = new auctionModel_1.default({
                 postId,
                 startingAmount: currentAmount,

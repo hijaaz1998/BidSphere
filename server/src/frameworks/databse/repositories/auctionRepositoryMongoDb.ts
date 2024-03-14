@@ -60,7 +60,7 @@ export const auctionRepositoryMongoDb = () => {
       const startingDate = auction.getStartingDate();
 
       const endingDate = new Date(startingDate);
-      endingDate.setMinutes(endingDate.getMinutes() + 50); // Set endingDate to 2 minutes after startingDate
+      endingDate.setMinutes(endingDate.getMinutes() + 2); // Set endingDate to 2 minutes after startingDate
 
       const newAuction: any = new Auction({
         postId,
