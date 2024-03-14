@@ -57,6 +57,7 @@ const messageRepositoryMongoDb = () => {
                 path: 'latestMessage.sender',
                 select: 'firstName, email'
             });
+            console.log("fetchedChats", fetchedChats);
             return fetchedChats;
         }
         catch (error) {
@@ -80,6 +81,7 @@ const messageRepositoryMongoDb = () => {
             const saved = await chatModel_1.default.findByIdAndUpdate(chatId, {
                 latestMessage: message
             });
+            console.log("message", message);
             return message;
         }
         catch (error) {

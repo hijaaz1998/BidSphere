@@ -19,7 +19,7 @@ const chatController = (
             const reciever = req.params.reciever
 
             const chats = await chatAccess(dbRepositoryMessage, userId, reciever)
-
+            console.log("chats",chats)
             res.json({
                 chats
             })

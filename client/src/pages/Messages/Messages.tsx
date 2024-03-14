@@ -47,11 +47,13 @@ const Messages = () => {
 
   const getChats = async () => {
     const chats = await axiosInstance.get(`/messages/chat`);
+    console.log("chats",chats.data.fetchedChats)
     setChats(chats.data.fetchedChats);
   };
 
   const accessChat = async (reciever: string) => {
     const chat = await axiosInstance.post(`/messages/chat/${reciever}`);
+    console.log("chats",chat.data.chats)
     setHidden(true)
     setselectedChat(chat.data.chats);
     
@@ -77,13 +79,15 @@ const Messages = () => {
     });
 
     socket.emit('new message', data.data.message)
+    console.log("messages", messages)
+    console.log("message", data.data.message)
     setMessages([...messages, data.data.message]);
   };
 
   
   useEffect(() => {
     socket.emit('setup',userId)
-    socket.emit('connection', () => setSocketConnected(true))
+    socket.on('connection', () => setSocketConnected(true))
     console.log(socketConnected)
   },[socket])
 
@@ -101,13 +105,12 @@ const Messages = () => {
         console.log("not setting");
         
       } else {
-        
-        setMessages([...messages, newMessageRecieved])
-        
+        console.log("messagesn1", newMessageRecieved)
+        setMessages(prev => [...prev, newMessageRecieved])
       }
 
     })
-  })
+  }, [])
 
   useEffect(() => {
     getChats();

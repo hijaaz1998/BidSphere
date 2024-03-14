@@ -12,6 +12,7 @@ const chatController = (messageDbRepository, messageDbRepositoryImpl) => {
             const userId = req.userId;
             const reciever = req.params.reciever;
             const chats = await (0, chats_1.chatAccess)(dbRepositoryMessage, userId, reciever);
+            console.log("chats", chats);
             res.json({
                 chats
             });

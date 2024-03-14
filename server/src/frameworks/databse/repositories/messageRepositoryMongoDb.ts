@@ -65,6 +65,7 @@ export const messageRepositoryMongoDb = () => {
             select: 'firstName, email'
         });
         
+        console.log("fetchedChats",fetchedChats)
         return fetchedChats
 
     } catch (error) {
@@ -99,6 +100,7 @@ export const messageRepositoryMongoDb = () => {
         latestMessage: message
       })      
 
+      console.log("message",message)
       return message
       
     } catch (error) {
